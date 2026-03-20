@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DIGIT Building Blocks — Digital Infrastructure for Governance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #080d1a; --surface: #0f1629; --surface2: #172040;
+  --border: rgba(255,255,255,0.07); --text: #e8eaf2; --text-dim: #7a82a0;
+  --identity: #818cf8; --registry: #34d399; --workflow: #fbbf24;
+  --notifications: #60a5fa; --documents: #a78bfa; --payments: #f87171;
+  --font-display: 'Syne', sans-serif; --font-body: 'IBM Plex Sans', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-weight: 300; line-height: 1.6; overflow-x: hidden; }
+body::before { content: ''; position: fixed; inset: 0; z-index: -1; background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px); background-size: 48px 48px; pointer-events: none; }
+
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(8,13,26,0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 2rem; height: 56px; display: flex; align-items: center; justify-content: space-between; }
+.nav-logo { font-family: var(--font-display); font-weight: 800; font-size: 1.1rem; letter-spacing: -0.02em; }
+.nav-logo span { color: var(--registry); }
+.nav-links { display: flex; gap: 0.25rem; }
+.nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.82rem; padding: 0.35rem 0.75rem; border-radius: 4px; transition: all 0.15s; }
+.nav-links a:hover { color: var(--text); background: var(--surface2); }
+
+section { padding: 96px 2rem 5rem; }
+.section-label { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.15em; color: var(--text-dim); text-transform: uppercase; margin-bottom: 1rem; }
+.section-title { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 800; line-height: 1.1; letter-spacing: -0.03em; margin-bottom: 1rem; }
+.section-sub { color: var(--text-dim); font-size: 1rem; max-width: 600px; margin-bottom: 3rem; line-height: 1.7; }
+
+/* LEGO BRICKS */
+.brick-tag {
+  display: inline-block; position: relative;
+  padding: 0.32rem 0.72rem 0.32rem; margin: 3px 2px 6px;
+  border-radius: 4px; font-size: 0.75rem; font-weight: 500;
+  background: var(--brick-color); color: var(--brick-text);
+  box-shadow: 0 3px 0 var(--brick-shadow), 0 4px 8px rgba(0,0,0,0.3);
+  transition: transform 0.15s, box-shadow 0.15s, opacity 0.25s;
+  opacity: 0.3; cursor: default;
+}
+.brick-tag::before {
+  content: ''; position: absolute; top: -4px; left: 50%; transform: translateX(-50%);
+  width: 48%; height: 4px; background: var(--brick-stud); border-radius: 2px 2px 0 0;
+}
+.brick-tag.active { opacity: 1; }
+.brick-tag.snap { animation: legoSnap 0.32s cubic-bezier(0.34,1.56,0.64,1) both; }
+@keyframes legoSnap { 0%{transform:translateY(-16px) scale(0.88);opacity:0} 100%{transform:translateY(0) scale(1);opacity:1} }
+.brick-tag:hover { transform: translateY(-2px); box-shadow: 0 5px 0 var(--brick-shadow), 0 8px 16px rgba(0,0,0,0.4); }
+
+.baseplate {
+  background: var(--surface); border: 2px solid var(--border);
+  border-radius: 12px; padding: 1.1rem 1.1rem 1.4rem;
+  position: relative; transition: border-color 0.3s, box-shadow 0.3s;
+}
+.baseplate::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 4px; border-radius: 0 0 10px 10px; background: var(--cluster-color); opacity: 0.25; transition: opacity 0.3s; }
+.baseplate.lit { border-color: var(--cluster-color); box-shadow: 0 0 28px -6px var(--cluster-alpha); }
+.baseplate.lit::after { opacity: 0.9; }
+.bp-header { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.85rem; font-size: 0.82rem; font-weight: 500; color: var(--text-dim); transition: color 0.3s; }
+.baseplate.lit .bp-header { color: var(--cluster-color); }
+.bp-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cluster-color); opacity: 0.3; transition: opacity 0.3s; }
+.baseplate.lit .bp-dot { opacity: 1; animation: pulseDot 1.4s infinite; }
+@keyframes pulseDot { 0%,100%{transform:scale(1)} 50%{transform:scale(1.45)} }
+.bricks-row { display: flex; flex-wrap: wrap; }
+
+/* Hover tooltip */
+.brick-wrap { position: relative; display: inline-block; }
+.brick-wrap .btip { display: none; position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: var(--surface2); border: 1px solid var(--cluster-color, #fff); border-radius: 6px; padding: 0.6rem 0.75rem; width: 210px; font-size: 0.78rem; line-height: 1.4; color: var(--text); z-index: 60; pointer-events: none; box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
+.brick-wrap .btip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-top-color: var(--cluster-color, #fff); }
+.brick-wrap:hover .btip { display: block; }
+
+/* ACT 1 */
+#orient { min-height: 100vh; }
+.orient-intro { font-size: 1.1rem; color: var(--text-dim); max-width: 620px; margin-bottom: 1.75rem; line-height: 1.75; }
+.orient-intro strong { color: var(--text); font-weight: 500; }
+.depth-toggle { display: inline-flex; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; margin-bottom: 3rem; }
+.depth-btn { padding: 0.45rem 1rem; font-family: var(--font-mono); font-size: 0.78rem; background: transparent; border: none; color: var(--text-dim); cursor: pointer; transition: all 0.15s; }
+.depth-btn.active { background: var(--surface2); color: var(--text); }
+.clusters-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.4rem; }
+.c-tagline { font-size: 0.82rem; color: var(--text-dim); margin-bottom: 0.85rem; line-height: 1.5; }
+.block-tech { display: none; font-family: var(--font-mono); font-size: 0.72rem; }
+.block-simple { }
+body.tech-depth .block-tech { display: inline; }
+body.tech-depth .block-simple { display: none; }
+.hero-chips { display: flex; flex-wrap: wrap; gap: 0.25rem; margin: 1.5rem 0 2.5rem; max-width: 680px; }
+.floating-tag { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 100px; font-size: 0.72rem; font-weight: 500; font-family: var(--font-mono); margin: 0.1rem; animation: floatChip 6s ease-in-out infinite; }
+@keyframes floatChip { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+
+/* PRINCIPLES */
+#principles { background: linear-gradient(180deg, var(--bg) 0%, var(--surface) 50%, var(--bg) 100%); min-height: auto; padding: 5rem 2rem; }
+.principles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(255px, 1fr)); gap: 1.1rem; }
+.principle-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.4rem; transition: border-color 0.2s, transform 0.2s; }
+.principle-card:hover { border-color: rgba(255,255,255,0.18); transform: translateY(-2px); }
+.p-anim { height: 50px; display: flex; align-items: flex-end; gap: 4px; margin-bottom: 1rem; }
+.pb { border-radius: 3px; position: relative; box-shadow: 0 3px 0 rgba(0,0,0,0.35); }
+.pb::before { content: ''; position: absolute; top: -4px; left: 50%; transform: translateX(-50%); width: 50%; height: 4px; border-radius: 2px 2px 0 0; background: rgba(255,255,255,0.2); }
+/* Modular */
+.am .pb1{width:26px;height:18px;background:#818cf8;animation:modPull 2.4s ease-in-out infinite}
+.am .pb2{width:26px;height:30px;background:#34d399}
+.am .pb3{width:26px;height:22px;background:#fbbf24}
+@keyframes modPull{0%,65%,100%{transform:translateY(0)}30%{transform:translateY(-12px)}}
+/* Reusable */
+.ar{gap:6px;align-items:flex-end}
+.ar .stack{display:flex;flex-direction:column;gap:3px;align-items:center}
+.ar .pb{width:24px;height:16px;background:#60a5fa}
+.ar .pbh{background:#f87171;animation:rFlash 2s ease-in-out infinite}
+.ar .sep{width:1px;height:38px;background:var(--border);margin:0 4px}
+@keyframes rFlash{0%,100%{opacity:0.35}50%{opacity:1}}
+/* Interoperable */
+.ai{align-items:center;gap:2px}
+.ai .pba{width:24px;height:20px;background:#a78bfa;animation:iA 2s ease-in-out infinite}
+.ai .conn{width:14px;height:4px;background:rgba(255,255,255,0.12);border-radius:2px;margin-bottom:0;animation:connG 2s ease-in-out infinite}
+.ai .pbb{width:24px;height:20px;background:#34d399;animation:iB 2s ease-in-out infinite}
+@keyframes iA{0%,100%{transform:translateX(0)}50%{transform:translateX(3px)}}
+@keyframes iB{0%,100%{transform:translateX(0)}50%{transform:translateX(-3px)}}
+@keyframes connG{0%,100%{opacity:0.15;width:6px}50%{opacity:1;width:14px}}
+/* Open */
+.ao .pb1{width:34px;height:20px;background:#fbbf24;animation:oBob 2s ease-in-out infinite}
+.ao .pb2{width:34px;height:14px;background:#fbbf24;opacity:0.5}
+@keyframes oBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+/* Multi-tenant */
+.amt{flex-direction:column;align-items:center;justify-content:flex-end;gap:2px}
+.amt .pb{width:50px;height:13px}
+.amt .pb1{background:#818cf8;animation:tS 2.6s ease-in-out infinite 0s}
+.amt .pb2{background:#34d399;animation:tS 2.6s ease-in-out infinite 0.12s}
+.amt .pb3{background:#f87171;animation:tS 2.6s ease-in-out infinite 0.24s}
+@keyframes tS{0%,80%,100%{transform:translateX(0)}40%{transform:translateX(5px)}}
+/* Secure */
+.as .pb1{width:22px;height:20px;background:#f87171}
+.as .pb2{width:22px;height:32px;background:#f87171;animation:sP 1.8s ease-in-out infinite}
+.as .pb3{width:22px;height:20px;background:#f87171}
+@keyframes sP{0%,100%{opacity:1}50%{opacity:0.4}}
+/* Scale */
+.asc .pb1{width:18px;height:12px;background:#34d399;animation:scG 2s ease-in-out infinite 0s}
+.asc .pb2{width:18px;height:20px;background:#34d399;animation:scG 2s ease-in-out infinite 0.18s}
+.asc .pb3{width:18px;height:32px;background:#34d399;animation:scG 2s ease-in-out infinite 0.36s}
+.asc .pb4{width:18px;height:46px;background:#34d399;animation:scG 2s ease-in-out infinite 0.54s}
+@keyframes scG{0%,80%,100%{transform:scaleY(1);transform-origin:bottom}40%{transform:scaleY(1.07);transform-origin:bottom}}
+
+.p-name { font-family: var(--font-display); font-weight: 700; font-size: 1rem; margin-bottom: 0.35rem; }
+.p-desc { font-size: 0.83rem; color: var(--text-dim); line-height: 1.6; }
+
+/* ACT 2 TUTORIAL */
+#understand { background: linear-gradient(180deg, var(--bg) 0%, var(--surface) 100%); min-height: 100vh; }
+.tutorial-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+@media(max-width:900px){.tutorial-layout{grid-template-columns:1fr}}
+.tutorial-story { position: sticky; top: 72px; }
+.step-progress { display: flex; gap: 0.4rem; margin-bottom: 2rem; }
+.step-dot { height: 4px; flex: 1; border-radius: 2px; background: var(--surface2); cursor: pointer; transition: all 0.2s; }
+.step-dot.active { background: var(--registry); }
+.step-dot.done { background: rgba(52,211,153,0.4); }
+.step-num { font-family: var(--font-mono); font-size: 0.75rem; color: var(--registry); margin-bottom: 0.4rem; }
+.step-title { font-family: var(--font-display); font-size: 1.45rem; font-weight: 700; line-height: 1.2; margin-bottom: 0.85rem; letter-spacing: -0.02em; }
+.step-story { font-size: 0.95rem; color: var(--text-dim); line-height: 1.7; margin-bottom: 1.1rem; }
+.step-plain { padding: 1rem 1.2rem; background: var(--surface2); border-left: 3px solid var(--registry); border-radius: 0 8px 8px 0; font-size: 0.87rem; color: var(--text); line-height: 1.6; margin-bottom: 1.4rem; }
+.infra-toggle { display: flex; align-items: center; gap: 0.5rem; font-size: 0.78rem; color: var(--text-dim); cursor: pointer; margin-bottom: 1.1rem; user-select: none; }
+.toggle-switch { width: 32px; height: 18px; background: var(--surface2); border-radius: 9px; position: relative; transition: background 0.2s; }
+.toggle-switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 12px; height: 12px; background: var(--text-dim); border-radius: 50%; transition: all 0.2s; }
+.toggle-switch.on { background: var(--workflow); }
+.toggle-switch.on::after { left: 17px; background: white; }
+.infra-note { display: none; margin-bottom: 1.2rem; padding: 0.6rem 0.8rem; background: rgba(251,191,36,0.07); border: 1px solid rgba(251,191,36,0.2); border-radius: 6px; font-family: var(--font-mono); font-size: 0.72rem; color: #fbbf24; line-height: 1.5; }
+.infra-note.visible { display: block; }
+.step-nav { display: flex; gap: 0.75rem; }
+.btn-step { padding: 0.6rem 1.25rem; font-family: var(--font-body); font-size: 0.85rem; font-weight: 500; border-radius: 6px; border: 1px solid var(--border); background: transparent; color: var(--text); cursor: pointer; transition: all 0.15s; }
+.btn-step:hover { background: var(--surface2); }
+.btn-step.primary { background: var(--registry); color: #000; border-color: var(--registry); }
+.btn-step.primary:hover { opacity: 0.85; }
+.btn-step:disabled { opacity: 0.3; cursor: default; }
+.tutorial-blocks { display: flex; flex-direction: column; gap: 0.9rem; }
+
+/* ACT 3 */
+#imagine { min-height: 100vh; background: var(--bg); }
+.imagine-focus { margin-bottom: 2.5rem; }
+.focus-label { font-size: 0.88rem; color: var(--text-dim); margin-bottom: 0.75rem; }
+.focus-options { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.focus-btn { padding: 0.55rem 1.1rem; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text-dim); font-size: 0.88rem; cursor: pointer; transition: all 0.15s; font-family: var(--font-body); }
+.focus-btn:hover { border-color: rgba(255,255,255,0.22); color: var(--text); }
+.focus-btn.selected { background: var(--surface2); border-color: var(--registry); color: var(--text); }
+.domains-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 0.85rem; margin-bottom: 2.5rem; opacity: 0.35; transition: opacity 0.3s; pointer-events: none; }
+.domains-grid.ready { opacity: 1; pointer-events: all; }
+.domain-card { padding: 1.1rem; background: var(--surface); border: 2px solid var(--border); border-radius: 10px; cursor: pointer; transition: all 0.2s; text-align: center; }
+.domain-card:hover { border-color: rgba(255,255,255,0.2); transform: translateY(-2px); }
+.domain-card.selected { border-color: var(--registry); background: var(--surface2); }
+.domain-emoji { font-size: 1.75rem; display: block; margin-bottom: 0.4rem; }
+.domain-name { font-family: var(--font-display); font-weight: 700; font-size: 0.88rem; margin-bottom: 0.2rem; }
+.domain-scenario { font-size: 0.74rem; color: var(--text-dim); line-height: 1.4; }
+.variant-row { display: none; flex-wrap: wrap; gap: 0.55rem; margin-bottom: 2.25rem; align-items: center; }
+.variant-row.visible { display: flex; }
+.variant-label { font-size: 0.82rem; color: var(--text-dim); width: 100%; }
+.variant-btn { padding: 0.42rem 0.95rem; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text-dim); font-size: 0.82rem; cursor: pointer; transition: all 0.15s; font-family: var(--font-body); }
+.variant-btn:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+.variant-btn.selected { background: var(--surface2); border-color: var(--workflow); color: var(--text); }
+.build-theatre { display: none; animation: fadeUp 0.28s ease both; }
+.build-theatre.visible { display: block; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+.theatre-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+@media(max-width:860px){.theatre-layout{grid-template-columns:1fr}}
+.theatre-story { position: sticky; top: 72px; }
+.build-progress { display: flex; gap: 0.4rem; margin-bottom: 1.75rem; }
+.build-dot { height: 4px; flex: 1; border-radius: 2px; background: var(--surface2); cursor: pointer; transition: all 0.2s; }
+.build-dot.active { background: var(--workflow); }
+.build-dot.done { background: rgba(251,191,36,0.38); }
+.build-phase { font-family: var(--font-mono); font-size: 0.72rem; color: var(--workflow); margin-bottom: 0.45rem; letter-spacing: 0.08em; }
+.build-title { font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; line-height: 1.2; margin-bottom: 0.75rem; letter-spacing: -0.02em; }
+.build-desc { font-size: 0.92rem; color: var(--text-dim); line-height: 1.7; margin-bottom: 1.1rem; }
+.build-callout { padding: 0.85rem 1rem; background: rgba(251,191,36,0.07); border-left: 3px solid var(--workflow); border-radius: 0 8px 8px 0; font-size: 0.84rem; color: var(--text); line-height: 1.6; margin-bottom: 1.5rem; }
+.build-nav { display: flex; gap: 0.75rem; }
+.theatre-blocks { display: flex; flex-direction: column; gap: 0.85rem; }
+.cta-note { margin-top: 3rem; padding: 1.4rem; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; }
+.cta-text { font-size: 0.88rem; color: var(--text-dim); line-height: 1.6; flex: 1; min-width: 220px; }
+.cta-text strong { color: var(--text); font-weight: 500; }
+.cta-link { padding: 0.55rem 1.25rem; border-radius: 6px; background: var(--registry); color: #000; text-decoration: none; font-weight: 500; font-size: 0.88rem; transition: opacity 0.15s; white-space: nowrap; }
+.cta-link:hover { opacity: 0.85; }
+
+/* DEVELOPERS */
+#developers { background: var(--surface); border-top: 1px solid var(--border); min-height: auto; padding: 5rem 2rem; }
+.dev-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(265px, 1fr)); gap: 1.1rem; margin-bottom: 2.5rem; }
+.dev-card { padding: 1.25rem 1.5rem; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; text-decoration: none; color: var(--text); transition: all 0.2s; display: block; }
+.dev-card:hover { border-color: var(--identity); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+.dc-label { font-family: var(--font-mono); font-size: 0.7rem; color: var(--identity); margin-bottom: 0.4rem; }
+.dc-title { font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 0.35rem; }
+.dc-desc { font-size: 0.82rem; color: var(--text-dim); line-height: 1.5; }
+.service-map { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; }
+.sm-title { font-family: var(--font-display); font-weight: 700; margin-bottom: 1rem; font-size: 0.95rem; }
+.svc-rows { display: flex; flex-direction: column; gap: 0.75rem; }
+.svc-row { display: flex; align-items: baseline; gap: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border); }
+.svc-row:last-child { border-bottom: none; padding-bottom: 0; }
+.svc-label { font-size: 0.75rem; color: var(--text-dim); min-width: 130px; flex-shrink: 0; font-weight: 500; }
+.svc-links { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.svc-link { font-family: var(--font-mono); font-size: 0.72rem; padding: 0.2rem 0.55rem; border-radius: 4px; border: 1px solid var(--border); color: var(--text-dim); text-decoration: none; transition: all 0.15s; }
+.svc-link:hover { border-color: var(--identity); color: var(--identity); }
+
+footer { padding: 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+.ft { font-size: 0.82rem; color: var(--text-dim); }
+.ft a { color: var(--registry); text-decoration: none; }
+.fl { display: flex; gap: 1rem; }
+.fl a { font-size: 0.82rem; color: var(--text-dim); text-decoration: none; transition: color 0.15s; }
+.fl a:hover { color: var(--text); }
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-logo">DIGIT<span>.</span>blocks</div>
+  <div class="nav-links">
+    <a href="#orient">Building Blocks</a>
+    <a href="#principles">Principles</a>
+    <a href="#understand">See It Work</a>
+    <a href="#imagine">Your Domain</a>
+    <a href="#developers">Developers</a>
+  </div>
+</nav>
+
+<!-- ACT 1 -->
+<section id="orient">
+  <div class="section-label">What is DIGIT?</div>
+  <h1 class="section-title">Digital infrastructure<br>for governance,<br>assembled like LEGO.</h1>
+  <p class="orient-intro"><strong>DIGIT</strong> is an open-source platform of modular building blocks — deployed across 1,000+ cities in India, and adapted for health campaigns in Africa. The same pieces that collect property tax can manage pollution registries, disaster relief, or agricultural subsidies. Each block does one thing well. Stack them to build anything.</p>
+  <div class="hero-chips" id="heroChips"></div>
+  <div class="depth-toggle">
+    <button class="depth-btn active" id="btnSimple" onclick="setDepth('simple')">Plain English</button>
+    <button class="depth-btn" id="btnTech" onclick="setDepth('tech')">Technical</button>
+  </div>
+  <div class="clusters-grid" id="clustersGrid"></div>
+</section>
+
+<!-- PRINCIPLES -->
+<section id="principles">
+  <div class="section-label">Design Philosophy</div>
+  <h2 class="section-title">Why it works at scale.</h2>
+  <p class="section-sub">Seven principles baked into every DIGIT building block.</p>
+  <div class="principles-grid" id="principlesGrid"></div>
+</section>
+
+<!-- ACT 2 -->
+<section id="understand">
+  <div class="section-label">Act 2 / Property Tax — A Step-by-Step Assembly</div>
+  <h2 class="section-title">Watch the blocks<br>assemble into a service.</h2>
+  <p class="section-sub">A citizen applies to pay property tax online. Follow each stage and watch which building blocks activate. This same stack — with different data — becomes any governance service.</p>
+  <div class="tutorial-layout">
+    <div class="tutorial-story">
+      <div class="step-progress" id="stepProgress"></div>
+      <div class="step-num" id="stepNum">STEP 1 OF 7</div>
+      <h3 class="step-title" id="stepTitle"></h3>
+      <p class="step-story" id="stepStory"></p>
+      <div class="step-plain" id="stepPlain"></div>
+      <label class="infra-toggle" onclick="toggleInfra()">
+        <div class="toggle-switch" id="infraSwitch"></div>
+        Show infrastructure layer (Kafka, API Gateway, databases)
+      </label>
+      <div class="infra-note" id="infraNote"></div>
+      <div class="step-nav">
+        <button class="btn-step" id="btnPrev" onclick="prevStep()">← Previous</button>
+        <button class="btn-step primary" id="btnNext" onclick="nextStep()">Next step →</button>
+      </div>
+    </div>
+    <div class="tutorial-blocks" id="tutorialBlocks"></div>
+  </div>
+</section>
+
+<!-- ACT 3 -->
+<section id="imagine">
+  <div class="section-label">Act 3 / Now Imagine Your Domain</div>
+  <h2 class="section-title">The same blocks.<br>A different problem.</h2>
+  <p class="section-sub">Start by telling us what kind of challenge you're working on. Then pick your domain and watch a possible stack assemble — phase by phase.</p>
+  <div class="imagine-focus">
+    <div class="focus-label">What's your primary challenge?</div>
+    <div class="focus-options">
+      <button class="focus-btn" data-focus="register" onclick="selectFocus(this)">📋 Register &amp; track entities</button>
+      <button class="focus-btn" data-focus="process" onclick="selectFocus(this)">⚙️ Manage processes &amp; approvals</button>
+      <button class="focus-btn" data-focus="citizens" onclick="selectFocus(this)">📣 Reach &amp; serve people at scale</button>
+      <button class="focus-btn" data-focus="accountability" onclick="selectFocus(this)">🔍 Accountability &amp; enforcement</button>
+    </div>
+  </div>
+  <div class="domains-grid" id="domainsGrid"></div>
+  <div class="variant-row" id="variantRow"><div class="variant-label">Which angle interests you most?</div></div>
+  <div class="build-theatre" id="buildTheatre">
+    <div class="theatre-layout">
+      <div class="theatre-story">
+        <div class="build-progress" id="buildProgress"></div>
+        <div class="build-phase" id="buildPhase"></div>
+        <h3 class="build-title" id="buildTitle"></h3>
+        <p class="build-desc" id="buildDesc"></p>
+        <div class="build-callout" id="buildCallout"></div>
+        <div class="build-nav">
+          <button class="btn-step" id="btnBuildPrev" onclick="prevBuildStep()">← Back</button>
+          <button class="btn-step primary" id="btnBuildNext" onclick="nextBuildStep()">Next phase →</button>
+        </div>
+      </div>
+      <div class="theatre-blocks" id="theatreBlocks"></div>
+    </div>
+    <div class="cta-note">
+      <div class="cta-text"><strong>This is a starting point for imagination, not a blueprint.</strong> For actual implementation at population scale, you'd work with the DIGIT team — they've done this before.</div>
+      <a href="https://egov.org.in/contact/" target="_blank" class="cta-link">Talk to the DIGIT team →</a>
+    </div>
+  </div>
+</section>
+
+<!-- DEVELOPERS -->
+<section id="developers">
+  <div style="display:flex;align-items:center;gap:1rem;margin-bottom:0.75rem;">
+    <h2 class="section-title" style="margin:0;">Go deeper.</h2>
+    <span style="font-family:var(--font-mono);font-size:0.72rem;padding:0.3rem 0.75rem;background:rgba(129,140,248,0.1);border:1px solid var(--identity);border-radius:4px;color:var(--identity);">for developers</span>
+  </div>
+  <p class="section-sub" style="margin-bottom:2rem;">DIGIT is production-grade, MIT-licensed, and actively maintained.</p>
+  <div class="dev-grid">
+    <a href="https://github.com/egovernments/Digit-Core" target="_blank" class="dev-card"><div class="dc-label">GITHUB REPO</div><div class="dc-title">Digit-Core</div><div class="dc-desc">The main repository. Core services, accelerators, utilities, and build configs. MIT licensed.</div></a>
+    <a href="https://github.com/egovernments/Digit-Core/tree/master/core-services" target="_blank" class="dev-card"><div class="dc-label">SOURCE CODE</div><div class="dc-title">Core Services</div><div class="dc-desc">Individual microservice folders — each independently deployable, documented, and configurable.</div></a>
+    <a href="https://github.com/egovernments/Digit-Core/tree/master/tutorials/backend-developer-guide" target="_blank" class="dev-card"><div class="dc-label">TUTORIAL</div><div class="dc-title">Backend Developer Guide</div><div class="dc-desc">Step-by-step guide to building a new service on DIGIT — from skeleton to deployment.</div></a>
+    <a href="https://core.digit.org/guides/installation-guide" target="_blank" class="dev-card"><div class="dc-label">DOCUMENTATION</div><div class="dc-title">Installation Guide</div><div class="dc-desc">Get DIGIT running locally or on cloud. Kubernetes-based, well documented.</div></a>
+    <a href="https://digit-api.apidog.io/" target="_blank" class="dev-card"><div class="dc-label">API REFERENCE</div><div class="dc-title">API Playground</div><div class="dc-desc">Interactive API explorer for all DIGIT core services. Test endpoints from the browser.</div></a>
+    <a href="https://core.digit.org/accelerators/sandbox" target="_blank" class="dev-card"><div class="dc-label">SANDBOX</div><div class="dc-title">Live Environment</div><div class="dc-desc">Access a running DIGIT instance before setting up your own.</div></a>
+  </div>
+  <div class="service-map">
+    <div class="sm-title">Direct links to service source code</div>
+    <div class="svc-rows" id="serviceRows"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="ft">Built to help people understand <a href="https://github.com/egovernments/Digit-Core" target="_blank">DIGIT</a> — an open-source platform by <a href="https://egov.org.in" target="_blank">eGov Foundation</a>. Certified Digital Public Good.</div>
+  <div class="fl">
+    <a href="https://core.digit.org" target="_blank">Documentation</a>
+    <a href="https://github.com/egovernments/Digit-Core/discussions" target="_blank">Community</a>
+    <a href="https://egov.org.in/contact/" target="_blank">Contact DIGIT Team</a>
+  </div>
+</footer>
+
+<script>
+const clusters = [
+  { id:'identity', name:'Identity & Trust', color:'var(--identity)', hex:'#818cf8', shadow:'#4338ca', stud:'#a5b4fc', alpha:'rgba(129,140,248,0.22)', icon:'🔐', tagline:'Who are you, and can we trust you?',
+    blocks:[
+      {id:'user',name:'User Service',simple:'Manages who can access the system — citizens, officers, admins.',tech:'User registration, auth, profile management. REST CRUD. Tenant-aware.'},
+      {id:'access',name:'Access Control',simple:'Decides who is allowed to do what — read, write, approve, reject.',tech:'Role-based access control (RBAC). Action-level permissions. Multi-tenant.'},
+      {id:'otp',name:'OTP Service',simple:'Verifies real people using one-time codes sent to their phone.',tech:'Time-bound OTP via SMS/email. Configurable TTL and retry logic.'},
+      {id:'api-gateway',name:'API Gateway',simple:'The secure front door — all requests pass through here first.',tech:'Zuul-based gateway. Auth verification, rate limiting, request routing.'},
+      {id:'encryption',name:'Encryption Service',simple:'Keeps sensitive personal data private — names, addresses, IDs.',tech:'AES-256 encryption for PII fields. Centralized key management.'},
+      {id:'audit',name:'Audit Service',simple:'Keeps an immutable record of every action taken in the system.',tech:'Append-only audit log. Kafka-backed. Tamper-evident compliance trail.'},
+    ]},
+  { id:'registry', name:'Registries & Data', color:'var(--registry)', hex:'#34d399', shadow:'#059669', stud:'#6ee7b7', alpha:'rgba(52,211,153,0.22)', icon:'📊', tagline:'The single source of truth for any entity.',
+    blocks:[
+      {id:'mdms',name:'MDMS',simple:'The master registry — store structured data about any type of entity.',tech:'Master Data Management Service V2. Hierarchical, multi-tenant, schema-flexible.'},
+      {id:'boundary',name:'Boundary Service',simple:'Geographic hierarchy from country down to ward or village.',tech:'Hierarchical boundary definitions. GeoJSON support. Configurable levels.'},
+      {id:'id-gen',name:'ID Generation',simple:'Generates unique, formatted IDs for every record in the system.',tech:'Configurable ID patterns. Sequence-based. Format: PT/2024/000001.'},
+      {id:'indexer',name:'Indexer',simple:'Makes all records instantly searchable across any field.',tech:'Elasticsearch-backed. Kafka consumer. YAML-configured index mapping.'},
+      {id:'persister',name:'Persister',simple:'Reliably writes all data to the database without losing anything.',tech:'Kafka-based async persistence. PostgreSQL backend. Retry logic built-in.'},
+      {id:'location',name:'Location',simple:'Locality and address master data — wards, mohallas, localities.',tech:'Hierarchical location master. Integrates with boundary service.'},
+    ]},
+  { id:'workflow', name:'Workflow & Process', color:'var(--workflow)', hex:'#fbbf24', shadow:'#b45309', stud:'#fde68a', alpha:'rgba(251,191,36,0.22)', icon:'⚙️', tagline:'Turns registries into governed, auditable processes.',
+    blocks:[
+      {id:'workflow-svc',name:'Workflow Engine',simple:'Configurable multi-step approval — apply, verify, inspect, approve, reject.',tech:'State machine engine. Configurable transitions, roles, SLAs, escalations. YAML-driven.'},
+      {id:'service-request',name:'Service Request',simple:'The form where any citizen request or application begins.',tech:'Generic service request creation and tracking. Hooks into workflow engine.'},
+    ]},
+  { id:'notifications', name:'Notifications', color:'var(--notifications)', hex:'#60a5fa', shadow:'#1d4ed8', stud:'#93c5fd', alpha:'rgba(96,165,250,0.22)', icon:'📣', tagline:'Reach anyone, in any language, on any channel.',
+    blocks:[
+      {id:'sms',name:'SMS Notifications',simple:'Text message alerts — updates, approvals, reminders — to any phone.',tech:'Pluggable SMS provider. Template-based. Multi-language via localization.'},
+      {id:'email',name:'Email Notifications',simple:'Email alerts with attachments — notices, certificates, reports.',tech:'SMTP-based. Mustache template-driven. File attachments supported.'},
+      {id:'localization',name:'Localization',simple:'Every message and document in any language and script.',tech:'Key-value message store. Tenant and locale-specific overrides. Runtime configurable.'},
+      {id:'url-shortener',name:'URL Shortener',simple:'Short links so a full receipt URL fits inside a text message.',tech:'Custom URL shortening service. Click analytics included.'},
+    ]},
+  { id:'documents', name:'Documents & Records', color:'var(--documents)', hex:'#a78bfa', shadow:'#6d28d9', stud:'#c4b5fd', alpha:'rgba(167,139,250,0.22)', icon:'📄', tagline:'Generate, upload, store and retrieve official documents.',
+    blocks:[
+      {id:'filestore',name:'FileStore',simple:'Upload and retrieve any file — photos, reports, satellite images.',tech:'S3-compatible object storage. Multi-tenant. Signed URLs. Version support.'},
+      {id:'pdf',name:'PDF Generation',simple:'Generate official certificates, tax receipts, and notices on demand.',tech:'Mustache template-based PDF. Per-service configurable. QR code support.'},
+    ]},
+  { id:'payments', name:'Payments', color:'var(--payments)', hex:'#f87171', shadow:'#b91c1c', stud:'#fca5a5', alpha:'rgba(248,113,113,0.22)', icon:'💳', tagline:'Collect fees, fines, and disburse benefits — all tracked.',
+    blocks:[
+      {id:'pg',name:'Payment Gateway',simple:'Collect payments via UPI, cards, net banking, or cash — at any scale.',tech:'Pluggable payment provider. Demand–bill–receipt lifecycle. Reconciliation built-in.'},
+    ]},
+];
+
+const principles = [
+  {name:'Modular', cls:'am', html:'<div class="pb pb1"></div><div class="pb pb2"></div><div class="pb pb3"></div>', desc:'Each building block does one thing and does it well. Pick only what you need — deploy, update, or replace any block independently without touching the rest.'},
+  {name:'Reusable', cls:'ar', html:'<div class="stack"><div class="pb pbh"></div><div class="pb"></div></div><div class="sep"></div><div class="stack"><div class="pb pbh"></div><div class="pb"></div></div>', desc:'The same notification service that sends a tax receipt also sends a flood alert or a vaccination reminder. Build once, use across every service.'},
+  {name:'Interoperable', cls:'ai', html:'<div class="pb pba"></div><div class="conn"></div><div class="pb pbb"></div>', desc:'Every service speaks standard APIs. Different agencies, systems, domains — all able to exchange data without custom integration work.'},
+  {name:'Open Source', cls:'ao', html:'<div class="pb pb1"></div><div class="pb pb2"></div>', desc:'MIT licensed. No vendor lock-in. Governments own their stack. A global community maintains and improves it. Certified Digital Public Good.'},
+  {name:'Multi-Tenant', cls:'amt', html:'<div class="pb pb1"></div><div class="pb pb2"></div><div class="pb pb3"></div>', desc:'One deployment, thousands of cities. Each agency gets its own data, configuration, and users — on shared, cost-efficient infrastructure.'},
+  {name:'Secure by Design', cls:'as', html:'<div class="pb pb1"></div><div class="pb pb2"></div><div class="pb pb3"></div>', desc:'Encryption, role-based access, OTP authentication, and tamper-evident audit logs are built in — not bolted on afterwards.'},
+  {name:'Population Scale', cls:'asc', html:'<div class="pb pb1"></div><div class="pb pb2"></div><div class="pb pb3"></div><div class="pb pb4"></div>', desc:'Designed from day one for tens of millions of transactions. 1,000+ cities and national health campaigns across Africa prove it holds.'},
+];
+
+const tutorialSteps = [
+  {title:'A property exists in a registry', story:'Before any transaction can happen, the property must exist as a structured record — with a unique ID, linked to the city\'s geographic hierarchy.', plain:'The Property Registry (MDMS) stores every property. The Boundary Service gives it a location — State → District → City → Ward → Locality. ID Generation gives it a canonical ID like PT/BLR/2024/000142.', blocksActive:['mdms','boundary','id-gen','location'], highlight:'registry', infra:'Data sits in PostgreSQL, written via the Persister service. The Indexer maintains an Elasticsearch copy so officers can search across a million records in milliseconds.'},
+  {title:'The citizen logs in with OTP verification', story:'A mobile number is entered. A 6-digit code arrives in seconds. Identity confirmed — and the system checks what this user is permitted to see.', plain:'User Service recognizes the citizen. OTP Service confirms it\'s them. Access Control checks that this citizen can view their own property — and not someone else\'s.', blocksActive:['user','otp','api-gateway','access'], highlight:'identity', infra:'Every request passes through the API Gateway — auth is verified before it touches any service. Encryption Service protects PII fields (name, mobile number) at rest in the database.'},
+  {title:'A demand notice is generated', story:'The system calculates annual tax due based on property type, floor area, and usage. A formal demand notice is produced automatically.', plain:'PDF Service generates the notice using a city-configured template. Localization Service renders it in the citizen\'s preferred language — Hindi, Kannada, Tamil, or English.', blocksActive:['pdf','localization','filestore'], highlight:'documents', infra:'The generated PDF is stored in FileStore (S3-compatible object storage). A signed URL is attached to the transaction record for future download.'},
+  {title:'Payment is made online', story:'The citizen taps "Pay Now." Rs. 4,200 is processed through UPI in under 3 seconds.', plain:'Payment Gateway handles the transaction — creates a demand, processes payment, records the receipt. Multiple payment providers can be plugged in without changing any other service.', blocksActive:['pg'], highlight:'payments', infra:'Payment status is published to Kafka. Downstream services — receipt generation, notification trigger — consume this event asynchronously. The payment flow is never blocked waiting for SMS delivery.'},
+  {title:'An SMS confirmation arrives', story:'"Your property tax of ₹4,200 has been received. Receipt No: PT2024-089123." Delivered within seconds.', plain:'SMS Notification is triggered by the payment event. URL Shortener compresses the receipt link to fit in the message. Localization renders it in the right language automatically.', blocksActive:['sms','url-shortener','localization'], highlight:'notifications', infra:'The notification consumer listens on Kafka for payment success events and fires SMS asynchronously. If the SMS provider is slow, it doesn\'t delay the payment confirmation.'},
+  {title:'Officers can search instantly', story:'The tax officer can pull up any payment in milliseconds — by name, property ID, receipt number, or locality. A city with 300,000 properties feels instant.', plain:'The Indexer maintains a search-optimized copy of all records in Elasticsearch. Access Control ensures an officer only sees records within their jurisdiction.', blocksActive:['indexer','access','boundary'], highlight:'registry', infra:'The Indexer is an Elasticsearch consumer of Kafka events — search is eventually consistent but near-real-time. Access Control scopes queries by tenant and role automatically.'},
+  {title:'Every action is permanently audited', story:'An auditor — or a court — can verify every step: who logged in, who generated the demand, who processed the payment, and exactly when.', plain:'The Audit Service keeps an immutable, tamper-evident log of every action. It cannot be edited, deleted, or rewritten after the fact.', blocksActive:['audit','persister'], highlight:'identity', infra:'The Audit Service is Kafka-backed and append-only. The Persister handles durable writes to PostgreSQL with retry logic — no record is ever lost silently.'},
+];
+
+const domains = [
+  {id:'climate', name:'Climate & Environment', emoji:'🌍', scenario:'Pollution monitoring & enforcement',
+   variants:['Industrial emissions','Community reporting','Forest & land registry'],
+   phases:[
+    {title:'Register every polluting entity', desc:'Every industrial unit, vehicle fleet, or waste facility is registered as a structured entity — linked to a geographic jurisdiction, assigned a canonical ID, and classified by type and risk level.', callout:'The same registry that holds a city\'s properties now holds its polluters. Boundary Service maps each entity to the right Pollution Control Board jurisdiction.', blocks:['mdms','boundary','id-gen','location']},
+    {title:'Build the inspection workflow', desc:'Field officers receive assigned inspections, log findings on mobile, and attach photos as evidence. Violations trigger escalation. The workflow is configurable — different rules for different categories of polluter.', callout:'Workflow Engine runs the state machine: Assigned → Inspected → Violation Raised → Notice Issued → Penalty Collected → Closed.', blocks:['workflow-svc','service-request','filestore','user','access']},
+    {title:'Close the loop — notices, penalties, alerts', desc:'Violation notices are generated as PDFs and served to operators. Penalties are collected through the payment system. Communities receive air quality alerts. Every action is immutably audited.', callout:'The same infrastructure that sends a property tax receipt now sends a pollution violation notice — in the operator\'s language, with a payment link attached.', blocks:['pdf','pg','sms','audit','indexer','localization']},
+  ]},
+  {id:'health', name:'Public Health', emoji:'🏥', scenario:'Health worker coordination & case tracking',
+   variants:['Disease surveillance','Vaccination campaigns','Health worker registry'],
+   phases:[
+    {title:'Register health workers and facilities', desc:'Health workers, facilities, and household clusters are registered in layered registries — each assigned an ID, linked to a geographic boundary, with roles and permissions defined per level.', callout:'DIGIT was adapted for health campaigns in multiple African countries — the registry layer is proven for this exact pattern.', blocks:['mdms','boundary','id-gen','user','access']},
+    {title:'Case reporting workflow', desc:'A health worker flags a suspected case via a service request. It escalates to a supervisor, triggers a home visit assignment, and closes with outcome recorded. SLAs are tracked automatically.', callout:'Workflow Engine handles the state machine: Reported → Reviewed → Visit Assigned → Outcome Recorded → Case Closed.', blocks:['workflow-svc','service-request','filestore','localization']},
+    {title:'Alerts, records, and accountability', desc:'SMS alerts go to families. Outcome data flows into searchable records. Every case is audited. Administrators get a real-time view across the entire geography.', callout:'The notification and audit layers are identical to the property tax system — built once, reused across every domain.', blocks:['sms','audit','indexer','pdf','persister']},
+  ]},
+  {id:'disaster', name:'Disaster Response', emoji:'🚨', scenario:'Flood relief application & disbursement',
+   variants:['Relief application & verification','Pre-registration of vulnerable households','Resource & supply tracking'],
+   phases:[
+    {title:'Pre-register vulnerable households', desc:'During normal times, register flood-prone households by geographic boundary — before disaster strikes. A canonical ID for every household, linked to administrative hierarchy.', callout:'When a disaster is declared, the registry is already there. Activation takes days, not months.', blocks:['mdms','boundary','id-gen','encryption']},
+    {title:'Run the relief application process', desc:'Affected families apply via SMS or a simple form. Applications are assigned to field officers for verification. Approvals trigger disbursement. Every decision is recorded with the officer\'s ID and timestamp.', callout:'The Workflow Engine ensures no application falls through the cracks — and every approval is traceable to a named official.', blocks:['service-request','workflow-svc','user','access','filestore']},
+    {title:'Disburse and confirm', desc:'Approved relief is disbursed through the payment gateway. Recipients receive SMS confirmation. The entire trail from application to receipt is audited and publicly accountable.', callout:'A district with 50,000 flood-affected households could move from application to verified disbursement in days, not months.', blocks:['pg','sms','pdf','audit','indexer']},
+  ]},
+  {id:'agriculture', name:'Agriculture', emoji:'🌾', scenario:'Farmer registry & subsidy disbursement',
+   variants:['Subsidy scheme management','Crop insurance verification','Input supply chain tracking'],
+   phases:[
+    {title:'One unified farmer registry', desc:'A single registry consolidates farmer data across multiple schemes — linked to land records and geographic boundaries at block and district level. One canonical ID per farmer, across all government programmes.', callout:'This alone eliminates ghost beneficiaries and duplicate subsidy claims — one of the biggest sources of leakage.', blocks:['mdms','boundary','id-gen','encryption','location']},
+    {title:'Scheme application and verification', desc:'Farmers apply for subsidies via a service request. The workflow routes to patwaris for land verification, then district officers for approval. Every step is time-stamped and role-assigned.', callout:'The same Workflow Engine that handles property tax inspection handles subsidy verification — configured differently, same underlying infrastructure.', blocks:['service-request','workflow-svc','user','access','filestore']},
+    {title:'Disbursement with a full trail', desc:'Approved subsidies are disbursed via payment gateway. Farmers receive SMS updates at every step, in their language. Officers see a real-time dashboard across their entire geography.', callout:'At state scale — this consolidates registries across dozens of scheme-specific databases on shared infrastructure that costs a fraction of independent systems.', blocks:['pg','sms','pdf','localization','audit','indexer']},
+  ]},
+  {id:'urban', name:'Urban Governance', emoji:'🏙️', scenario:'Trade licenses, permits & grievance redressal',
+   variants:['Trade license management','Building permits','Citizen grievance redressal'],
+   phases:[
+    {title:'The business and property registries', desc:'Every business, property, and street vendor is registered with a canonical ID, linked to ward and locality. This is the foundation for every urban service that follows — all on shared infrastructure.', callout:'DIGIT already does this for 1,000+ cities — the same registry infrastructure handles property tax, trade licenses, water connections, and building permits simultaneously.', blocks:['mdms','boundary','id-gen','location']},
+    {title:'Application to approval workflow', desc:'A business applies for a trade license via a service request. The workflow routes through zonal officer verification, inspection scheduling, and final approval. Citizens track status in real time.', callout:'The same workflow configuration handles a 3-step license renewal and a 12-step building permit — different configurations, same engine.', blocks:['service-request','workflow-svc','user','access','filestore']},
+    {title:'Payment, certificate, and audit', desc:'License fees are collected via the payment gateway. A digitally-generated certificate is produced. An immutable audit trail records every decision. Citizens get SMS updates throughout.', callout:'All urban services share the same notification, payment, and audit infrastructure. Cost of adding a new service is a fraction of building from scratch.', blocks:['pg','pdf','sms','audit','indexer','localization']},
+  ]},
+];
+
+const serviceLinks = [
+  {label:'User & Access', links:[{name:'egov-user',url:'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-user'},{name:'egov-accesscontrol',url:'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-accesscontrol'}]},
+  {label:'Workflow', links:[{name:'egov-workflow-v2',url:'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-workflow-v2'}]},
+  {label:'Master Data', links:[{name:'egov-mdms-service',url:'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-mdms-service'},{name:'boundary-service',url:'https://github.com/egovernments/Digit-Core/tree/master/core-services/boundary-service'}]},
+  {label:'Notifications', links:[{name:'egov-notification-sms',url:'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-notification-sms'},{name:'egov-notification-mail',url:'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-notification-mail'}]},
+  {label:'Documents', links:[{name:'pdf-service',url:'https://github.com/egovernments/Digit-Core/tree/master/core-services/pdf-service'},{name:'egov-filestore',url:'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-filestore'}]},
+  {label:'Data & Search', links:[{name:'egov-indexer',url:'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-indexer'},{name:'egov-persister',url:'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-persister'},{name:'egov-idgen',url:'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-idgen'}]},
+  {label:'Security', links:[{name:'egov-enc-service',url:'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-enc-service'},{name:'egov-otp',url:'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-otp'}]},
+  {label:'Payment', links:[{name:'egov-pg-service',url:'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-pg-service'}]},
+];
+
+// STATE
+let currentStep = 0, showInfra = false;
+let selectedDomain = null, currentBuildStep = 0;
+
+// HELPERS
+function getCluster(id) { return clusters.find(c => c.blocks.some(b => b.id === id)); }
+
+// RENDER ACT 1
+function renderHeroChips() {
+  const el = document.getElementById('heroChips');
+  clusters.flatMap(c => c.blocks).filter((_,i) => i % 2 === 0).slice(0,14).forEach((b,i) => {
+    const c = getCluster(b.id);
+    const chip = document.createElement('span');
+    chip.className = 'floating-tag';
+    chip.textContent = b.name;
+    chip.style.cssText = `background:${c.hex}18;border:1px solid ${c.hex}44;color:${c.hex};animation-delay:${i*0.35}s;animation-duration:${5+i*0.25}s;`;
+    el.appendChild(chip);
+  });
+}
+
+function renderClusters() {
+  const grid = document.getElementById('clustersGrid');
+  clusters.forEach(c => {
+    const card = document.createElement('div');
+    card.className = 'baseplate'; card.style.setProperty('--cluster-color', c.color); card.style.setProperty('--cluster-alpha', c.alpha);
+    const bricks = c.blocks.map(b => `
+      <div class="brick-wrap">
+        <div class="brick-tag active" style="--brick-color:${c.hex}25;--brick-shadow:${c.shadow}66;--brick-stud:${c.stud}55;color:${c.hex};">${b.name}</div>
+        <div class="btip" style="border-color:${c.hex};"><strong style="color:${c.hex};font-size:0.74rem;">${b.name}</strong><br><span class="block-simple">${b.simple}</span><span class="block-tech" style="color:${c.hex};">${b.tech}</span></div>
+      </div>`).join('');
+    card.innerHTML = `<div class="bp-header"><div class="bp-dot"></div>${c.icon} ${c.name}</div><div class="c-tagline">${c.tagline}</div><div class="bricks-row">${bricks}</div>`;
+    grid.appendChild(card);
+  });
+}
+
+// RENDER PRINCIPLES
+function renderPrinciples() {
+  const grid = document.getElementById('principlesGrid');
+  principles.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'principle-card';
+    card.innerHTML = `<div class="p-anim ${p.cls}">${p.html}</div><div class="p-name">${p.name}</div><div class="p-desc">${p.desc}</div>`;
+    grid.appendChild(card);
+  });
+}
+
+// RENDER TUTORIAL
+function renderTutorial() {
+  const progress = document.getElementById('stepProgress');
+  tutorialSteps.forEach((_,i) => { const d = document.createElement('div'); d.className='step-dot'; d.onclick=()=>goToStep(i); progress.appendChild(d); });
+  const container = document.getElementById('tutorialBlocks');
+  clusters.forEach(c => {
+    const panel = document.createElement('div'); panel.className='baseplate'; panel.id=`t-${c.id}`;
+    panel.style.setProperty('--cluster-color', c.color); panel.style.setProperty('--cluster-alpha', c.alpha);
+    const bricks = c.blocks.map(b => `<div class="brick-tag" id="tb-${b.id}" style="--brick-color:${c.hex}25;--brick-shadow:${c.shadow}66;--brick-stud:${c.stud}55;color:${c.hex};">${b.name}</div>`).join('');
+    panel.innerHTML = `<div class="bp-header"><div class="bp-dot"></div>${c.icon} ${c.name}</div><div class="bricks-row">${bricks}</div>`;
+    container.appendChild(panel);
+  });
+  updateStep();
+}
+
+function updateStep() {
+  const s = tutorialSteps[currentStep];
+  document.getElementById('stepNum').textContent = `STEP ${currentStep+1} OF ${tutorialSteps.length}`;
+  document.getElementById('stepTitle').textContent = s.title;
+  document.getElementById('stepStory').textContent = s.story;
+  document.getElementById('stepPlain').textContent = s.plain;
+  const infEl = document.getElementById('infraNote');
+  if (s.infra) { infEl.textContent = '⬡ ' + s.infra; infEl.className = 'infra-note' + (showInfra ? ' visible' : ''); } else { infEl.className = 'infra-note'; }
+  document.querySelectorAll('.step-dot').forEach((d,i) => d.className = 'step-dot' + (i===currentStep?' active':i<currentStep?' done':''));
+  document.getElementById('btnPrev').disabled = currentStep === 0;
+  document.getElementById('btnNext').textContent = currentStep === tutorialSteps.length-1 ? 'Try your domain →' : 'Next step →';
+  document.querySelectorAll('[id^="t-"].baseplate').forEach(el => el.classList.remove('lit'));
+  document.querySelectorAll('#tutorialBlocks .brick-tag').forEach(el => el.classList.remove('active','snap'));
+  s.blocksActive.forEach((id, idx) => {
+    const el = document.getElementById(`tb-${id}`); if (!el) return;
+    setTimeout(() => { el.classList.add('active','snap'); setTimeout(()=>el.classList.remove('snap'),380); }, idx*85);
+    const c = getCluster(id); if (!c) return;
+    setTimeout(() => { const p = document.getElementById(`t-${c.id}`); if(p) p.classList.add('lit'); }, idx*85+50);
+  });
+}
+function nextStep() { if(currentStep<tutorialSteps.length-1){currentStep++;updateStep();}else{document.getElementById('imagine').scrollIntoView({behavior:'smooth'});} }
+function prevStep() { if(currentStep>0){currentStep--;updateStep();} }
+function goToStep(i) { currentStep=i; updateStep(); }
+function toggleInfra() { showInfra=!showInfra; document.getElementById('infraSwitch').className='toggle-switch'+(showInfra?' on':''); const s=tutorialSteps[currentStep]; if(s.infra) document.getElementById('infraNote').className='infra-note'+(showInfra?' visible':''); }
+
+// RENDER DOMAINS
+function renderDomains() {
+  const grid = document.getElementById('domainsGrid');
+  domains.forEach(d => {
+    const card = document.createElement('div'); card.className='domain-card'; card.id=`domain-${d.id}`;
+    card.innerHTML = `<span class="domain-emoji">${d.emoji}</span><div class="domain-name">${d.name}</div><div class="domain-scenario">${d.scenario}</div>`;
+    card.onclick = () => selectDomain(d.id); grid.appendChild(card);
+  });
+  const container = document.getElementById('theatreBlocks');
+  clusters.forEach(c => {
+    const panel = document.createElement('div'); panel.className='baseplate'; panel.id=`i-${c.id}`;
+    panel.style.setProperty('--cluster-color', c.color); panel.style.setProperty('--cluster-alpha', c.alpha);
+    const bricks = c.blocks.map(b => `<div class="brick-tag" id="ib-${b.id}" style="--brick-color:${c.hex}25;--brick-shadow:${c.shadow}66;--brick-stud:${c.stud}55;color:${c.hex};">${b.name}</div>`).join('');
+    panel.innerHTML = `<div class="bp-header"><div class="bp-dot"></div>${c.icon} ${c.name}</div><div class="bricks-row">${bricks}</div>`;
+    container.appendChild(panel);
+  });
+}
+
+function selectFocus(btn) {
+  document.querySelectorAll('.focus-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('domainsGrid').classList.add('ready');
+}
+
+function selectDomain(id) {
+  const domain = domains.find(d => d.id === id); if (!domain) return;
+  selectedDomain = id;
+  document.querySelectorAll('.domain-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById(`domain-${id}`).classList.add('selected');
+  const vr = document.getElementById('variantRow');
+  // Remove old variant buttons
+  Array.from(vr.querySelectorAll('.variant-btn')).forEach(el => el.remove());
+  domain.variants.forEach((v, i) => {
+    const btn = document.createElement('button'); btn.className='variant-btn'+(i===0?' selected':'');
+    btn.textContent = v; btn.onclick = () => { document.querySelectorAll('.variant-btn').forEach(b=>b.classList.remove('selected')); btn.classList.add('selected'); };
+    vr.appendChild(btn);
+  });
+  vr.className = 'variant-row visible';
+  currentBuildStep = 0;
+  resetTheatre();
+  document.getElementById('buildTheatre').className = 'build-theatre visible';
+  buildProgress(domain);
+  updateBuildStep(domain);
+  setTimeout(() => document.getElementById('buildTheatre').scrollIntoView({behavior:'smooth', block:'nearest'}), 120);
+}
+
+function resetTheatre() {
+  document.querySelectorAll('#theatreBlocks .baseplate').forEach(el => el.classList.remove('lit'));
+  document.querySelectorAll('#theatreBlocks .brick-tag').forEach(el => el.classList.remove('active','snap'));
+}
+
+function buildProgress(domain) {
+  const progress = document.getElementById('buildProgress'); progress.innerHTML = '';
+  domain.phases.forEach((_,i) => { const d=document.createElement('div'); d.className='build-dot'; d.onclick=()=>goToBuildStep(i); progress.appendChild(d); });
+}
+
+function updateBuildStep(domain) {
+  const phase = domain.phases[currentBuildStep];
+  document.getElementById('buildPhase').textContent = `PHASE ${currentBuildStep+1} OF ${domain.phases.length} — ${domain.name.toUpperCase()}`;
+  document.getElementById('buildTitle').textContent = phase.title;
+  document.getElementById('buildDesc').textContent = phase.desc;
+  document.getElementById('buildCallout').textContent = phase.callout;
+  document.querySelectorAll('#buildProgress .build-dot').forEach((d,i) => d.className='build-dot'+(i===currentBuildStep?' active':i<currentBuildStep?' done':''));
+  document.getElementById('btnBuildPrev').disabled = currentBuildStep === 0;
+  document.getElementById('btnBuildNext').textContent = currentBuildStep === domain.phases.length-1 ? 'Start over ↺' : 'Next phase →';
+  // Snap in new blocks; keep previous active
+  phase.blocks.forEach((id, idx) => {
+    const el = document.getElementById(`ib-${id}`); if (!el) return;
+    if (!el.classList.contains('active')) {
+      setTimeout(() => { el.classList.add('active','snap'); setTimeout(()=>el.classList.remove('snap'),380); }, idx*90);
+    }
+    const c = getCluster(id); if (!c) return;
+    setTimeout(() => { const p = document.getElementById(`i-${c.id}`); if(p) p.classList.add('lit'); }, idx*90+60);
+  });
+}
+
+function nextBuildStep() {
+  const domain = domains.find(d => d.id === selectedDomain); if (!domain) return;
+  if (currentBuildStep < domain.phases.length-1) { currentBuildStep++; updateBuildStep(domain); }
+  else { currentBuildStep=0; resetTheatre(); buildProgress(domain); updateBuildStep(domain); }
+}
+function prevBuildStep() {
+  const domain = domains.find(d => d.id === selectedDomain); if (!domain || currentBuildStep===0) return;
+  currentBuildStep--;
+  resetTheatre();
+  domain.phases.slice(0, currentBuildStep+1).forEach(p => p.blocks.forEach(id => { const el=document.getElementById(`ib-${id}`); if(el) el.classList.add('active'); const c=getCluster(id); if(c){const p=document.getElementById(`i-${c.id}`);if(p)p.classList.add('lit');} }));
+  updateBuildStep(domain);
+}
+function goToBuildStep(i) {
+  const domain = domains.find(d => d.id === selectedDomain); if (!domain) return;
+  currentBuildStep = i; resetTheatre();
+  domain.phases.slice(0, i+1).forEach(p => p.blocks.forEach(id => { const el=document.getElementById(`ib-${id}`); if(el) el.classList.add('active'); const c=getCluster(id); if(c){const p=document.getElementById(`i-${c.id}`);if(p)p.classList.add('lit');} }));
+  updateBuildStep(domain);
+}
+
+// RENDER DEVELOPERS
+function renderServiceRows() {
+  const container = document.getElementById('serviceRows');
+  serviceLinks.forEach(row => {
+    const el = document.createElement('div'); el.className = 'svc-row';
+    const links = row.links.map(l => `<a href="${l.url}" target="_blank" class="svc-link">${l.name}</a>`).join('');
+    el.innerHTML = `<div class="svc-label">${row.label}</div><div class="svc-links">${links}</div>`;
+    container.appendChild(el);
+  });
+}
+
+function setDepth(mode) {
+  document.body.classList.toggle('tech-depth', mode==='tech');
+  document.getElementById('btnTech').classList.toggle('active', mode==='tech');
+  document.getElementById('btnSimple').classList.toggle('active', mode==='simple');
+}
+
+// INIT
+renderHeroChips(); renderClusters(); renderPrinciples(); renderTutorial(); renderDomains(); renderServiceRows();
+</script>
+</body>
+</html>
