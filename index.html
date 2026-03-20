@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DIGIT Building Blocks — Digital Infrastructure for Governance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #080d1a;
+    --surface: #0f1629;
+    --surface2: #172040;
+    --border: rgba(255,255,255,0.07);
+    --text: #e8eaf2;
+    --text-dim: #7a82a0;
+    --identity: #818cf8;
+    --registry: #34d399;
+    --workflow: #fbbf24;
+    --notifications: #60a5fa;
+    --documents: #a78bfa;
+    --payments: #f87171;
+    --font-display: 'Syne', sans-serif;
+    --font-body: 'IBM Plex Sans', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-weight: 300;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(8,13,26,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    height: 56px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo {
+    font-family: var(--font-display);
+    font-weight: 800; font-size: 1.1rem;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+  .nav-logo span { color: var(--registry); }
+  .nav-links { display: flex; gap: 0.25rem; }
+  .nav-links a {
+    color: var(--text-dim); text-decoration: none;
+    font-size: 0.82rem; font-weight: 400;
+    padding: 0.35rem 0.75rem; border-radius: 4px;
+    transition: all 0.15s;
+  }
+  .nav-links a:hover { color: var(--text); background: var(--surface2); }
+  .nav-links a.active { color: var(--text); }
+
+  /* ── SECTIONS ── */
+  section { min-height: 100vh; padding: 80px 2rem 4rem; }
+
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem; letter-spacing: 0.15em;
+    color: var(--text-dim); text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 800; line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin-bottom: 1rem;
+  }
+  .section-sub {
+    color: var(--text-dim);
+    font-size: 1.05rem;
+    max-width: 640px;
+    margin-bottom: 3rem;
+  }
+
+  /* ── ACT 1: ORIENT ── */
+  #orient {
+    position: relative;
+    display: flex; flex-direction: column;
+    padding-top: 96px;
+  }
+  .orient-header { max-width: 700px; margin-bottom: 3rem; }
+  .orient-intro {
+    font-size: 1.15rem; color: var(--text-dim);
+    max-width: 620px; margin-bottom: 2rem;
+    line-height: 1.7;
+  }
+  .orient-intro strong { color: var(--text); font-weight: 500; }
+
+  .depth-toggle {
+    display: inline-flex; gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 6px; overflow: hidden;
+    margin-bottom: 3rem;
+  }
+  .depth-btn {
+    padding: 0.45rem 1rem;
+    font-family: var(--font-mono); font-size: 0.78rem;
+    background: transparent; border: none;
+    color: var(--text-dim); cursor: pointer;
+    transition: all 0.15s;
+  }
+  .depth-btn.active {
+    background: var(--surface2);
+    color: var(--text);
+  }
+
+  /* Cluster grid */
+  .clusters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .cluster-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .cluster-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--cluster-color);
+    opacity: 0.8;
+  }
+  .cluster-card:hover {
+    border-color: var(--cluster-color);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+  .cluster-card.expanded { border-color: var(--cluster-color); }
+
+  .cluster-header {
+    display: flex; align-items: center; gap: 0.75rem;
+    margin-bottom: 0.6rem;
+  }
+  .cluster-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: rgba(255,255,255,0.05);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    border: 1px solid var(--cluster-color);
+  }
+  .cluster-name {
+    font-family: var(--font-display);
+    font-weight: 700; font-size: 1rem;
+    color: var(--cluster-color);
+  }
+  .cluster-tagline {
+    font-size: 0.88rem; color: var(--text-dim);
+    margin-bottom: 1.25rem; line-height: 1.5;
+  }
+
+  .blocks-list { display: flex; flex-direction: column; gap: 0.5rem; }
+  .block-item {
+    padding: 0.6rem 0.75rem;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 6px;
+    transition: all 0.15s;
+  }
+  .block-item:hover { background: rgba(255,255,255,0.06); border-color: var(--cluster-color); }
+  .block-item-name {
+    font-size: 0.85rem; font-weight: 500; color: var(--text);
+    margin-bottom: 0.2rem;
+  }
+  .block-item-desc {
+    font-size: 0.78rem; color: var(--text-dim); line-height: 1.4;
+  }
+  .block-item-tech {
+    display: none;
+    font-family: var(--font-mono);
+    font-size: 0.72rem; color: var(--cluster-color);
+    margin-top: 0.35rem; line-height: 1.4;
+  }
+  body.tech-depth .block-item-tech { display: block; }
+  body.tech-depth .block-item-desc { display: none; }
+
+  /* ── ACT 2: TUTORIAL ── */
+  #understand {
+    background: linear-gradient(180deg, var(--bg) 0%, var(--surface) 100%);
+    padding-top: 80px;
+  }
+  .tutorial-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .tutorial-layout { grid-template-columns: 1fr; }
+  }
+
+  .tutorial-story { position: sticky; top: 80px; }
+
+  .step-progress {
+    display: flex; gap: 0.4rem; margin-bottom: 2rem;
+  }
+  .step-dot {
+    width: 28px; height: 4px; border-radius: 2px;
+    background: var(--surface2);
+    cursor: pointer; transition: all 0.2s;
+  }
+  .step-dot.active { background: var(--registry); }
+  .step-dot.done { background: rgba(52, 211, 153, 0.4); }
+
+  .step-number {
+    font-family: var(--font-mono); font-size: 0.75rem;
+    color: var(--registry); margin-bottom: 0.5rem;
+    letter-spacing: 0.1em;
+  }
+  .step-title {
+    font-family: var(--font-display);
+    font-size: 1.6rem; font-weight: 700;
+    line-height: 1.2; margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+  }
+  .step-story {
+    font-size: 1rem; color: var(--text-dim);
+    line-height: 1.7; margin-bottom: 1.25rem;
+  }
+  .step-plain {
+    padding: 1rem 1.25rem;
+    background: var(--surface2);
+    border-left: 3px solid var(--registry);
+    border-radius: 0 8px 8px 0;
+    font-size: 0.88rem; color: var(--text);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+  .step-plain.hidden { display: none; }
+
+  .infra-toggle {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-size: 0.78rem; color: var(--text-dim);
+    cursor: pointer; margin-bottom: 1.5rem;
+    user-select: none;
+  }
+  .toggle-switch {
+    width: 32px; height: 18px;
+    background: var(--surface2); border-radius: 9px;
+    position: relative; transition: background 0.2s;
+  }
+  .toggle-switch::after {
+    content: '';
+    position: absolute; top: 3px; left: 3px;
+    width: 12px; height: 12px;
+    background: var(--text-dim); border-radius: 50%;
+    transition: all 0.2s;
+  }
+  .toggle-switch.on { background: var(--workflow); }
+  .toggle-switch.on::after { left: 17px; background: white; }
+
+  .step-nav { display: flex; gap: 0.75rem; }
+  .btn-step {
+    padding: 0.6rem 1.25rem;
+    font-family: var(--font-body); font-size: 0.85rem; font-weight: 500;
+    border-radius: 6px; border: 1px solid var(--border);
+    background: transparent; color: var(--text);
+    cursor: pointer; transition: all 0.15s;
+  }
+  .btn-step:hover { background: var(--surface2); }
+  .btn-step.primary {
+    background: var(--registry); color: #000;
+    border-color: var(--registry);
+  }
+  .btn-step.primary:hover { opacity: 0.85; }
+  .btn-step:disabled { opacity: 0.3; cursor: default; }
+
+  /* Tutorial block diagram */
+  .tutorial-blocks { display: flex; flex-direction: column; gap: 1rem; }
+
+  .t-cluster {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+  .t-cluster.lit {
+    border-color: var(--cluster-color);
+    box-shadow: 0 0 20px rgba(0,0,0,0.4), inset 0 0 30px rgba(255,255,255,0.02);
+  }
+  .t-cluster-header {
+    display: flex; align-items: center; gap: 0.6rem;
+    padding: 0.7rem 1rem;
+    background: rgba(255,255,255,0.02);
+    border-bottom: 1px solid var(--border);
+    font-size: 0.82rem; font-weight: 500;
+    color: var(--text-dim);
+  }
+  .t-cluster.lit .t-cluster-header { color: var(--cluster-color); }
+  .t-cluster-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--cluster-color);
+    opacity: 0.3;
+  }
+  .t-cluster.lit .t-cluster-dot { opacity: 1; animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(1.3)} }
+
+  .t-blocks-row {
+    padding: 0.75rem 1rem;
+    display: flex; flex-wrap: wrap; gap: 0.4rem;
+  }
+  .t-block {
+    padding: 0.3rem 0.65rem;
+    border-radius: 4px;
+    font-size: 0.75rem; font-weight: 500;
+    background: rgba(255,255,255,0.04);
+    color: var(--text-dim);
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: all 0.3s;
+  }
+  .t-block.active {
+    background: rgba(255,255,255,0.08);
+    color: var(--text);
+    border-color: var(--cluster-color);
+  }
+
+  /* Infrastructure overlay */
+  .infra-note {
+    display: none;
+    margin-top: 0.5rem;
+    padding: 0.6rem 0.8rem;
+    background: rgba(251,191,36,0.07);
+    border: 1px solid rgba(251,191,36,0.2);
+    border-radius: 6px;
+    font-family: var(--font-mono); font-size: 0.72rem;
+    color: #fbbf24; line-height: 1.5;
+  }
+  .infra-note.visible { display: block; }
+
+  /* ── ACT 3: IMAGINE ── */
+  #imagine {
+    background: var(--bg);
+    padding-top: 80px;
+  }
+
+  .domains-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+  .domain-card {
+    padding: 1.25rem;
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+  .domain-card:hover { border-color: rgba(255,255,255,0.2); transform: translateY(-2px); }
+  .domain-card.selected { border-color: var(--registry); background: var(--surface2); }
+  .domain-emoji { font-size: 2rem; display: block; margin-bottom: 0.5rem; }
+  .domain-name {
+    font-family: var(--font-display);
+    font-weight: 700; font-size: 0.95rem;
+    margin-bottom: 0.3rem;
+  }
+  .domain-scenario { font-size: 0.78rem; color: var(--text-dim); line-height: 1.4; }
+
+  .domain-detail {
+    display: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    animation: fadeUp 0.25s ease;
+  }
+  .domain-detail.visible { display: block; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+  .detail-layout {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
+  }
+  @media (max-width: 800px) { .detail-layout { grid-template-columns: 1fr; } }
+
+  .detail-title {
+    font-family: var(--font-display);
+    font-size: 1.4rem; font-weight: 700;
+    margin-bottom: 0.75rem;
+  }
+  .detail-desc {
+    font-size: 0.9rem; color: var(--text-dim);
+    line-height: 1.7; margin-bottom: 1rem;
+  }
+  .detail-example {
+    padding: 0.75rem 1rem;
+    background: rgba(52,211,153,0.07);
+    border-left: 3px solid var(--registry);
+    border-radius: 0 6px 6px 0;
+    font-size: 0.82rem; color: var(--text);
+    line-height: 1.5;
+  }
+
+  .imagine-blocks { display: flex; flex-direction: column; gap: 0.75rem; }
+  .i-cluster {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    transition: all 0.25s;
+  }
+  .i-cluster.used {
+    border-color: var(--cluster-color);
+    background: rgba(255,255,255,0.02);
+  }
+  .i-cluster-label {
+    font-size: 0.78rem; color: var(--text-dim);
+    margin-bottom: 0.5rem; font-weight: 500;
+  }
+  .i-cluster.used .i-cluster-label { color: var(--cluster-color); }
+  .i-blocks-row { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .i-block {
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    background: rgba(255,255,255,0.04);
+    color: var(--text-dim);
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: all 0.25s;
+  }
+  .i-block.used {
+    background: rgba(255,255,255,0.08);
+    color: var(--text);
+    border-color: var(--cluster-color);
+  }
+
+  /* ── DEVELOPERS ── */
+  #developers {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    min-height: auto;
+    padding: 5rem 2rem;
+  }
+  .dev-header {
+    display: flex; align-items: center; gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+  .dev-badge {
+    font-family: var(--font-mono); font-size: 0.72rem;
+    padding: 0.3rem 0.75rem;
+    background: rgba(129,140,248,0.1);
+    border: 1px solid var(--identity);
+    border-radius: 4px; color: var(--identity);
+  }
+
+  .dev-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2.5rem;
+  }
+  .dev-card {
+    padding: 1.25rem 1.5rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    text-decoration: none;
+    color: var(--text);
+    transition: all 0.2s;
+    display: block;
+  }
+  .dev-card:hover {
+    border-color: var(--identity);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+  .dev-card-label {
+    font-family: var(--font-mono); font-size: 0.7rem;
+    color: var(--identity); margin-bottom: 0.5rem;
+    letter-spacing: 0.08em;
+  }
+  .dev-card-title {
+    font-family: var(--font-display);
+    font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem;
+  }
+  .dev-card-desc { font-size: 0.82rem; color: var(--text-dim); line-height: 1.5; }
+
+  .service-map {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+  }
+  .service-map-title {
+    font-family: var(--font-display); font-weight: 700;
+    margin-bottom: 1rem; font-size: 0.95rem;
+  }
+  .service-rows { display: flex; flex-direction: column; gap: 0.75rem; }
+  .service-row {
+    display: flex; align-items: baseline; gap: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .service-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .service-row-label {
+    font-size: 0.75rem; color: var(--text-dim);
+    min-width: 140px; flex-shrink: 0;
+    font-weight: 500;
+  }
+  .service-links { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .service-link {
+    font-family: var(--font-mono); font-size: 0.72rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    color: var(--text-dim); text-decoration: none;
+    transition: all 0.15s;
+  }
+  .service-link:hover { border-color: var(--identity); color: var(--identity); }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 2rem;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 1rem;
+  }
+  .footer-text { font-size: 0.82rem; color: var(--text-dim); }
+  .footer-text a { color: var(--registry); text-decoration: none; }
+  .footer-links { display: flex; gap: 1rem; }
+  .footer-links a {
+    font-size: 0.82rem; color: var(--text-dim);
+    text-decoration: none; transition: color 0.15s;
+  }
+  .footer-links a:hover { color: var(--text); }
+
+  /* ── BACKGROUND GRID ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: -1;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+  }
+
+  /* Animations */
+  .fade-in { animation: fadeIn 0.4s ease both; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+  .floating-tag {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 100px;
+    font-size: 0.72rem; font-weight: 500;
+    font-family: var(--font-mono);
+    margin: 0.15rem;
+    animation: floatChip 6s ease-in-out infinite;
+  }
+  @keyframes floatChip { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+
+  .hero-chips {
+    display: flex; flex-wrap: wrap; gap: 0.25rem;
+    margin: 2rem 0 3rem;
+    max-width: 700px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="nav-logo">DIGIT<span>.</span>blocks</div>
+  <div class="nav-links">
+    <a href="#orient">Building Blocks</a>
+    <a href="#understand">See It In Action</a>
+    <a href="#imagine">Your Domain</a>
+    <a href="#developers">For Developers</a>
+  </div>
+</nav>
+
+<!-- ── ACT 1: ORIENT ── -->
+<section id="orient">
+  <div class="orient-header">
+    <div class="section-label">Act 1 / Understanding DIGIT</div>
+    <h1 class="section-title">Digital infrastructure<br>doesn't need to be built<br>from scratch.</h1>
+    <p class="orient-intro">
+      <strong>DIGIT</strong> is an open-source platform of modular building blocks for population-scale governance —
+      deployed across 1,000+ cities in India, and adapted for health campaigns across Africa.
+      The same pieces that collect property tax can manage pollution registries, disaster relief,
+      or agricultural subsidies. Pick your blocks. Assemble your system.
+    </p>
+
+    <div class="hero-chips" id="heroChips"></div>
+
+    <div class="depth-toggle">
+      <button class="depth-btn active" id="btnSimple" onclick="setDepth('simple')">Plain English</button>
+      <button class="depth-btn" id="btnTech" onclick="setDepth('tech')">Technical</button>
+    </div>
+  </div>
+
+  <div class="clusters-grid" id="clustersGrid"></div>
+</section>
+
+<!-- ── ACT 2: UNDERSTAND ── -->
+<section id="understand">
+  <div class="section-label">Act 2 / Property Tax — A Walkthrough</div>
+  <h2 class="section-title">How the blocks<br>assemble into a service.</h2>
+  <p class="section-sub">
+    Follow Raju as he pays his annual property tax. Watch which building blocks activate at each step.
+    This same pattern — with different data — becomes any governance service.
+  </p>
+
+  <div class="tutorial-layout">
+    <div class="tutorial-story">
+      <div class="step-progress" id="stepProgress"></div>
+
+      <div class="step-number" id="stepNumber">STEP 1 OF 7</div>
+      <h3 class="step-title" id="stepTitle">Loading...</h3>
+      <p class="step-story" id="stepStory"></p>
+      <div class="step-plain" id="stepPlain"></div>
+
+      <label class="infra-toggle" onclick="toggleInfra()">
+        <div class="toggle-switch" id="infraSwitch"></div>
+        Show infrastructure layer (Kafka, API Gateway, databases)
+      </label>
+
+      <div class="infra-note" id="infraNote"></div>
+
+      <div class="step-nav">
+        <button class="btn-step" id="btnPrev" onclick="prevStep()">← Previous</button>
+        <button class="btn-step primary" id="btnNext" onclick="nextStep()">Next step →</button>
+      </div>
+    </div>
+
+    <div class="tutorial-blocks" id="tutorialBlocks"></div>
+  </div>
+</section>
+
+<!-- ── ACT 3: IMAGINE ── -->
+<section id="imagine">
+  <div class="section-label">Act 3 / Now Imagine Your Domain</div>
+  <h2 class="section-title">The same blocks.<br>A different problem.</h2>
+  <p class="section-sub">
+    Choose a domain. See which building blocks you'd likely reach for — and what a solution
+    at population scale could look like. This is a starting point for imagination, not a blueprint.
+  </p>
+
+  <div class="domains-grid" id="domainsGrid"></div>
+  <div class="domain-detail" id="domainDetail">
+    <div class="detail-layout">
+      <div>
+        <h3 class="detail-title" id="detailTitle"></h3>
+        <p class="detail-desc" id="detailDesc"></p>
+        <div class="detail-example" id="detailExample"></div>
+      </div>
+      <div class="imagine-blocks" id="imagineBlocks"></div>
+    </div>
+  </div>
+
+  <p style="font-size:0.88rem; color: var(--text-dim); max-width:560px; line-height:1.6;">
+    ✦ &nbsp;For actual implementation, you'd work with the <a href="https://egov.org.in/contact/" target="_blank" style="color:var(--registry); text-decoration:none;">eGov Foundation / DIGIT team</a>.
+    This visualization is for understanding the architecture and sparking ideas.
+  </p>
+</section>
+
+<!-- ── DEVELOPERS ── -->
+<section id="developers" style="min-height:auto;">
+  <div class="dev-header">
+    <h2 class="section-title" style="margin:0;">Go deeper.</h2>
+    <div class="dev-badge">For developers</div>
+  </div>
+  <p class="section-sub" style="margin-bottom:2rem;">
+    DIGIT is production-grade, MIT-licensed, and actively maintained. Here's where to go next.
+  </p>
+
+  <div class="dev-grid">
+    <a href="https://github.com/egovernments/Digit-Core" target="_blank" class="dev-card">
+      <div class="dev-card-label">GITHUB REPO</div>
+      <div class="dev-card-title">Digit-Core</div>
+      <div class="dev-card-desc">The main repository. Core services, accelerators, utilities, and build configs. MIT licensed.</div>
+    </a>
+    <a href="https://github.com/egovernments/Digit-Core/tree/master/core-services" target="_blank" class="dev-card">
+      <div class="dev-card-label">SOURCE CODE</div>
+      <div class="dev-card-title">Core Services</div>
+      <div class="dev-card-desc">Individual microservice folders — each independently deployable, documented, and configurable.</div>
+    </a>
+    <a href="https://github.com/egovernments/Digit-Core/tree/master/tutorials/backend-developer-guide" target="_blank" class="dev-card">
+      <div class="dev-card-label">TUTORIAL</div>
+      <div class="dev-card-title">Backend Developer Guide</div>
+      <div class="dev-card-desc">Step-by-step guide to building a new service on DIGIT — from skeleton to deployment.</div>
+    </a>
+    <a href="https://core.digit.org/guides/installation-guide" target="_blank" class="dev-card">
+      <div class="dev-card-label">DOCUMENTATION</div>
+      <div class="dev-card-title">Installation Guide</div>
+      <div class="dev-card-desc">Get DIGIT running locally or on cloud infrastructure. Kubernetes-based, well documented.</div>
+    </a>
+    <a href="https://digit-api.apidog.io/" target="_blank" class="dev-card">
+      <div class="dev-card-label">API REFERENCE</div>
+      <div class="dev-card-title">API Playground</div>
+      <div class="dev-card-desc">Interactive API explorer for all DIGIT core services. Test endpoints directly from the browser.</div>
+    </a>
+    <a href="https://core.digit.org/accelerators/sandbox" target="_blank" class="dev-card">
+      <div class="dev-card-label">SANDBOX</div>
+      <div class="dev-card-title">Live Environment</div>
+      <div class="dev-card-desc">Access a running DIGIT instance to explore the platform before setting up your own.</div>
+    </a>
+  </div>
+
+  <div class="service-map">
+    <div class="service-map-title">Direct links to service source code</div>
+    <div class="service-rows" id="serviceRows"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-text">
+    Built to help people understand <a href="https://github.com/egovernments/Digit-Core" target="_blank">DIGIT</a> —
+    an open-source platform by <a href="https://egov.org.in" target="_blank">eGov Foundation</a>.
+    Certified Digital Public Good.
+  </div>
+  <div class="footer-links">
+    <a href="https://core.digit.org" target="_blank">Documentation</a>
+    <a href="https://github.com/egovernments/Digit-Core/discussions" target="_blank">Community</a>
+    <a href="https://egov.org.in/contact/" target="_blank">Contact DIGIT Team</a>
+  </div>
+</footer>
+
+<script>
+// ── DATA ──
+const clusters = [
+  {
+    id: 'identity', name: 'Identity & Trust', color: 'var(--identity)',
+    colorHex: '#818cf8', icon: '🔐',
+    tagline: 'Who are you, and can we trust you? Every person, role, and permission — verified.',
+    blocks: [
+      { id: 'user', name: 'User Service',
+        simple: 'Manages who can access the system — citizens, officers, admins.',
+        tech: 'User registration, authentication, profile management. REST CRUD. Tenant-aware.' },
+      { id: 'access', name: 'Access Control',
+        simple: 'Decides who is allowed to do what — read, write, approve, reject.',
+        tech: 'Role-based access control (RBAC). Action-level permissions. Multi-tenant.' },
+      { id: 'otp', name: 'OTP Service',
+        simple: 'Verifies real people using one-time codes sent to their phone.',
+        tech: 'Generates and validates time-bound OTPs via SMS/email. Configurable TTL.' },
+      { id: 'api-gateway', name: 'API Gateway',
+        simple: 'The secure front door — all requests pass through here first.',
+        tech: 'Zuul-based gateway. Auth verification, rate limiting, request routing.' },
+      { id: 'encryption', name: 'Encryption Service',
+        simple: 'Keeps sensitive personal data private — names, addresses, IDs.',
+        tech: 'AES-256 encryption for PII fields. Centralized key management.' },
+      { id: 'audit', name: 'Audit Service',
+        simple: 'Keeps an immutable record of every action taken in the system.',
+        tech: 'Append-only audit log. Kafka-backed. Tamper-evident trail for compliance.' },
+    ]
+  },
+  {
+    id: 'registry', name: 'Registries & Data', color: 'var(--registry)',
+    colorHex: '#34d399', icon: '📊',
+    tagline: 'The single source of truth for any entity — property, person, plant, parcel, or plot.',
+    blocks: [
+      { id: 'mdms', name: 'MDMS',
+        simple: 'The master registry — store any type of structured data about any type of entity.',
+        tech: 'Master Data Management Service V2. Hierarchical, multi-tenant. Schema-flexible.' },
+      { id: 'boundary', name: 'Boundary Service',
+        simple: 'Geographic hierarchy from country down to ward or village. Jurisdiction mapping.',
+        tech: 'Hierarchical boundary definitions. GeoJSON support. Configurable hierarchy levels.' },
+      { id: 'id-gen', name: 'ID Generation',
+        simple: 'Generates unique, formatted IDs for every record in the system.',
+        tech: 'Configurable ID patterns. Sequence-based. Format: PT/2024/000001 etc.' },
+      { id: 'indexer', name: 'Indexer',
+        simple: 'Makes all records instantly searchable across any field.',
+        tech: 'Elasticsearch-backed. Kafka consumer. YAML-configured index mapping.' },
+      { id: 'persister', name: 'Persister',
+        simple: 'Reliably writes all data to the database without losing anything.',
+        tech: 'Kafka-based async persistence. PostgreSQL backend. Retry logic built-in.' },
+      { id: 'location', name: 'Location',
+        simple: 'Locality and address master data — mohallas, wards, localities.',
+        tech: 'Hierarchical location master. Integrates with boundary service.' },
+    ]
+  },
+  {
+    id: 'workflow', name: 'Workflow & Process', color: 'var(--workflow)',
+    colorHex: '#fbbf24', icon: '⚙️',
+    tagline: 'Turns registries into governed, auditable, multi-step processes.',
+    blocks: [
+      { id: 'workflow', name: 'Workflow Engine',
+        simple: 'Configurable multi-step approval process — apply, verify, inspect, approve, reject.',
+        tech: 'State machine engine. Configurable transitions, assignee roles, SLAs, escalations. YAML-driven.' },
+      { id: 'service-request', name: 'Service Request',
+        simple: 'The citizen-facing form where any request or application begins.',
+        tech: 'Generic service request creation and tracking. Hooks into workflow engine.' },
+    ]
+  },
+  {
+    id: 'notifications', name: 'Notifications', color: 'var(--notifications)',
+    colorHex: '#60a5fa', icon: '📣',
+    tagline: 'Reach anyone, in any language, on any channel — SMS, email, app.',
+    blocks: [
+      { id: 'sms', name: 'SMS Notifications',
+        simple: 'Text message alerts sent to any phone — updates, approvals, reminders.',
+        tech: 'Pluggable SMS provider (Airtel, others). Template-based. Multi-language via localization.' },
+      { id: 'email', name: 'Email Notifications',
+        simple: 'Email alerts with attachments — notices, certificates, reports.',
+        tech: 'SMTP-based. Template-driven with Mustache. File attachments supported.' },
+      { id: 'localization', name: 'Localization',
+        simple: 'Every message, label, and document in any language and script.',
+        tech: 'Key-value message store. Tenant and locale-specific overrides. Runtime configurable.' },
+      { id: 'url-shortener', name: 'URL Shortener',
+        simple: 'Short links for SMS messages — so a full receipt URL fits in a text.',
+        tech: 'Custom URL shortening service. Click analytics included.' },
+    ]
+  },
+  {
+    id: 'documents', name: 'Documents & Records', color: 'var(--documents)',
+    colorHex: '#a78bfa', icon: '📄',
+    tagline: 'Generate, upload, store, and retrieve official documents and evidence.',
+    blocks: [
+      { id: 'filestore', name: 'FileStore',
+        simple: 'Upload and retrieve any file — photos, reports, certificates, satellite images.',
+        tech: 'S3-compatible object storage. Multi-tenant. Signed URLs. Version support.' },
+      { id: 'pdf', name: 'PDF Generation',
+        simple: 'Generate official certificates, tax receipts, notices, and reports on demand.',
+        tech: 'Mustache template-based PDF generation. Per-service configurable. QR code support.' },
+    ]
+  },
+  {
+    id: 'payments', name: 'Payments', color: 'var(--payments)',
+    colorHex: '#f87171', icon: '💳',
+    tagline: 'Collect fees, fines, levies, and disburse benefits — all tracked and reconciled.',
+    blocks: [
+      { id: 'pg', name: 'Payment Gateway',
+        simple: 'Collect payments via UPI, cards, net banking, or cash — at any scale.',
+        tech: 'Pluggable payment provider. Demand–bill–receipt lifecycle. Reconciliation built-in.' },
+    ]
+  },
+];
+
+const tutorialSteps = [
+  {
+    title: 'Raju wants to pay his property tax',
+    story: 'Raju owns a house in Bengaluru. It\'s tax season. He opens the city portal on his phone.',
+    plain: 'Before anything happens, the city needs to have Raju\'s property registered — with a unique ID, linked to his ward and locality.',
+    blocksActive: [],
+    highlight: null,
+    infra: null,
+  },
+  {
+    title: 'His property exists in a registry',
+    story: 'DIGIT has already stored the property details — size, location, assessed value, owner — as structured data linked to the city\'s geographic hierarchy.',
+    plain: 'The Property Registry (MDMS) stores every property. The Boundary Service gives it a location — State → District → City → Ward → Locality. ID Generation gave it a unique canonical ID.',
+    blocksActive: ['mdms', 'boundary', 'id-gen', 'location'],
+    highlight: 'registry',
+    infra: 'Data sits in PostgreSQL, written via the Persister service. The Indexer keeps an Elasticsearch copy so officers can search in milliseconds.',
+  },
+  {
+    title: 'Raju logs in with OTP verification',
+    story: 'He enters his mobile number. A 6-digit code arrives in seconds. He\'s authenticated.',
+    plain: 'User Service recognizes Raju. OTP Service confirms it\'s him. Access Control checks that a citizen has permission to view their own property — not someone else\'s.',
+    blocksActive: ['user', 'otp', 'api-gateway', 'access'],
+    highlight: 'identity',
+    infra: 'Every request passes through the API Gateway — auth is verified before it touches any service. Encryption Service protects PII fields (name, mobile) in the database.',
+  },
+  {
+    title: 'A demand notice is generated',
+    story: 'The system calculates his annual tax due based on property type, floor area, and usage. It generates a formal demand notice.',
+    plain: 'PDF Service generates the notice using a city-configured template, in Raju\'s preferred language (Kannada or English) via the Localization Service.',
+    blocksActive: ['pdf', 'localization', 'filestore'],
+    highlight: 'documents',
+    infra: 'The generated PDF is stored in FileStore (S3-compatible). A URL is attached to the transaction record.',
+  },
+  {
+    title: 'Raju pays online',
+    story: 'He taps "Pay Now." Rs. 4,200 is processed through UPI in under 3 seconds.',
+    plain: 'Payment Gateway handles the transaction — creates a demand, processes payment, records the receipt. Multiple payment providers can be plugged in.',
+    blocksActive: ['pg'],
+    highlight: 'payments',
+    infra: 'Payment status is published to Kafka. Downstream services (receipt generation, notification trigger) consume this event asynchronously.',
+  },
+  {
+    title: 'He gets an SMS confirmation',
+    story: '"Your property tax of ₹4,200 has been received. Receipt No: PT2024-089123." Arrives within seconds.',
+    plain: 'SMS Notification is triggered by the payment event. URL Shortener compresses the receipt link so it fits in the message. The text arrives in his language.',
+    blocksActive: ['sms', 'url-shortener', 'localization'],
+    highlight: 'notifications',
+    infra: 'The notification consumer listens on Kafka for payment success events and fires SMS asynchronously — no blocking the payment flow.',
+  },
+  {
+    title: 'The record is searchable and audited',
+    story: 'The tax officer can pull up Raju\'s payment history instantly. An auditor can verify every step was followed, by whom, and when.',
+    plain: 'The Indexer makes the transaction searchable across any attribute. The Audit Service has an immutable, tamper-evident log of every action in the system.',
+    blocksActive: ['audit', 'indexer', 'persister', 'access'],
+    highlight: 'registry',
+    infra: 'The Audit Service is Kafka-backed and append-only. The Indexer is an Elasticsearch consumer — search is eventually consistent but near-real-time.',
+  },
+];
+
+const domains = [
+  {
+    id: 'climate', name: 'Climate & Environment', emoji: '🌍',
+    scenario: 'Industrial pollution monitoring & enforcement',
+    description: 'A state pollution control board registers every industrial unit and vehicle as an entity in the registry, linked to geographic jurisdiction. Field officers conduct inspections via a configurable workflow — findings are logged, violations trigger automated notices, repeat offenders face escalating penalties collected through the payment system. Communities can submit pollution reports via a service request, triggering officer assignment.',
+    example: '12,000+ industrial units registered, 300 field officers with mobile-based workflows, real-time dashboard for the Pollution Control Board.',
+    blocksUsed: ['mdms', 'boundary', 'id-gen', 'workflow', 'service-request', 'sms', 'pg', 'audit', 'pdf', 'filestore', 'indexer'],
+  },
+  {
+    id: 'health', name: 'Public Health', emoji: '🏥',
+    scenario: 'Community health worker management & case reporting',
+    description: 'Register health workers, health facilities, and households in layered registries. Workflow manages disease case reporting — a worker flags a suspected case, it escalates to a supervisor, triggers a home visit, closes with outcome recorded. SMS alerts go to families. The same infrastructure handles vaccination campaigns, bed availability, or supply chain tracking.',
+    example: 'DIGIT was adapted for health campaigns in multiple African countries — this exact pattern of registry + workflow + notifications.',
+    blocksUsed: ['mdms', 'boundary', 'user', 'access', 'workflow', 'service-request', 'sms', 'filestore', 'audit', 'localization'],
+  },
+  {
+    id: 'disaster', name: 'Disaster Response', emoji: '🚨',
+    scenario: 'Flood relief application & disbursement management',
+    description: 'Pre-register vulnerable households by geographic boundary during normal times. When disaster strikes, activate a relief application workflow. Affected families submit via SMS or a simple form. Officers verify, approve, and record disbursement. Every decision is audited. Payments go directly through the payment gateway — tracked from allocation to receipt.',
+    example: 'A district with 50,000 flood-affected households could move from application to verified disbursement in days, not months.',
+    blocksUsed: ['mdms', 'boundary', 'service-request', 'workflow', 'sms', 'pg', 'pdf', 'audit', 'indexer', 'id-gen'],
+  },
+  {
+    id: 'agriculture', name: 'Agriculture', emoji: '🌾',
+    scenario: 'Farmer registry & subsidy disbursement',
+    description: 'A unified farmer registry linked to land records and boundary data — across every block and district. Farmers apply for subsidies or crop insurance via a service request. The workflow routes to patwaris for verification, then district officers for approval, then payment. SMS updates at every step, in the farmer\'s language. One system can replace dozens of disconnected scheme-specific databases.',
+    example: 'At state scale, this consolidates registries across multiple subsidy schemes — eliminating duplication and ghost beneficiaries.',
+    blocksUsed: ['mdms', 'boundary', 'id-gen', 'user', 'workflow', 'service-request', 'pg', 'sms', 'pdf', 'localization', 'encryption'],
+  },
+  {
+    id: 'urban', name: 'Urban Governance', emoji: '🏙️',
+    scenario: 'Trade license issuance, renewal & enforcement',
+    description: 'This is DIGIT\'s home turf — proven across 1,000+ cities. Business registry (MDMS), application form (Service Request), multi-step workflow for verification and inspection, payment, certificate generation. The same infrastructure simultaneously handles property tax, water connections, building permits, grievance redressal, and street vendor registration — all on shared infrastructure.',
+    example: 'Over 1,000 Indian cities already run DIGIT for exactly this — serving millions of citizens daily with a shared platform.',
+    blocksUsed: ['mdms', 'boundary', 'user', 'workflow', 'service-request', 'pg', 'pdf', 'sms', 'audit', 'indexer', 'access', 'id-gen'],
+  },
+];
+
+const serviceLinks = [
+  { label: 'User & Access', links: [
+    { name: 'egov-user', url: 'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-user' },
+    { name: 'egov-accesscontrol', url: 'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-accesscontrol' },
+  ]},
+  { label: 'Workflow', links: [
+    { name: 'egov-workflow-v2', url: 'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-workflow-v2' },
+  ]},
+  { label: 'Master Data', links: [
+    { name: 'egov-mdms-service', url: 'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-mdms-service' },
+    { name: 'boundary-service', url: 'https://github.com/egovernments/Digit-Core/tree/master/core-services/boundary-service' },
+  ]},
+  { label: 'Notifications', links: [
+    { name: 'egov-notification-sms', url: 'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-notification-sms' },
+    { name: 'egov-notification-mail', url: 'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-notification-mail' },
+  ]},
+  { label: 'Documents', links: [
+    { name: 'pdf-service', url: 'https://github.com/egovernments/Digit-Core/tree/master/core-services/pdf-service' },
+    { name: 'egov-filestore', url: 'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-filestore' },
+  ]},
+  { label: 'Data & Search', links: [
+    { name: 'egov-indexer', url: 'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-indexer' },
+    { name: 'egov-persister', url: 'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-persister' },
+    { name: 'egov-id-gen', url: 'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-idgen' },
+  ]},
+  { label: 'Security', links: [
+    { name: 'egov-enc-service', url: 'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-enc-service' },
+    { name: 'egov-otp', url: 'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-otp' },
+  ]},
+  { label: 'Payment', links: [
+    { name: 'egov-pg-service', url: 'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-pg-service' },
+  ]},
+];
+
+// ── STATE ──
+let currentStep = 0;
+let showInfra = false;
+let selectedDomain = null;
+
+// ── INIT ──
+function init() {
+  renderHeroChips();
+  renderClusters();
+  renderTutorial();
+  renderDomains();
+  renderServiceRows();
+  updateStep();
+}
+
+function renderHeroChips() {
+  const el = document.getElementById('heroChips');
+  const allBlocks = clusters.flatMap(c => c.blocks.map(b => ({ ...b, color: c.colorHex })));
+  // pick a selection
+  const picks = allBlocks.filter((_, i) => i % 2 === 0).slice(0, 14);
+  picks.forEach((b, i) => {
+    const chip = document.createElement('span');
+    chip.className = 'floating-tag';
+    chip.textContent = b.name;
+    chip.style.cssText = `
+      background: ${b.color}18;
+      border: 1px solid ${b.color}44;
+      color: ${b.color};
+      animation-delay: ${i * 0.4}s;
+      animation-duration: ${5 + i * 0.3}s;
+    `;
+    el.appendChild(chip);
+  });
+}
+
+function renderClusters() {
+  const grid = document.getElementById('clustersGrid');
+  clusters.forEach(cluster => {
+    const card = document.createElement('div');
+    card.className = 'cluster-card';
+    card.style.setProperty('--cluster-color', cluster.color);
+
+    const blocksHTML = cluster.blocks.map(b => `
+      <div class="block-item">
+        <div class="block-item-name">${b.name}</div>
+        <div class="block-item-desc">${b.simple}</div>
+        <div class="block-item-tech">${b.tech}</div>
+      </div>
+    `).join('');
+
+    card.innerHTML = `
+      <div class="cluster-header">
+        <div class="cluster-icon">${cluster.icon}</div>
+        <div class="cluster-name">${cluster.name}</div>
+      </div>
+      <div class="cluster-tagline">${cluster.tagline}</div>
+      <div class="blocks-list">${blocksHTML}</div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function renderTutorial() {
+  // Progress dots
+  const progress = document.getElementById('stepProgress');
+  tutorialSteps.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'step-dot';
+    dot.onclick = () => goToStep(i);
+    progress.appendChild(dot);
+  });
+
+  // Build cluster panels
+  const container = document.getElementById('tutorialBlocks');
+  clusters.forEach(cluster => {
+    const panel = document.createElement('div');
+    panel.className = 't-cluster';
+    panel.id = `t-${cluster.id}`;
+    panel.style.setProperty('--cluster-color', cluster.color);
+
+    const blocksHTML = cluster.blocks.map(b => `
+      <span class="t-block" id="tb-${b.id}">${b.name}</span>
+    `).join('');
+
+    panel.innerHTML = `
+      <div class="t-cluster-header">
+        <div class="t-cluster-dot"></div>
+        ${cluster.icon} ${cluster.name}
+      </div>
+      <div class="t-blocks-row">${blocksHTML}</div>
+    `;
+    container.appendChild(panel);
+  });
+}
+
+function renderDomains() {
+  const grid = document.getElementById('domainsGrid');
+  domains.forEach(d => {
+    const card = document.createElement('div');
+    card.className = 'domain-card';
+    card.id = `domain-${d.id}`;
+    card.innerHTML = `
+      <span class="domain-emoji">${d.emoji}</span>
+      <div class="domain-name">${d.name}</div>
+      <div class="domain-scenario">${d.scenario}</div>
+    `;
+    card.onclick = () => selectDomain(d.id);
+    grid.appendChild(card);
+  });
+
+  // Build imagine blocks panel
+  const container = document.getElementById('imagineBlocks');
+  clusters.forEach(cluster => {
+    const panel = document.createElement('div');
+    panel.className = 'i-cluster';
+    panel.id = `i-${cluster.id}`;
+    panel.style.setProperty('--cluster-color', cluster.color);
+
+    const blocksHTML = cluster.blocks.map(b => `
+      <span class="i-block" id="ib-${b.id}">${b.name}</span>
+    `).join('');
+
+    panel.innerHTML = `
+      <div class="i-cluster-label">${cluster.icon} ${cluster.name}</div>
+      <div class="i-blocks-row">${blocksHTML}</div>
+    `;
+    container.appendChild(panel);
+  });
+}
+
+function renderServiceRows() {
+  const container = document.getElementById('serviceRows');
+  serviceLinks.forEach(row => {
+    const el = document.createElement('div');
+    el.className = 'service-row';
+    const linksHTML = row.links.map(l =>
+      `<a href="${l.url}" target="_blank" class="service-link">${l.name}</a>`
+    ).join('');
+    el.innerHTML = `
+      <div class="service-row-label">${row.label}</div>
+      <div class="service-links">${linksHTML}</div>
+    `;
+    container.appendChild(el);
+  });
+}
+
+// ── TUTORIAL LOGIC ──
+function updateStep() {
+  const step = tutorialSteps[currentStep];
+
+  // Update text
+  document.getElementById('stepNumber').textContent = `STEP ${currentStep + 1} OF ${tutorialSteps.length}`;
+  document.getElementById('stepTitle').textContent = step.title;
+  document.getElementById('stepStory').textContent = step.story;
+  document.getElementById('stepPlain').textContent = step.plain;
+
+  // Infra note
+  const infraNote = document.getElementById('infraNote');
+  if (step.infra) {
+    infraNote.textContent = '⬡ ' + step.infra;
+    infraNote.className = 'infra-note' + (showInfra ? ' visible' : '');
+  } else {
+    infraNote.className = 'infra-note';
+  }
+
+  // Progress dots
+  document.querySelectorAll('.step-dot').forEach((dot, i) => {
+    dot.className = 'step-dot' + (i === currentStep ? ' active' : i < currentStep ? ' done' : '');
+  });
+
+  // Buttons
+  document.getElementById('btnPrev').disabled = currentStep === 0;
+  document.getElementById('btnNext').textContent = currentStep === tutorialSteps.length - 1
+    ? 'Try your domain →' : 'Next step →';
+
+  // Reset all blocks
+  document.querySelectorAll('.t-cluster').forEach(el => el.classList.remove('lit'));
+  document.querySelectorAll('.t-block').forEach(el => el.classList.remove('active'));
+
+  // Light up active blocks
+  step.blocksActive.forEach(blockId => {
+    const el = document.getElementById(`tb-${blockId}`);
+    if (el) el.classList.add('active');
+  });
+
+  // Light up cluster
+  if (step.highlight) {
+    const clusterEl = document.getElementById(`t-${step.highlight}`);
+    if (clusterEl) clusterEl.classList.add('lit');
+    // Also light clusters of active blocks
+    step.blocksActive.forEach(blockId => {
+      const cluster = clusters.find(c => c.blocks.some(b => b.id === blockId));
+      if (cluster) {
+        const el = document.getElementById(`t-${cluster.id}`);
+        if (el) el.classList.add('lit');
+      }
+    });
+  }
+}
+
+function nextStep() {
+  if (currentStep < tutorialSteps.length - 1) {
+    currentStep++;
+    updateStep();
+  } else {
+    document.getElementById('imagine').scrollIntoView({ behavior: 'smooth' });
+  }
+}
+function prevStep() {
+  if (currentStep > 0) { currentStep--; updateStep(); }
+}
+function goToStep(i) { currentStep = i; updateStep(); }
+
+function toggleInfra() {
+  showInfra = !showInfra;
+  document.getElementById('infraSwitch').className = 'toggle-switch' + (showInfra ? ' on' : '');
+  const infraNote = document.getElementById('infraNote');
+  const step = tutorialSteps[currentStep];
+  if (step.infra) {
+    infraNote.className = 'infra-note' + (showInfra ? ' visible' : '');
+  }
+}
+
+// ── DOMAIN LOGIC ──
+function selectDomain(id) {
+  const domain = domains.find(d => d.id === id);
+  if (!domain) return;
+
+  // Update card selection
+  document.querySelectorAll('.domain-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById(`domain-${id}`).classList.add('selected');
+
+  // Update detail panel
+  document.getElementById('detailTitle').textContent = `${domain.emoji} ${domain.name}`;
+  document.getElementById('detailDesc').textContent = domain.description;
+  document.getElementById('detailExample').innerHTML = '<strong>At scale:</strong> ' + domain.example;
+  document.getElementById('domainDetail').className = 'domain-detail visible';
+
+  // Reset imagine blocks
+  document.querySelectorAll('.i-cluster').forEach(el => el.classList.remove('used'));
+  document.querySelectorAll('.i-block').forEach(el => el.classList.remove('used'));
+
+  // Light up used blocks
+  domain.blocksUsed.forEach(blockId => {
+    const el = document.getElementById(`ib-${blockId}`);
+    if (el) el.classList.add('used');
+    // Light up parent cluster
+    const cluster = clusters.find(c => c.blocks.some(b => b.id === blockId));
+    if (cluster) {
+      const clusterEl = document.getElementById(`i-${cluster.id}`);
+      if (clusterEl) clusterEl.classList.add('used');
+    }
+  });
+
+  selectedDomain = id;
+}
+
+// ── DEPTH TOGGLE ──
+function setDepth(mode) {
+  if (mode === 'tech') {
+    document.body.classList.add('tech-depth');
+    document.getElementById('btnTech').classList.add('active');
+    document.getElementById('btnSimple').classList.remove('active');
+  } else {
+    document.body.classList.remove('tech-depth');
+    document.getElementById('btnSimple').classList.add('active');
+    document.getElementById('btnTech').classList.remove('active');
+  }
+}
+
+// ── RUN ──
+init();
+</script>
+</body>
+</html>
