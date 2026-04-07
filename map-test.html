@@ -3,239 +3,261 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Portfolio Map — eGov DIGIT</title>
+<title>Portfolio — eGov DIGIT</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 <style>
-:root{--bg:#f7f4ef;--surface:#fff;--s2:#f0ede8;--text:#1c1917;--muted:#78716c;--faint:#a8a29e;--border:#e7e5e4;--green:#2a6e47;--amber:#b45309}
+:root{
+  --bg:#f7f4ef;--surface:#fff;--s2:#f0ede8;--text:#1c1917;
+  --muted:#78716c;--faint:#a8a29e;--border:#e7e5e4;
+  --green:#2a6e47;--green-lt:#d1f0e2;--amber:#b45309;
+  --c-egov:#2a6e47;--c-comm:#1e40af;--c-dev:#b45309;--c-govt:#6b21a8;--c-pipe:#a8a29e;
+}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);padding:2rem 2rem 4rem}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);padding:2rem 2rem 5rem;max-width:1100px;margin:0 auto}
 
-/* HEADER */
-.hdr{max-width:1200px;margin:0 auto 1.6rem}
-.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--green);display:flex;align-items:center;gap:.55rem;margin-bottom:.45rem}
-.eyebrow::before{content:'';width:22px;height:2px;background:var(--green);flex-shrink:0}
-.ptitle{font-family:'DM Serif Display',serif;font-size:clamp(1.7rem,3vw,2.3rem);line-height:1.15;margin-bottom:.45rem}
-.psub{font-size:.88rem;line-height:1.7;color:var(--muted);max-width:580px}
+/* ── HEADER ─────────────────────────────────── */
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:.63rem;letter-spacing:.13em;text-transform:uppercase;color:var(--green);display:flex;align-items:center;gap:.5rem;margin-bottom:.4rem}
+.eyebrow::before{content:'';width:20px;height:2px;background:var(--green);flex-shrink:0}
+h1{font-family:'DM Serif Display',serif;font-size:clamp(1.6rem,2.8vw,2.2rem);line-height:1.15;margin-bottom:.4rem}
+.intro{font-size:.87rem;line-height:1.7;color:var(--muted);max-width:560px;margin-bottom:1.6rem}
 
-/* STATS */
-.stats{display:flex;flex-wrap:wrap;gap:.65rem;margin:1.4rem 0}
-.sc{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:.7rem 1rem;min-width:100px}
-.sn{font-family:'DM Serif Display',serif;font-size:1.55rem;color:var(--green);line-height:1;margin-bottom:.18rem}
-.sl{font-size:.67rem;color:var(--muted);line-height:1.35}
+/* ── STATS BAR ──────────────────────────────── */
+.stats-bar{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.4rem}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.6rem .95rem}
+.stat-n{font-family:'DM Serif Display',serif;font-size:1.45rem;color:var(--green);line-height:1;margin-bottom:.15rem}
+.stat-l{font-size:.65rem;color:var(--muted);line-height:1.3}
 
-/* FILTERS */
-.filter-wrap{max-width:1200px;margin:0 auto 1.1rem;display:flex;flex-direction:column;gap:.5rem}
-.filter-row{display:flex;flex-wrap:wrap;gap:.35rem;align-items:center}
-.flbl{font-size:.63rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-right:.2rem;white-space:nowrap}
-.fb{font-family:'Plus Jakarta Sans',sans-serif;font-size:.73rem;font-weight:600;padding:.25rem .72rem;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);color:#57534e;cursor:pointer;transition:all .14s}
+/* ── FILTER PANEL ───────────────────────────── */
+.filter-panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.1rem 1.3rem;margin-bottom:1.2rem}
+.filter-section{display:flex;flex-wrap:wrap;gap:.35rem;align-items:center;margin-bottom:.6rem}
+.filter-section:last-child{margin-bottom:0}
+.flbl{font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);width:52px;flex-shrink:0}
+.fb{font-family:'Plus Jakarta Sans',sans-serif;font-size:.72rem;font-weight:600;padding:.22rem .68rem;border-radius:20px;border:1.5px solid var(--border);background:var(--bg);color:#57534e;cursor:pointer;transition:all .13s;white-space:nowrap}
 .fb:hover{border-color:var(--green);color:var(--green)}
 .fb.active{background:var(--green);color:#fff;border-color:var(--green)}
+.fb.r-comm.active{background:var(--c-comm);border-color:var(--c-comm)}
+.fb.r-dev.active{background:var(--c-dev);border-color:var(--c-dev)}
+.fb.r-govt.active{background:var(--c-govt);border-color:var(--c-govt)}
+.fb.r-pipe.active{background:#78716c;border-color:#78716c}
 .fb.stage-live.active{background:#15803d;border-color:#15803d}
 .fb.stage-pipe.active{background:#a16207;border-color:#a16207}
+.state-sel{font-family:'Plus Jakarta Sans',sans-serif;font-size:.72rem;font-weight:600;padding:.22rem .65rem;border-radius:20px;border:1.5px solid var(--border);background:var(--bg);color:#57534e;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;padding-right:1.5rem;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2378716c'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .45rem center}
+.state-sel:focus{border-color:var(--green)}
 
-/* LEGEND */
-.legend{display:flex;flex-wrap:wrap;gap:.8rem;align-items:center;margin-bottom:1rem;font-size:.71rem;color:#57534e;max-width:1200px;margin-left:auto;margin-right:auto}
-.li{display:flex;align-items:center;gap:.35rem}
-.ld{width:12px;height:12px;border-radius:3px;flex-shrink:0}
-.new-badge{font-size:.61rem;background:#fef3c7;color:#92400e;border:1px solid #fde68a;border-radius:4px;padding:.07rem .37rem;font-weight:600}
+/* ── RESULTS HEADER ─────────────────────────── */
+.results-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem;flex-wrap:wrap;gap:.5rem}
+.results-count{font-size:.78rem;color:var(--muted)}
+.results-count strong{color:var(--text)}
+.map-toggle-btn{font-family:'Plus Jakarta Sans',sans-serif;font-size:.73rem;font-weight:600;padding:.25rem .7rem;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);color:#57534e;cursor:pointer;display:flex;align-items:center;gap:.35rem;transition:all .13s}
+.map-toggle-btn:hover{border-color:var(--green);color:var(--green)}
+.map-toggle-btn.open{background:var(--green-lt);border-color:var(--green);color:var(--green)}
 
-/* LAYOUT */
-.layout{display:grid;grid-template-columns:1fr 340px;gap:1.6rem;align-items:start;max-width:1200px;margin:0 auto}
+/* ── MAP SECTION (toggleable) ───────────────── */
+.map-section{margin-bottom:1.2rem;display:none}
+.map-section.visible{display:block}
+.map-inner{display:flex;gap:1.2rem;align-items:flex-start}
+.map-container{background:#daedf7;border-radius:12px;overflow:hidden;border:1px solid #b6d4e9;flex-shrink:0;width:340px;position:relative}
+.map-container svg{display:block;width:100%;height:auto}
+.state-path{stroke:#a8c4b0;stroke-width:.5px;cursor:pointer;transition:filter .13s,opacity .2s}
+.state-path:hover{filter:brightness(.82)}
+.state-path.map-selected{stroke:#1c1917;stroke-width:1.5px}
+.map-legend{font-size:.68rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:.55rem;align-items:center;margin-top:.6rem}
+.ml-item{display:flex;align-items:center;gap:.3rem}
+.ml-dot{width:10px;height:10px;border-radius:2px}
+.map-note{font-size:.63rem;color:var(--faint);font-style:italic;margin-top:.35rem;line-height:1.5}
+.map-aside{flex:1;min-width:0}
+.map-aside-title{font-family:'DM Serif Display',serif;font-size:1.1rem;margin-bottom:.5rem}
+.map-aside-hint{font-size:.77rem;color:var(--muted);line-height:1.6}
+.map-selected-state{font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--green);margin-bottom:.4rem}
+.clear-state{font-size:.7rem;color:var(--green);cursor:pointer;text-decoration:underline;font-weight:600}
 
-/* MAP */
-.map-wrap{background:#daedf7;border-radius:14px;overflow:hidden;border:1px solid #b6d4e9;position:relative}
-.map-wrap svg{display:block;width:100%;height:auto}
-.map-tip{position:absolute;bottom:.65rem;left:50%;transform:translateX(-50%);font-size:.64rem;background:rgba(255,255,255,.9);border-radius:20px;padding:.22rem .7rem;color:var(--muted);pointer-events:none;white-space:nowrap;border:1px solid var(--border)}
-.state-path{stroke:#a8c4b0;stroke-width:.5px;cursor:pointer;transition:filter .14s,opacity .2s}
-.state-path:hover{filter:brightness(.85)}
-.state-path.selected{stroke:#1c1917!important;stroke-width:2px!important;filter:brightness(.88)}
-.state-path.dimmed{opacity:.18}
-/* GoI claimed boundary overlay */
-.goi-claimed{fill:#e8f5ef;fill-opacity:.35;stroke:#2a6e47;stroke-width:.7px;stroke-dasharray:3,2.5;pointer-events:none}
-.goi-solid{fill:none;stroke:#8ab4a0;stroke-width:.6px;pointer-events:none}
-
-/* PANEL */
-.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.3rem 1.4rem;position:sticky;top:1.5rem;max-height:calc(100vh - 3rem);overflow-y:auto}
-.panel-back{font-size:.72rem;color:var(--green);cursor:pointer;display:flex;align-items:center;gap:.3rem;margin-bottom:.9rem;font-weight:600}
-.panel-back:hover{text-decoration:underline}
-.pstate{font-family:'DM Serif Display',serif;font-size:1.3rem;margin-bottom:.3rem}
-.ppills{display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.9rem}
-.pp{font-size:.65rem;font-weight:700;letter-spacing:.04em;padding:.15rem .48rem;border-radius:7px}
-.pp-live{background:#dcfce7;color:#15803d}
-.pp-des{background:#fef9c3;color:#a16207}
-
-/* Prog cards */
+/* ── PROGRAMME LIST ─────────────────────────── */
 .prog-list{display:flex;flex-direction:column;gap:.5rem}
-.pc{background:var(--bg);border-radius:8px;padding:.75rem .9rem;border-left:3px solid #c8c4be;cursor:pointer;transition:background .11s,transform .11s}
-.pc:hover{background:#f0f7f4;transform:translateX(2px)}
-.pc-header{display:flex;justify-content:space-between;align-items:flex-start;gap:.4rem;margin-bottom:.25rem}
-.pc-use{font-size:.8rem;font-weight:600;line-height:1.3;flex:1}
-.pc-stage{font-size:.6rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:.13rem .4rem;border-radius:6px;flex-shrink:0}
+.prog-card{background:var(--surface);border:1px solid var(--border);border-radius:9px;border-left:3px solid #c8c4be;overflow:hidden;cursor:pointer;transition:box-shadow .13s}
+.prog-card:hover{box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.prog-card.r-egov_direct{border-left-color:var(--c-egov)}
+.prog-card.r-commercial_partner{border-left-color:var(--c-comm)}
+.prog-card.r-development_sector{border-left-color:var(--c-dev)}
+.prog-card.r-govt_body{border-left-color:var(--c-govt)}
+.prog-summary{display:grid;grid-template-columns:130px 1fr auto;gap:.6rem;align-items:center;padding:.7rem 1rem}
+.prog-geo{font-size:.73rem;font-weight:700;color:var(--text)}
+.prog-geo-sub{font-size:.67rem;font-weight:400;color:var(--muted);margin-top:.08rem}
+.prog-main{}
+.prog-use{font-size:.82rem;font-weight:600;line-height:1.3;color:var(--text)}
+.prog-meta{display:flex;flex-wrap:wrap;gap:.3rem;align-items:center;margin-top:.25rem}
+.prog-sector{font-size:.66rem;background:#f0efed;border-radius:4px;padding:.07rem .35rem;color:#57534e}
+.prog-by{font-size:.66rem;color:var(--muted)}
+.prog-right{display:flex;flex-direction:column;align-items:flex-end;gap:.3rem;flex-shrink:0}
+.prog-stage{font-size:.59rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:.12rem .38rem;border-radius:6px}
 .s-live{background:#dcfce7;color:#15803d}
 .s-des{background:#fef9c3;color:#a16207}
-.pc-meta{font-size:.71rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:.35rem;align-items:center}
-.pc-sector{background:#f0efed;border-radius:4px;padding:.08rem .36rem}
-.pc-role{font-size:.65rem;padding:.08rem .36rem;border-radius:4px;border:1px solid var(--border)}
-.pc-detail{display:none;font-size:.76rem;line-height:1.65;color:#44403c;margin-top:.4rem;padding-top:.4rem;border-top:1px solid var(--border)}
-.pc-detail.open{display:block}
-.pc-dm-row{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.38rem}
-.pc-dm{font-size:.67rem;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.09rem .36rem;color:#57534e}
-.pc-dm strong{color:var(--text)}
+.new-badge{font-size:.6rem;background:#fef3c7;color:#92400e;border:1px solid #fde68a;border-radius:4px;padding:.07rem .35rem;font-weight:600}
+.expand-hint{font-size:.62rem;color:var(--faint)}
+.prog-detail{display:none;padding:.6rem 1rem .85rem 1rem;border-top:1px solid #f0efed;background:#fafaf9;font-size:.78rem;line-height:1.65;color:#44403c}
+.prog-detail.open{display:block}
+.detail-meta{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.45rem}
+.dm{font-size:.67rem;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.09rem .35rem;color:#57534e}
+.dm strong{color:var(--text)}
 
-/* All-programmes panel */
-.all-hdr{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.3rem}
-.all-title{font-family:'DM Serif Display',serif;font-size:1.2rem}
-.all-total{font-size:.73rem;color:var(--muted)}
-.all-hint{font-size:.69rem;color:var(--faint);font-style:italic;margin-bottom:.85rem}
-.region-group{margin-bottom:.75rem}
-.region-lbl{font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);padding:.1rem 0 .3rem;border-bottom:1px solid var(--border);margin-bottom:.35rem}
-.all-row{display:flex;align-items:center;gap:.45rem;padding:.42rem .35rem;border-radius:7px;cursor:pointer;transition:background .1s}
-.all-row:hover{background:var(--s2)}
-.all-dot{width:9px;height:9px;border-radius:2px;flex-shrink:0}
-.all-name{flex:1;font-size:.78rem;font-weight:500}
-.all-rols{display:flex;gap:.28rem;flex-shrink:0}
-
-/* Intl */
-.intl-wrap{max-width:1200px;margin:1.1rem auto 0}
-.intl-tog{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.8rem 1.25rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:background .14s;user-select:none}
+/* ── INTL ───────────────────────────────────── */
+.intl-wrap{margin-top:1.2rem}
+.intl-tog{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.75rem 1.2rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:background .13s;user-select:none}
 .intl-tog:hover{background:var(--s2)}
 .intl-tog.open{border-radius:10px 10px 0 0;border-bottom-color:transparent}
-.intl-lft{display:flex;align-items:center;gap:.7rem}
-.intl-ttl{font-size:.85rem;font-weight:700}
-.intl-sub{font-size:.71rem;color:var(--muted)}
-.intl-chev{font-size:.74rem;color:var(--faint);transition:transform .2s}
+.intl-lft{display:flex;align-items:center;gap:.65rem}
+.intl-ttl{font-size:.84rem;font-weight:700}
+.intl-sub{font-size:.7rem;color:var(--muted)}
+.intl-chev{font-size:.72rem;color:var(--faint);transition:transform .2s}
 .intl-tog.open .intl-chev{transform:rotate(180deg)}
-.intl-panel{display:none;background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 10px 10px;padding:1rem 1.25rem}
+.intl-panel{display:none;background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 10px 10px;padding:.9rem 1.2rem}
 .intl-panel.visible{display:block}
-.intl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.6rem}
-.intl-card{background:var(--bg);border-radius:7px;padding:.6rem .8rem;border-left:2px solid #0f766e}
-.intl-geo{font-size:.75rem;font-weight:700;margin-bottom:.17rem}
-.intl-use{font-size:.73rem;color:#44403c;line-height:1.35;margin-bottom:.17rem}
-.intl-meta{font-size:.66rem;color:var(--muted)}
+.intl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:.55rem}
+.intl-card{background:var(--bg);border-radius:7px;padding:.58rem .78rem;border-left:2px solid #0f766e}
+.intl-geo{font-size:.74rem;font-weight:700;margin-bottom:.15rem}
+.intl-use{font-size:.72rem;color:#44403c;line-height:1.3;margin-bottom:.15rem}
+.intl-meta2{font-size:.65rem;color:var(--muted)}
 
-/* Disclaimer */
-.disclaimer{max-width:1200px;margin:.75rem auto 0;font-size:.63rem;color:var(--faint);line-height:1.55;font-style:italic}
+/* ── EMPTY STATE ─────────────────────────────── */
+.empty{padding:2.5rem 1rem;text-align:center;color:var(--muted);font-size:.85rem}
 
-/* Loading */
-.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:400px;gap:.7rem;color:var(--muted)}
-.spinner{width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite}
+/* ── LOADING ─────────────────────────────────── */
+.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:300px;gap:.65rem;color:var(--muted)}
+.spinner{width:26px;height:26px;border:3px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-@media(max-width:900px){.layout{grid-template-columns:1fr}.panel{position:static;max-height:none}}
+/* ── DISCLAIMER ──────────────────────────────── */
+.disc{margin-top:1.2rem;font-size:.62rem;color:var(--faint);font-style:italic;line-height:1.55}
+
+@media(max-width:680px){
+  .prog-summary{grid-template-columns:1fr auto;grid-template-rows:auto auto}
+  .prog-geo{grid-column:1;grid-row:1}
+  .prog-right{grid-column:2;grid-row:1;align-items:flex-end}
+  .prog-main{grid-column:1/-1;grid-row:2}
+  .map-inner{flex-direction:column}.map-container{width:100%}
+}
 </style>
 </head>
 <body>
-<div class="hdr">
-  <div class="eyebrow">Solutions built by the eGov community</div>
-  <h1 class="ptitle">Portfolio of programs.</h1>
-  <p class="psub">Each of eGov's five modes leaves a different footprint. A portfolio of 70+ programmes has taken shape across 20+ states and 11 sectors. Most were not built by eGov. That is precisely the point.</p>
+
+<div class="eyebrow">Solutions built by the eGov community</div>
+<h1>Portfolio of programs.</h1>
+<p class="intro">Each of eGov's five modes of engagement leaves a different footprint. A portfolio of 70+ programmes has taken shape across 20+ states and 11 sectors. Most were not built by eGov. That is precisely the point.</p>
+
+<div class="stats-bar" id="statsBar"></div>
+
+<div class="filter-panel">
+  <div class="filter-section">
+    <span class="flbl">Sector</span>
+    <button class="fb active" onclick="setF('sector','all',this)">All</button>
+    <button class="fb" onclick="setF('sector','Local Governance',this)">Local Gov.</button>
+    <button class="fb" onclick="setF('sector','Health',this)">Health</button>
+    <button class="fb" onclick="setF('sector','Water & Sanitation',this)">Water</button>
+    <button class="fb" onclick="setF('sector','Livelihoods & Benefits',this)">Livelihoods</button>
+    <button class="fb" onclick="setF('sector','Education',this)">Education</button>
+    <button class="fb" onclick="setF('sector','Legal',this)">Legal</button>
+    <button class="fb" onclick="setF('sector','Industrials',this)">Industrials</button>
+    <button class="fb" onclick="setF('sector','Clean Energy',this)">Clean Energy</button>
+    <button class="fb" onclick="setF('sector','Works Management',this)">Works Mgmt</button>
+  </div>
+  <div class="filter-section">
+    <span class="flbl">Stage</span>
+    <button class="fb active" onclick="setF('stage','all',this)">All</button>
+    <button class="fb stage-live" onclick="setF('stage','live',this)">Live only</button>
+    <button class="fb stage-pipe" onclick="setF('stage','pipe',this)">Pipeline only</button>
+  </div>
+  <div class="filter-section">
+    <span class="flbl">Role</span>
+    <button class="fb active" onclick="setF('role','all',this)">All</button>
+    <button class="fb" onclick="setF('role','egov_direct',this)">eGov direct</button>
+    <button class="fb r-comm" onclick="setF('role','commercial_partner',this)">Commercial partners</button>
+    <button class="fb r-dev" onclick="setF('role','development_sector',this)">Development sector</button>
+    <button class="fb r-govt" onclick="setF('role','govt_body',this)">Govt / public body</button>
+    <button class="fb r-pipe" onclick="setF('role','pipeline',this)">Pipeline / TBD</button>
+  </div>
+  <div class="filter-section">
+    <span class="flbl">State</span>
+    <select class="state-sel" id="stateSel" onchange="setStateFilter(this.value)">
+      <option value="all">All states</option>
+    </select>
+  </div>
 </div>
-<div id="appRoot">
-  <div class="loading"><div class="spinner"></div><span style="font-size:.82rem">Loading…</span></div>
+
+<div class="results-hdr">
+  <div class="results-count" id="resultsCount"></div>
+  <button class="map-toggle-btn" id="mapToggleBtn" onclick="toggleMap()">📍 View on map</button>
 </div>
+
+<div class="map-section" id="mapSection">
+  <div class="map-inner">
+    <div>
+      <div class="map-container" id="mapContainer"><!-- D3 SVG injected here --></div>
+      <div class="map-legend" id="mapLegend"></div>
+      <div class="map-note">Map indicative. Boundaries as per available open data. Official boundaries per Survey of India.</div>
+    </div>
+    <div class="map-aside">
+      <div id="mapAsideContent">
+        <div class="map-aside-title">Click a state</div>
+        <div class="map-aside-hint">Select any highlighted state on the map to filter the programme list below to that state.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="prog-list" id="progList"></div>
+
+<div class="intl-wrap">
+  <div class="intl-tog" id="intlTog" onclick="toggleIntl()">
+    <div class="intl-lft">
+      <span style="font-size:1.1rem">🌍</span>
+      <div><div class="intl-ttl">International deployments</div>
+      <div class="intl-sub" id="intlSub"></div></div>
+    </div>
+    <span class="intl-chev">▾</span>
+  </div>
+  <div class="intl-panel" id="intlPanel"></div>
+</div>
+
+<div class="disc">Map view is indicative. External and internal boundaries as per Government of India official sources / Survey of India where available.</div>
 
 <script>
-// ── DATA SOURCES ──────────────────────────────────────────────────────────
-// CSV: swap to baked-in array at the comment below if needed
-const CSV_URL = 'https://raw.githubusercontent.com/kriticalthinking/digit-building-blocks-visualization/main/programmes.csv';
-const GEO_PRIMARY  = 'https://raw.githubusercontent.com/datameet/maps/master/States/Admin2.geojson';
-const GEO_FALLBACK = 'https://raw.githubusercontent.com/geohacker/india/master/state/india_state.geojson';
+// ── SOURCES ────────────────────────────────────────────────────────────────
+const CSV_URL     = 'https://raw.githubusercontent.com/kriticalthinking/digit-building-blocks-visualization/main/programmes.csv';
+const GEO_PRIMARY = 'https://raw.githubusercontent.com/datameet/maps/master/States/Admin2.geojson';
+const GEO_BACKUP  = 'https://raw.githubusercontent.com/geohacker/india/master/state/india_state.geojson';
 
-// ── ROLE COLOURS (used only in programme cards, not on map) ───────────────
-const ROLE_COLOR = {
-  egov_direct:        '#2a6e47',
-  commercial_partner: '#1e40af',
-  development_sector: '#b45309',
-  govt_body:          '#6b21a8',
-  pipeline:           '#a8a29e',
-};
-const ROLE_LABEL = {
-  egov_direct:'eGov direct', commercial_partner:'Commercial', development_sector:'Dev sector',
-  govt_body:'Govt body', international:'International', pipeline:'Pipeline',
-};
+// ── ROLE DISPLAY ────────────────────────────────────────────────────────────
+const ROLE_COL  = {egov_direct:'#2a6e47',commercial_partner:'#1e40af',development_sector:'#b45309',govt_body:'#6b21a8',pipeline:'#a8a29e'};
+const ROLE_LBL  = {egov_direct:'eGov direct',commercial_partner:'Commercial partner',development_sector:'Dev sector',govt_body:'Govt body',pipeline:'Pipeline / TBD'};
 
-// ── MAP COLOUR SCALE — by live programme count ────────────────────────────
-// 0 live = grey/amber, 1 = lightest green, 4+ = darkest green
-const LIVE_SHADES = ['#e5e0d8','#fef3c7','#c6e8d5','#8dd0ae','#4aaa7e','#2a6e47'];
-// index: 0=none, 1=pipeline-only, 2=1live, 3=2live, 4=3live, 5=4+live
-function liveShadeIdx(progs) {
-  const live = progs.filter(p => p.stage === 'Live').length;
-  if (live >= 4) return 5;
-  if (live >= 3) return 4;
-  if (live >= 2) return 3;
-  if (live >= 1) return 2;
-  if (progs.length > 0) return 1; // pipeline only
-  return 0; // nothing
-}
-function mapFill(progs)   { return LIVE_SHADES[liveShadeIdx(progs)]; }
-function mapStroke(progs) { return liveShadeIdx(progs) >= 2 ? '#2a6e47' : '#c8c4be'; }
+// ── MAP FILL BY LIVE COUNT ──────────────────────────────────────────────────
+const FILLS = ['#e5e0d8','#fef3c7','#c6e8d5','#8dd0ae','#4aaa7e','#2a6e47'];
+function liveIdx(progs){ const n=progs.filter(p=>p.stage==='Live').length; return n>=4?5:n>=3?4:n>=2?3:n>=1?2:progs.length?1:0; }
 
-// ── SECTORS ───────────────────────────────────────────────────────────────
-const SECTORS = [
-  'Local Governance','Health','Water & Sanitation','Livelihoods & Benefits',
-  'Education','Legal','Industrials','Clean Energy','Works Management','Emergency Response',
-];
-
-// ── STATE NAME NORMALISATION ──────────────────────────────────────────────
-// Maps GeoJSON state name (NAME_1 or ST_NM) → our CSV geography value
+// ── STATE NAME NORM ─────────────────────────────────────────────────────────
 const GEO_NORM = {
   'Andhra Pradesh':'Andhra Pradesh','Assam':'Assam','Bihar':'Bihar',
   'Chandigarh':'Chandigarh','Chhattisgarh':'Chhattisgarh',
   'Delhi':'New Delhi','NCT of Delhi':'New Delhi',
-  'Goa':'Goa','Gujarat':'Gujarat','Haryana':'Haryana',
-  'Himachal Pradesh':'Himachal Pradesh',
-  'Jammu & Kashmir':'Jammu & Kashmir','Jammu and Kashmir':'Jammu & Kashmir',
-  'Ladakh':'Ladakh',
+  'Goa':'Goa','Gujarat':'Gujarat','Haryana':'Haryana','Himachal Pradesh':'Himachal Pradesh',
+  'Jammu & Kashmir':'Jammu & Kashmir','Jammu and Kashmir':'Jammu & Kashmir','Ladakh':'Ladakh',
   'Jharkhand':'Jharkhand','Karnataka':'Karnataka','Kerala':'Kerala',
   'Madhya Pradesh':'Madhya Pradesh','Maharashtra':'Maharashtra','Manipur':'Manipur',
-  'Odisha':'Odisha','Orissa':'Odisha',
-  'Puducherry':'Puducherry','Pondicherry':'Puducherry',
-  'Punjab':'Punjab','Rajasthan':'Rajasthan','Tamil Nadu':'Tamil Nadu',
-  'Telangana':'Telangana','Uttar Pradesh':'Uttar Pradesh',
-  'Uttarakhand':'Uttarakhand','Uttaranchal':'Uttarakhand','West Bengal':'West Bengal',
+  'Odisha':'Odisha','Orissa':'Odisha','Puducherry':'Puducherry','Pondicherry':'Puducherry',
+  'Punjab':'Punjab','Rajasthan':'Rajasthan','Tamil Nadu':'Tamil Nadu','Telangana':'Telangana',
+  'Uttar Pradesh':'Uttar Pradesh','Uttarakhand':'Uttarakhand','Uttaranchal':'Uttarakhand',
+  'West Bengal':'West Bengal',
 };
-
-// ── REGION GROUPING ───────────────────────────────────────────────────────
-const REGION = {
-  'Jammu & Kashmir':'North','Ladakh':'North','Himachal Pradesh':'North',
-  'Punjab':'North','Haryana':'North','New Delhi':'North','Chandigarh':'North',
-  'Uttarakhand':'North','Uttar Pradesh':'North','Rajasthan':'North',
-  'Gujarat':'West','Maharashtra':'West','Goa':'West',
-  'Madhya Pradesh':'Central','Chhattisgarh':'Central',
-  'Bihar':'East','Jharkhand':'East','Odisha':'East','West Bengal':'East',
-  'Assam':'North East','Manipur':'North East',
-  'Andhra Pradesh':'South','Karnataka':'South','Kerala':'South',
-  'Tamil Nadu':'South','Telangana':'South','Puducherry':'South',
-};
-const REGION_ORDER = ['National','North','West','Central','East','North East','South'];
-
-// National/Central programmes bucket
 const NATIONAL = new Set(['All Cantonments','Central Govt.','National (NUDM)']);
+function geoName(f){ return f.properties.ST_NM||f.properties.NAME_1||f.properties.name||''; }
+function csvName(f){ return GEO_NORM[geoName(f)]||null; }
 
-// ── GoI CLAIMED BOUNDARY — J&K + Ladakh full territory ────────────────────
-// This polygon represents India's full claimed territory for J&K/Ladakh
-// including Pakistan-Administered Kashmir and Aksai Chin (as per GoI).
-// The boundary is rendered as a dashed overlay on top of state polygons.
-const GOI_BOUNDARY = {
-  type:'Feature', properties:{},
-  geometry:{
-    type:'Polygon',
-    coordinates:[[
-      [74.5,32.0],[73.6,32.9],[73.2,33.6],[73.5,34.4],
-      [73.1,35.0],[72.4,35.6],[72.1,36.1],[73.2,36.6],
-      [75.0,36.9],[76.6,37.1],[78.1,37.5],[79.2,37.1],
-      [80.5,36.5],[82.4,34.9],[82.2,34.3],[80.4,33.6],
-      [79.4,32.4],[77.3,32.2],[75.8,32.1],[74.8,32.0],[74.5,32.0]
-    ]]
-  }
-};
+// ── STATE ───────────────────────────────────────────────────────────────────
+let PROGRAMS=[], GEO=null, stateMap={};
+let F = {sector:'all', stage:'all', role:'all', state:'all'};
+let mapBuilt=false, expandedIdx=null;
 
-// ── STATE ─────────────────────────────────────────────────────────────────
-let PROGRAMS=[], GEO=null, stateMap={}, activeFilter={stage:'all',sector:'all'};
-let activeState=null, svgEl=null, pathGen=null;
-
-// ── CSV PARSER ────────────────────────────────────────────────────────────
+// ── CSV ─────────────────────────────────────────────────────────────────────
 function parseCSV(t){
   const lines=t.trim().split('\n');
   const h=lines[0].replace(/\r/,'').split(',').map(x=>x.replace(/"/g,'').trim());
@@ -250,294 +272,212 @@ function parseCSV(t){
   }).filter(p=>p.geo);
 }
 
-function buildStateMap(programs){
-  const m={};
-  programs.filter(p=>p.role!=='international').forEach(p=>{
-    if(!m[p.geo])m[p.geo]=[];m[p.geo].push(p);
-  });
-  return m;
-}
+function buildStateMap(ps){ const m={}; ps.filter(p=>p.role!=='international').forEach(p=>{if(!m[p.geo])m[p.geo]=[];m[p.geo].push(p);}); return m; }
 
-// ── FILTER LOGIC ──────────────────────────────────────────────────────────
+// ── FILTER MATCHING ─────────────────────────────────────────────────────────
 function matches(p){
-  if(activeFilter.stage==='live'&&p.stage!=='Live') return false;
-  if(activeFilter.stage==='pipe'&&p.stage==='Live') return false;
-  if(activeFilter.sector!=='all'&&p.sector!==activeFilter.sector) return false;
+  if(p.role==='international') return false;
+  if(F.sector!=='all'&&p.sector!==F.sector) return false;
+  if(F.stage==='live'&&p.stage!=='Live') return false;
+  if(F.stage==='pipe'&&p.stage==='Live') return false;
+  if(F.role!=='all'&&p.role!==F.role) return false;
+  if(F.state!=='all'&&p.geo!==F.state) return false;
   return true;
 }
-function filteredFor(geo){ return (stateMap[geo]||[]).filter(matches); }
 
-// ── GEO HELPERS ───────────────────────────────────────────────────────────
-function geoName(f){return f.properties.ST_NM||f.properties.NAME_1||f.properties.name||'';}
-function csvName(f){return GEO_NORM[geoName(f)]||null;}
-
-// ── INIT ──────────────────────────────────────────────────────────────────
+// ── INIT ────────────────────────────────────────────────────────────────────
 function init(programs,geo){
   PROGRAMS=programs; GEO=geo; stateMap=buildStateMap(programs);
-  renderApp();
+  populateStateDropdown();
+  document.getElementById('intlSub').textContent=`${programs.filter(p=>p.role==='international').length} programmes across Mozambique, Liberia, Senegal and Nigeria — click to expand`;
+  render();
 }
 
-// ── RENDER APP ────────────────────────────────────────────────────────────
-function renderApp(){
-  const root=document.getElementById('appRoot');
-  const sectorBtns=SECTORS.map(s=>
-    `<button class="fb" data-sector="${s}" onclick="setSector('${s.replace(/'/g,'\\x27')}',this)">${s.replace('& Sanitation','& San.').replace('Livelihoods & Benefits','Livelihoods').replace('Emergency Response','Emergency').replace('Works Management','Works Mgmt').replace('Clean Energy','Clean Energy')}</button>`
-  ).join('');
-  root.innerHTML=`
-    <div class="stats" id="statsRow"></div>
-    <div class="filter-wrap">
-      <div class="filter-row">
-        <span class="flbl">Stage:</span>
-        <button class="fb active" onclick="setStage('all',this)">All</button>
-        <button class="fb stage-live" onclick="setStage('live',this)">Live only</button>
-        <button class="fb stage-pipe" onclick="setStage('pipe',this)">Pipeline only</button>
-      </div>
-      <div class="filter-row">
-        <span class="flbl">Sector:</span>
-        <button class="fb active" onclick="setSector('all',this)">All sectors</button>
-        ${sectorBtns}
-      </div>
-    </div>
-    <div class="legend" id="legendRow"></div>
-    <div class="layout">
-      <div>
-        <div class="map-wrap" id="mapWrap">
-          <div class="map-tip">Click a state to see its programmes</div>
+function populateStateDropdown(){
+  const states=[...new Set(PROGRAMS.filter(p=>!NATIONAL.has(p.geo)&&p.role!=='international').map(p=>p.geo))].sort();
+  const sel=document.getElementById('stateSel');
+  states.forEach(s=>{ const o=document.createElement('option'); o.value=s; o.textContent=s; sel.appendChild(o); });
+}
+
+// ── RENDER ───────────────────────────────────────────────────────────────────
+function render(){
+  const filtered=PROGRAMS.filter(matches);
+  renderStats(filtered);
+  renderList(filtered);
+  if(mapBuilt) repaintMap();
+}
+
+function renderStats(filtered){
+  const live=filtered.filter(p=>p.stage==='Live').length;
+  const netNew=filtered.filter(p=>p.new).length;
+  document.getElementById('statsBar').innerHTML=[
+    [filtered.length,'programmes shown'],
+    [live,'live & in use'],
+    [netNew,'net-new products'],
+  ].map(([n,l])=>`<div class="stat"><div class="stat-n">${n}</div><div class="stat-l">${l}</div></div>`).join('');
+  document.getElementById('resultsCount').innerHTML=
+    `Showing <strong>${filtered.length}</strong> programmes · <strong>${live}</strong> live`;
+}
+
+function renderList(filtered){
+  const list=document.getElementById('progList');
+  expandedIdx=null;
+  if(!filtered.length){ list.innerHTML='<div class="empty">No programmes match the current filters.</div>'; return; }
+  list.innerHTML=filtered.map((p,i)=>{
+    const rc='r-'+(p.role||'pipeline');
+    const sc=p.stage==='Live'?'s-live':'s-des';
+    const col=ROLE_COL[p.role]||'#a8a29e';
+    const rl=ROLE_LBL[p.role]||p.role;
+    const pop=p.pop?`<span class="dm"><strong>Population:</strong> ${(p.pop/1e6).toFixed(1)}M</span>`:'';
+    const yr=p.year?`<span class="dm"><strong>Since:</strong> ${p.year}</span>`:'';
+    const nb=p.new?`<span class="new-badge">Net-new</span>`:'';
+    const byStr=(p.by&&!p.by.includes('TBD')&&!p.by.includes('Global'))?p.by:'';
+    return`<div class="prog-card ${rc}" onclick="toggleCard(${i})">
+      <div class="prog-summary">
+        <div class="prog-geo">${p.geo}<div class="prog-geo-sub" style="color:${col}">${rl}</div></div>
+        <div class="prog-main">
+          <div class="prog-use">${p.use}</div>
+          <div class="prog-meta">
+            <span class="prog-sector">${p.sector}</span>
+            ${byStr?`<span class="prog-by">↳ ${byStr}</span>`:''}
+            ${nb}
+          </div>
+        </div>
+        <div class="prog-right">
+          <span class="prog-stage ${sc}">${p.stage}</span>
+          <span class="expand-hint" id="hint-${i}">+ more</span>
         </div>
       </div>
-      <div id="sidePanel" class="panel"></div>
-    </div>
-    <div class="intl-wrap">
-      <div class="intl-tog" id="intlTog" onclick="toggleIntl()">
-        <div class="intl-lft">
-          <span style="font-size:1.15rem">🌍</span>
-          <div><div class="intl-ttl">International deployments</div>
-          <div class="intl-sub">${PROGRAMS.filter(p=>p.role==='international').length} programmes across Mozambique, Liberia, Senegal and Nigeria</div></div>
-        </div>
-        <span class="intl-chev">▾</span>
-      </div>
-      <div class="intl-panel" id="intlPanel"></div>
-    </div>
-    <div class="disclaimer">Map follows Government of India official boundaries. External boundaries as per Survey of India. Responsibility for the correctness of internal details rests with the publisher.</div>`;
-  renderStats();
-  renderLegend();
-  buildMap();
-  renderAllPanel();
+      <div class="prog-detail" id="det-${i}">${p.details}<div class="detail-meta">${yr}${pop}</div></div>
+    </div>`;
+  }).join('');
 }
 
-// ── STATS ─────────────────────────────────────────────────────────────────
-function renderStats(){
-  const india=PROGRAMS.filter(p=>p.role!=='international');
-  const live=india.filter(p=>p.stage==='Live').length;
-  const netNew=PROGRAMS.filter(p=>p.new).length;
-  const partners=new Set(PROGRAMS.map(p=>p.by).filter(b=>b&&!b.includes('TBD')&&!b.includes('Global'))).size;
-  const sectors=new Set(india.map(p=>p.sector)).size;
-  document.getElementById('statsRow').innerHTML=[
-    [india.length,'India programmes'],[live,'Live & in use'],
-    [netNew,'Net-new products'],[partners+'+','Implementing orgs'],[sectors,'Sectors'],
-  ].map(([n,l])=>`<div class="sc"><div class="sn">${n}</div><div class="sl">${l}</div></div>`).join('');
+function toggleCard(i){
+  const det=document.getElementById('det-'+i);
+  const hint=document.getElementById('hint-'+i);
+  if(!det)return;
+  const open=det.classList.contains('open');
+  document.querySelectorAll('.prog-detail.open').forEach(d=>d.classList.remove('open'));
+  document.querySelectorAll('.expand-hint').forEach(h=>h.textContent='+ more');
+  if(!open){det.classList.add('open');hint.textContent='− less';}
 }
 
-// ── LEGEND ────────────────────────────────────────────────────────────────
-function renderLegend(){
-  document.getElementById('legendRow').innerHTML=`
-    <div class="li"><div class="ld" style="background:${LIVE_SHADES[2]}"></div>1 live programme</div>
-    <div class="li"><div class="ld" style="background:${LIVE_SHADES[3]}"></div>2 live</div>
-    <div class="li"><div class="ld" style="background:${LIVE_SHADES[4]}"></div>3 live</div>
-    <div class="li"><div class="ld" style="background:${LIVE_SHADES[5]}"></div>4+ live</div>
-    <div class="li"><div class="ld" style="background:${LIVE_SHADES[1]};border:1px solid #d6b96a"></div>Pipeline only</div>
-    <div class="li"><div class="ld" style="background:${LIVE_SHADES[0]};border:1px solid #c8c4be"></div>No programmes</div>
-    <div class="li"><div class="ld" style="background:none;border:1.5px dashed #2a6e47"></div>GoI claimed boundary</div>
-    <div class="li"><span class="new-badge">Net-new</span> New product built on DIGIT</div>`;
+// ── FILTERS ──────────────────────────────────────────────────────────────────
+function setF(key,val,btn){
+  F[key]=val;
+  // reset active in that filter row
+  btn.closest('.filter-section').querySelectorAll('.fb').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+function setStateFilter(val){
+  F.state=val;
+  // update map selected state
+  if(mapBuilt) repaintMap();
+  // update map aside if map open
+  updateMapAside();
+  render();
 }
 
-// ── D3 MAP ────────────────────────────────────────────────────────────────
+// ── MAP ───────────────────────────────────────────────────────────────────────
+let svgEl=null, pathGen=null;
+
+function toggleMap(){
+  const sec=document.getElementById('mapSection');
+  const btn=document.getElementById('mapToggleBtn');
+  const open=sec.classList.toggle('visible');
+  btn.classList.toggle('open',open);
+  btn.textContent=open?'✕ Hide map':'📍 View on map';
+  if(open&&!mapBuilt) buildMap();
+}
+
 function buildMap(){
-  const wrap=document.getElementById('mapWrap');
-  const W=500,H=580;
+  const wrap=document.getElementById('mapContainer');
+  const W=320,H=370;
   const proj=d3.geoMercator()
-    .fitExtent([[18,18],[W-18,H-18]],{type:'FeatureCollection',features:GEO.features});
+    .fitExtent([[12,12],[W-12,H-12]],{type:'FeatureCollection',features:GEO.features});
   pathGen=d3.geoPath().projection(proj);
-  const hint=wrap.querySelector('.map-tip');
-  svgEl=d3.select(wrap).insert('svg','.map-tip')
+  svgEl=d3.select(wrap).append('svg')
     .attr('viewBox',`0 0 ${W} ${H}`).style('width','100%').style('height','auto');
   svgEl.append('rect').attr('width',W).attr('height',H).attr('fill','#daedf7');
-
-  const g=svgEl.append('g');
-
-  // ── GoI claimed boundary layer (behind states, visual only) ──────────────
-  g.append('path')
-    .datum(GOI_BOUNDARY)
-    .attr('class','goi-claimed')
-    .attr('d',pathGen);
-
-  // ── State polygons ────────────────────────────────────────────────────────
-  g.selectAll('path.state-path')
+  svgEl.selectAll('path')
     .data(GEO.features)
     .enter().append('path')
     .attr('class','state-path')
     .attr('d',pathGen)
-    .attr('fill',d=>{ const cn=csvName(d); return cn?mapFill(filteredFor(cn)):LIVE_SHADES[0]; })
-    .attr('stroke',d=>{ const cn=csvName(d); return cn?mapStroke(filteredFor(cn)):'#c8c4be'; })
-    .on('click',(_,d)=>{ const cn=csvName(d); if(cn) clickState(cn,geoName(d)); })
+    .attr('fill',d=>{ const cn=csvName(d); return cn?FILLS[liveIdx(stateMap[cn]||[])]:'#e5e0d8'; })
+    .attr('stroke','#a8c4b0').attr('stroke-width','.5')
+    .on('click',(_,d)=>{ const cn=csvName(d); if(cn) clickMapState(cn); })
     .append('title').text(d=>geoName(d));
+
+  // legend
+  document.getElementById('mapLegend').innerHTML=`
+    ${[[1,'1 live'],[3,'2-3 live'],[5,'4+ live']].map(([i,l])=>
+      `<div class="ml-item"><div class="ml-dot" style="background:${FILLS[i]}"></div>${l}</div>`
+    ).join('')}
+    <div class="ml-item"><div class="ml-dot" style="background:${FILLS[1]};border:1px solid #d6b96a"></div>Pipeline</div>
+    <div class="ml-item"><div class="ml-dot" style="background:${FILLS[0]};border:1px solid #c8c4be"></div>None</div>`;
+  mapBuilt=true;
 }
 
-function repaint(){
-  if(!svgEl)return;
+function repaintMap(){
+  if(!svgEl||!pathGen)return;
   svgEl.selectAll('path.state-path')
-    .attr('fill',d=>{ const cn=csvName(d); return cn?mapFill(filteredFor(cn)):LIVE_SHADES[0]; })
-    .attr('stroke',d=>{ const cn=csvName(d); return cn?mapStroke(filteredFor(cn)):'#c8c4be'; })
-    .style('opacity',1)
-    .classed('selected',d=>csvName(d)===activeState);
+    .attr('fill',d=>{
+      const cn=csvName(d); if(!cn) return '#e5e0d8';
+      const progs=(stateMap[cn]||[]).filter(p=>{
+        if(F.sector!=='all'&&p.sector!==F.sector) return false;
+        if(F.stage==='live'&&p.stage!=='Live') return false;
+        if(F.stage==='pipe'&&p.stage==='Live') return false;
+        if(F.role!=='all'&&p.role!==F.role) return false;
+        return true;
+      });
+      return FILLS[liveIdx(progs)];
+    })
+    .classed('map-selected',d=>csvName(d)===F.state);
 }
 
-// ── CLICK STATE ───────────────────────────────────────────────────────────
-function clickState(cn,dn){
-  if(activeState===cn){ activeState=null; repaint(); renderAllPanel(); return; }
-  activeState=cn; repaint(); renderStatePanel(cn,dn||cn);
-  if(window.innerWidth<900)setTimeout(()=>document.getElementById('sidePanel').scrollIntoView({behavior:'smooth',block:'nearest'}),80);
+function clickMapState(cn){
+  if(F.state===cn){ F.state='all'; document.getElementById('stateSel').value='all'; }
+  else { F.state=cn; document.getElementById('stateSel').value=cn; }
+  repaintMap(); updateMapAside(); render();
 }
 
-function renderStatePanel(cn,dn){
-  const progs=filteredFor(cn);
-  const live=progs.filter(p=>p.stage==='Live').length;
-  const des=progs.filter(p=>p.stage!=='Live').length;
-  const panel=document.getElementById('sidePanel');
-  if(!progs.length){
-    panel.innerHTML=`<div class="panel-back" onclick="goBack()">← All programmes</div>
-      <div class="pstate">${dn}</div>
-      <div style="font-size:.82rem;color:var(--muted);margin-top:.5rem">No programmes match the current filter for this state.</div>`;
-    return;
+function updateMapAside(){
+  const aside=document.getElementById('mapAsideContent');
+  if(F.state==='all'){
+    aside.innerHTML=`<div class="map-aside-title">Click a state</div><div class="map-aside-hint">Select any highlighted state to filter the list below. Click again to deselect.</div>`;
+  } else {
+    const progs=(stateMap[F.state]||[]);
+    const live=progs.filter(p=>p.stage==='Live').length;
+    aside.innerHTML=`<div class="map-selected-state">${F.state}</div>
+      <div class="map-aside-hint" style="margin-bottom:.5rem">${progs.length} programmes · ${live} live</div>
+      <span class="clear-state" onclick="clickMapState('${F.state.replace(/'/g,"\\'")}')">← Show all states</span>`;
   }
-  const cards=progs.map((p,i)=>{
-    const sc=p.stage==='Live'?'s-live':'s-des';
-    const rc=ROLE_COLOR[p.role]||'#a8a29e';
-    const rl=ROLE_LABEL[p.role]||p.role;
-    const pop=p.pop?`<span class="pc-dm"><strong>People:</strong> ${(p.pop/1e6).toFixed(1)}M</span>`:'';
-    const yr=p.year?`<span class="pc-dm"><strong>Since:</strong> ${p.year}</span>`:'';
-    const nb=p.new?`<span class="new-badge">Net-new</span>`:'';
-    const byStr=p.by&&!p.by.includes('TBD')&&!p.by.includes('Global')?p.by:'';
-    return`<div class="pc" style="border-left-color:${rc}" onclick="toggleCard(${i})">
-      <div class="pc-header"><div class="pc-use">${p.use}</div><span class="pc-stage ${sc}">${p.stage}</span></div>
-      <div class="pc-meta">
-        <span class="pc-sector">${p.sector}</span>
-        ${byStr?`<span class="pc-role" style="border-color:${rc};color:${rc}">↳ ${byStr}</span>`:''}
-        ${nb}
-      </div>
-      <div class="pc-detail" id="pd-${i}">${p.details}<div class="pc-dm-row">${yr}${pop}</div></div>
-    </div>`;
-  }).join('');
-  panel.innerHTML=`
-    <div class="panel-back" onclick="goBack()">← All programmes</div>
-    <div class="pstate">${dn}</div>
-    <div class="ppills">
-      ${live?`<span class="pp pp-live">${live} live</span>`:''}
-      ${des?`<span class="pp pp-des">${des} in design/pipeline</span>`:''}
-    </div>
-    <div class="prog-list">${cards}</div>`;
 }
 
-function toggleCard(i){
-  const el=document.getElementById('pd-'+i);if(!el)return;
-  const open=el.classList.contains('open');
-  document.querySelectorAll('.pc-detail.open').forEach(d=>d.classList.remove('open'));
-  if(!open)el.classList.add('open');
-}
-
-function goBack(){ activeState=null; repaint(); renderAllPanel(); }
-
-// ── ALL PROGRAMMES PANEL ─────────────────────────────────────────────────
-function renderAllPanel(){
-  const india=PROGRAMS.filter(p=>p.role!=='international'&&matches(p));
-  const live=india.filter(p=>p.stage==='Live').length;
-  // group by region
-  const regions={};
-  india.forEach(p=>{
-    const r=NATIONAL.has(p.geo)?'National':(REGION[p.geo]||'Other');
-    if(!regions[r])regions[r]=[];
-    // group within region by state
-    const existing=regions[r].find(x=>x.geo===p.geo);
-    if(existing)existing.progs.push(p);
-    else regions[r].push({geo:p.geo,progs:[p]});
-  });
-  const groups=REGION_ORDER.filter(r=>regions[r]).map(r=>{
-    const states=regions[r].sort((a,b)=>a.geo.localeCompare(b.geo));
-    const rows=states.map(({geo,progs})=>{
-      const lv=progs.filter(p=>p.stage==='Live').length;
-      const ds=progs.filter(p=>p.stage!=='Live').length;
-      const fill=mapFill(filteredFor(geo));
-      return`<div class="all-row" data-geo="${geo.replace(/"/g,'&quot;')}" onclick="clickStateByName(this.dataset.geo)">
-        <div class="all-dot" style="background:${fill};border:1px solid ${mapStroke(filteredFor(geo))}"></div>
-        <span class="all-name">${geo}</span>
-        <span class="all-rols">
-          ${lv?`<span class="pp pp-live" style="font-size:.6rem">${lv}</span>`:''}
-          ${ds?`<span class="pp pp-des" style="font-size:.6rem">${ds}</span>`:''}
-        </span>
-      </div>`;
-    }).join('');
-    return`<div class="region-group"><div class="region-lbl">${r}</div>${rows}</div>`;
-  }).join('');
-  document.getElementById('sidePanel').innerHTML=`
-    <div class="all-hdr">
-      <div class="all-title">All programmes</div>
-      <div class="all-total">${india.length} total · ${live} live</div>
-    </div>
-    <div class="all-hint">Click a region or the map to explore.</div>
-    ${groups||'<div style="font-size:.82rem;color:var(--muted)">No programmes match the current filter.</div>'}`;
-}
-
-function clickStateByName(geo){
-  if(!GEO)return;
-  const feat=GEO.features.find(f=>GEO_NORM[geoName(f)]===geo);
-  clickState(geo, feat?geoName(feat):geo);
-}
-
-// ── FILTERS ───────────────────────────────────────────────────────────────
-function setStage(s,btn){
-  activeFilter.stage=s;
-  document.querySelectorAll('.filter-row:first-child .fb').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  repaint(); renderAllPanel();
-  if(activeState){ const f=GEO.features.find(f=>GEO_NORM[geoName(f)]===activeState); renderStatePanel(activeState,f?geoName(f):activeState); }
-}
-function setSector(s,btn){
-  activeFilter.sector=s;
-  document.querySelectorAll('[data-sector],.fb.active[onclick^="setSector"]').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.filter-row').forEach(row=>{
-    row.querySelectorAll('.fb').forEach(b=>{ if(b.dataset.sector===s||(s==='all'&&b.textContent==='All sectors'))b.classList.add('active'); });
-  });
-  btn.classList.add('active');
-  repaint(); renderAllPanel();
-  if(activeState){ const f=GEO.features.find(f=>GEO_NORM[geoName(f)]===activeState); renderStatePanel(activeState,f?geoName(f):activeState); }
-}
-
-// ── INTERNATIONAL ─────────────────────────────────────────────────────────
+// ── INTERNATIONAL ─────────────────────────────────────────────────────────────
 function toggleIntl(){
   const t=document.getElementById('intlTog'),p=document.getElementById('intlPanel');
   t.classList.toggle('open');p.classList.toggle('visible');
   if(p.classList.contains('visible')&&!p.innerHTML.trim()){
     const intl=PROGRAMS.filter(p=>p.role==='international');
-    p.innerHTML=`<div class="intl-grid">${intl.map(p=>`<div class="intl-card"><div class="intl-geo">${p.geo}</div><div class="intl-use">${p.use}</div><div class="intl-meta">${p.sector}${p.pop?' · '+(p.pop/1e6).toFixed(1)+'M people':''}</div></div>`).join('')}</div>`;
+    p.innerHTML=`<div class="intl-grid">${intl.map(p=>`<div class="intl-card"><div class="intl-geo">${p.geo}</div><div class="intl-use">${p.use}</div><div class="intl-meta2">${p.sector}${p.pop?' · '+(p.pop/1e6).toFixed(1)+'M':''}</div></div>`).join('')}</div>`;
   }
 }
 
-// ── BOOT ──────────────────────────────────────────────────────────────────
+// ── BOOT ───────────────────────────────────────────────────────────────────────
 const fetchGeo=()=>fetch(GEO_PRIMARY).then(r=>{if(!r.ok)throw 0;return r.json()})
-  .catch(()=>fetch(GEO_FALLBACK).then(r=>{if(!r.ok)throw new Error('GeoJSON failed');return r.json()}));
+  .catch(()=>fetch(GEO_BACKUP).then(r=>{if(!r.ok)throw new Error('GeoJSON failed');return r.json()}));
 
 Promise.all([
   fetch(CSV_URL).then(r=>{if(!r.ok)throw new Error('CSV '+r.status);return r.text();}),
   fetchGeo()
-]).then(([csv,geo])=>init(parseCSV(csv),geo))
+]).then(([csv,geo])=>{ document.getElementById('progList').innerHTML=''; init(parseCSV(csv),geo); })
   .catch(err=>{
-    document.getElementById('appRoot').innerHTML=`<div style="padding:3rem;text-align:center;color:#78716c">
-      <div style="font-size:1.3rem;margin-bottom:.4rem">⚠️</div>
-      <div style="font-weight:600;font-size:.9rem">Could not load data</div>
-      <div style="font-family:monospace;font-size:.72rem;margin-top:.3rem;color:#a8a29e">${err.message}</div>
-      <div style="font-size:.77rem;margin-top:.8rem;color:#a8a29e;max-width:380px;margin-left:auto;margin-right:auto;line-height:1.6">
-        Must be served over HTTPS.<br>Upload to GitHub Pages or run <code>python3 -m http.server 8000</code> locally.
-      </div></div>`;
+    document.getElementById('progList').innerHTML=`<div class="empty">⚠️ Could not load data: ${err.message}<br><br>
+      <span style="font-size:.75rem">Must be served over HTTPS — upload to GitHub Pages or run <code>python3 -m http.server 8000</code> locally.</span></div>`;
   });
 </script>
 </body>
