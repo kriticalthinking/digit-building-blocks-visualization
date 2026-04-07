@@ -200,8 +200,7 @@ h1{font-family:'DM Serif Display',serif;font-size:clamp(1.6rem,2.8vw,2.2rem);lin
       <span class="gblbl">Group by</span>
       <button class="gbtn active" onclick="setGroup('region',this)">Region</button>
       <button class="gbtn" onclick="setGroup('sector',this)">Sector</button>
-      <button class="gbtn" onclick="setGroup('role',this)">Role</button>
-      <button class="gbtn" onclick="setGroup('none',this)">None</button>
+      <button class="gbtn" onclick="setGroup('role',this)">Partner</button>
     </div>
     <button class="map-toggle-btn" id="mapToggleBtn" onclick="toggleMap()">📍 View on map</button>
   </div>
@@ -287,7 +286,7 @@ const REGION_OF = {
   'Andhra Pradesh':'South','Karnataka':'South','Kerala':'South',
   'Tamil Nadu':'South','Telangana':'South','Puducherry':'South',
 };
-const REGION_ORDER = ['North','West','Central','East','North East','South','National & Central','Other'];
+const REGION_ORDER = ['National & Central','North','West','Central','East','North East','South','Other'];
 
 // ── CSV ─────────────────────────────────────────────────────────────────────
 function parseCSV(t){
