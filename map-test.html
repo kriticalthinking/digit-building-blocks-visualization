@@ -136,6 +136,16 @@ h1{font-family:'DM Serif Display',serif;font-size:clamp(1.6rem,2.8vw,2.2rem);lin
   .prog-main{grid-column:1/-1;grid-row:2}
   .map-inner{flex-direction:column}.map-container{width:100%}
 }
+
+/* ── GROUP-BY ────────────────────────────────── */
+.group-hdr{display:flex;justify-content:space-between;align-items:center;margin:1.1rem 0 .45rem;flex-wrap:wrap;gap:.4rem}
+.group-label{font-family:'IBM Plex Mono',monospace;font-size:.63rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border-bottom:2px solid var(--border);padding-bottom:.3rem;flex:1}
+.group-count{font-size:.68rem;color:var(--faint);margin-left:.6rem}
+.groupby-row{display:flex;gap:.3rem;align-items:center}
+.gblbl{font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.gbtn{font-family:'Plus Jakarta Sans',sans-serif;font-size:.7rem;font-weight:600;padding:.18rem .58rem;border-radius:20px;border:1.5px solid var(--border);background:var(--bg);color:#57534e;cursor:pointer;transition:all .13s}
+.gbtn:hover{border-color:var(--green);color:var(--green)}
+.gbtn.active{background:var(--green);color:#fff;border-color:var(--green)}
 </style>
 </head>
 <body>
@@ -185,7 +195,16 @@ h1{font-family:'DM Serif Display',serif;font-size:clamp(1.6rem,2.8vw,2.2rem);lin
 
 <div class="results-hdr">
   <div class="results-count" id="resultsCount"></div>
-  <button class="map-toggle-btn" id="mapToggleBtn" onclick="toggleMap()">📍 View on map</button>
+  <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
+    <div class="groupby-row">
+      <span class="gblbl">Group by</span>
+      <button class="gbtn active" onclick="setGroup('region',this)">Region</button>
+      <button class="gbtn" onclick="setGroup('sector',this)">Sector</button>
+      <button class="gbtn" onclick="setGroup('role',this)">Role</button>
+      <button class="gbtn" onclick="setGroup('none',this)">None</button>
+    </div>
+    <button class="map-toggle-btn" id="mapToggleBtn" onclick="toggleMap()">📍 View on map</button>
+  </div>
 </div>
 
 <div class="map-section" id="mapSection">
@@ -255,7 +274,20 @@ function csvName(f){ return GEO_NORM[geoName(f)]||null; }
 // ── STATE ───────────────────────────────────────────────────────────────────
 let PROGRAMS=[], GEO=null, stateMap={};
 let F = {sector:'all', stage:'all', role:'all', state:'all'};
-let mapBuilt=false, expandedIdx=null;
+let mapBuilt=false, expandedIdx=null, groupBy='region';
+
+const REGION_OF = {
+  'Jammu & Kashmir':'North','Ladakh':'North','Himachal Pradesh':'North',
+  'Punjab':'North','Haryana':'North','New Delhi':'North','Chandigarh':'North',
+  'Uttarakhand':'North','Uttar Pradesh':'North','Rajasthan':'North',
+  'Gujarat':'West','Maharashtra':'West','Goa':'West',
+  'Madhya Pradesh':'Central','Chhattisgarh':'Central',
+  'Bihar':'East','Jharkhand':'East','Odisha':'East','West Bengal':'East',
+  'Assam':'North East','Manipur':'North East',
+  'Andhra Pradesh':'South','Karnataka':'South','Kerala':'South',
+  'Tamil Nadu':'South','Telangana':'South','Puducherry':'South',
+};
+const REGION_ORDER = ['North','West','Central','East','North East','South','National & Central','Other'];
 
 // ── CSV ─────────────────────────────────────────────────────────────────────
 function parseCSV(t){
@@ -319,16 +351,56 @@ function renderStats(filtered){
     `Showing <strong>${filtered.length}</strong> programmes · <strong>${live}</strong> live`;
 }
 
+function setGroup(g,btn){
+  groupBy=g;
+  document.querySelectorAll('.gbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function groupLabel(key, val){
+  if(key==='role') return {egov_direct:'eGov direct',commercial_partner:'Commercial partners',development_sector:'Development sector',govt_body:'Govt / public body',pipeline:'Pipeline / TBD'}[val]||val;
+  return val;
+}
+
 function renderList(filtered){
   const list=document.getElementById('progList');
   expandedIdx=null;
   if(!filtered.length){ list.innerHTML='<div class="empty">No programmes match the current filters.</div>'; return; }
-  list.innerHTML=filtered.map((p,i)=>{
+
+  // Build groups
+  let groups;
+  if(groupBy==='none'){
+    groups=[{label:'',items:filtered}];
+  } else if(groupBy==='region'){
+    const order=REGION_ORDER;
+    const map={};
+    filtered.forEach(p=>{
+      const r=NATIONAL.has(p.geo)?'National & Central':(REGION_OF[p.geo]||'Other');
+      if(!map[r])map[r]=[];map[r].push(p);
+    });
+    groups=order.filter(r=>map[r]).map(r=>({label:r,items:map[r]}));
+  } else {
+    const key=groupBy; // 'sector' or 'role'
+    const map={};
+    filtered.forEach(p=>{
+      const v=p[key]||'Unknown';
+      if(!map[v])map[v]=[];map[v].push(p);
+    });
+    groups=Object.keys(map).sort().map(v=>({label:groupLabel(key,v),items:map[v]}));
+  }
+
+  let globalIdx=0;
+  list.innerHTML=groups.map(({label,items})=>{
+    const header=label?`<div class="group-hdr">
+      <div class="group-label">${label}<span class="group-count">${items.length} programme${items.length!==1?'s':''}</span></div>
+    </div>`:'';
+    const cards=items.map((p)=>{
+      const i=globalIdx++;
     const rc='r-'+(p.role||'pipeline');
     const sc=p.stage==='Live'?'s-live':'s-des';
     const col=ROLE_COL[p.role]||'#a8a29e';
     const rl=ROLE_LBL[p.role]||p.role;
-    const pop=p.pop?`<span class="dm"><strong>Population:</strong> ${(p.pop/1e6).toFixed(1)}M</span>`:'';
     const yr=p.year?`<span class="dm"><strong>Since:</strong> ${p.year}</span>`:'';
     const nb=p.new?`<span class="new-badge">Net-new</span>`:'';
     const byStr=(p.by&&!p.by.includes('TBD')&&!p.by.includes('Global'))?p.by:'';
@@ -348,8 +420,10 @@ function renderList(filtered){
           <span class="expand-hint" id="hint-${i}">+ more</span>
         </div>
       </div>
-      <div class="prog-detail" id="det-${i}">${p.details}<div class="detail-meta">${yr}${pop}</div></div>
+      <div class="prog-detail" id="det-${i}">${p.details}<div class="detail-meta">${yr}</div></div>
     </div>`;
+    }).join('');
+    return header + cards;
   }).join('');
 }
 
