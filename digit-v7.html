@@ -1,0 +1,2750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Building Blocks for better Public Services, An Interactive Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f7f4ef;
+  --surface: #ffffff;
+  --surface2: #f0ece4;
+  --border: rgba(0,0,0,0.08);
+  --border-warm: rgba(0,0,0,0.12);
+  --text: #1c1917;
+  --text-mid: #44403c;
+  --text-dim: #78716c;
+  --green: #2a6e47;
+  --green-light: #e8f3ed;
+  --green-mid: #c5dece;
+  --amber: #b45309;
+  --amber-light: #fef3c7;
+  --blue: #1d4ed8;
+  --blue-light: #eff6ff;
+
+  /* cluster colors, warm, not neon */
+  --c-identity: #4f46e5;
+  --c-registry: #2a6e47;
+  --c-workflow: #b45309;
+  --c-notify: #0369a1;
+  --c-docs: #7c3aed;
+  --c-payments: #be123c;
+
+  /* foundation colors */
+  --f-policy: #92400e;
+  --f-institutions: #065f46;
+  --f-data-gov: #1e40af;
+  --f-community: #7c2d12;
+  --f-capacity: #4a044e;
+
+  --font-display: 'DM Serif Display', serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.05);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,0.1), 0 4px 8px rgba(0,0,0,0.06);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 400;
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+
+/* subtle paper texture */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: -1;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+/* ── STATUS BANNER ── */
+.status-banner {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+  background: #92400e;
+  padding: 0.45rem 1.5rem;
+  display: flex; align-items: center; justify-content: center; gap: 1rem;
+  font-family: var(--font-body); font-size: 0.78rem; font-weight: 600;
+  color: #fef3c7; letter-spacing: 0.02em;
+}
+.status-banner-dot { width: 6px; height: 6px; border-radius: 50%; background: #fbbf24; flex-shrink: 0; }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 32px; left: 0; right: 0; z-index: 100;
+  background: rgba(247,244,239,0.95);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-warm);
+  padding: 0 2rem; height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 1rem; color: var(--text);
+  display: flex; flex-direction: column; gap: 0.05rem;
+  flex-shrink: 0; line-height: 1.2;
+}
+.nav-logo-top { display: flex; align-items: center; gap: 0.4rem; }
+.nav-logo-sub { font-family: var(--font-body); font-size: 0.65rem; font-weight: 400; color: var(--text-dim); letter-spacing: 0.02em; }
+.nav-logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+.nav-links { display: flex; gap: 0.15rem; align-items: center; flex-wrap: nowrap; }
+.nav-links a {
+  color: var(--text-dim); text-decoration: none;
+  font-size: 0.78rem; font-weight: 500;
+  padding: 0.3rem 0.65rem; border-radius: 20px;
+  transition: all 0.15s; white-space: nowrap;
+}
+.nav-links a:hover { color: var(--text); background: var(--surface2); }
+
+/* Mobile nav, hamburger */
+.nav-hamburger {
+  display: none; flex-direction: column; gap: 5px;
+  cursor: pointer; padding: 6px;
+  background: none; border: none;
+}
+.nav-hamburger span {
+  display: block; width: 22px; height: 2px;
+  background: var(--text); border-radius: 2px; transition: all 0.2s;
+}
+.mobile-nav {
+  display: none; position: fixed; top: 92px; left: 0; right: 0;
+  background: rgba(247,244,239,0.98); backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-warm);
+  padding: 1.25rem 2rem; z-index: 99;
+  flex-direction: column; gap: 0.5rem;
+}
+.mobile-nav.open { display: flex; }
+.mobile-nav a {
+  color: var(--text-mid); text-decoration: none; font-size: 0.95rem;
+  font-weight: 500; padding: 0.6rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.mobile-nav a:last-child { border-bottom: none; }
+.mobile-tech-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.6rem 0; font-size: 0.88rem; color: var(--text-mid); font-weight: 500;
+}
+
+/* tech mode toggle, floating pill, always visible */
+.tech-toggle-wrap {
+  display: none; /* hidden in nav, replaced by floating button */
+}
+.tech-float {
+  position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 200;
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.55rem 1rem 0.55rem 0.85rem;
+  background: var(--surface);
+  border: 1.5px solid var(--border-warm);
+  border-radius: 30px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+.tech-float:hover {
+  border-color: var(--green);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  transform: translateY(-1px);
+}
+body.tech-mode .tech-float {
+  background: var(--green);
+  border-color: var(--green);
+}
+.tf-icon {
+  font-size: 0.95rem; line-height: 1;
+}
+.tf-label {
+  font-size: 0.75rem; font-weight: 600;
+  color: var(--text); white-space: nowrap;
+  font-family: var(--font-body);
+}
+body.tech-mode .tf-label { color: white; }
+.tf-switch {
+  width: 30px; height: 17px;
+  background: var(--border-warm);
+  border-radius: 9px; position: relative;
+  transition: background 0.2s; flex-shrink: 0;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+.tf-switch::after {
+  content: ''; position: absolute; top: 2px; left: 2px;
+  width: 11px; height: 11px; background: white;
+  border-radius: 50%; transition: all 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+body.tech-mode .tf-switch { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.2); }
+body.tech-mode .tf-switch::after { left: 15px; }
+
+section { padding: 104px 2rem 5rem; max-width: 1200px; margin: 0 auto; scroll-margin-top: 100px; }
+section.full-width { max-width: none; padding-left: 2rem; padding-right: 2rem; scroll-margin-top: 100px; }
+
+.section-eyebrow {
+  font-family: var(--font-display); font-size: 1.15rem;
+  font-weight: normal; color: var(--green);
+  margin-bottom: 0.6rem;
+  display: flex; align-items: center; gap: 0.6rem;
+  letter-spacing: -0.01em;
+}
+.section-eyebrow::before { content: ''; width: 28px; height: 2px; background: var(--green); flex-shrink: 0; }
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2.4rem);
+  line-height: 1.15; letter-spacing: -0.01em;
+  margin-bottom: 1.25rem; color: var(--text);
+}
+.section-sub {
+  font-size: 1.05rem; color: var(--text-mid);
+  max-width: 820px; line-height: 1.75;
+  margin-bottom: 3.5rem;
+}
+
+/* ── HERO ── */
+#hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; justify-content: center;
+  padding-top: 120px; padding-bottom: 5rem;
+  position: relative;
+}
+.hero-kicker {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.1em;
+  color: var(--text-dim); text-transform: uppercase; margin-bottom: 2rem;
+}
+.hero-kicker::before { content: ''; width: 20px; height: 1px; background: var(--text-dim); }
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3.8rem);
+  line-height: 1.08; letter-spacing: -0.02em;
+  max-width: 760px; margin-bottom: 1.75rem;
+  color: var(--text);
+}
+.hero-title em { font-style: italic; color: var(--green); }
+.hero-sub {
+  font-size: 1.05rem; color: var(--text-mid);
+  max-width: 780px; line-height: 1.8; margin-bottom: 2.25rem;
+}
+/* Problem / solution comparison box */
+.hero-problem-box {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1px; background: var(--border-warm);
+  border: 1.5px solid var(--border-warm);
+  border-radius: 10px; overflow: hidden;
+  margin-bottom: 2.5rem; max-width: 820px;
+}
+.hpb-left { padding: 1.35rem 1.5rem; background: var(--surface); }
+.hpb-right { padding: 1.35rem 1.5rem; background: var(--green-light); }
+.hpb-label {
+  font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--text-dim); margin-bottom: 0.85rem;
+}
+.hpb-right .hpb-label { color: var(--green); }
+.hpb-items { display: flex; flex-direction: column; gap: 0; }
+.hpb-item {
+  font-size: 0.83rem; color: var(--text-mid); line-height: 1.45;
+  padding: 0.4rem 0; border-bottom: 1px solid var(--border);
+}
+.hpb-item:last-child { border-bottom: none; padding-bottom: 0; }
+.hpb-green { color: var(--green); border-bottom-color: rgba(42,110,71,0.12); }
+.hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+.btn-primary {
+  padding: 0.75rem 1.75rem; border-radius: 6px;
+  background: var(--green); color: white;
+  font-size: 0.92rem; font-weight: 600;
+  text-decoration: none; border: none; cursor: pointer;
+  transition: all 0.15s; font-family: var(--font-body);
+  box-shadow: 0 2px 8px rgba(42,110,71,0.3);
+}
+.btn-primary:hover { background: #225c3b; transform: translateY(-1px); }
+.btn-ghost {
+  padding: 0.75rem 1.75rem; border-radius: 6px;
+  background: transparent; color: var(--text);
+  font-size: 0.92rem; font-weight: 500;
+  text-decoration: none; border: 1.5px solid var(--border-warm);
+  cursor: pointer; transition: all 0.15s; font-family: var(--font-body);
+}
+.btn-ghost:hover { background: var(--surface); border-color: var(--text-dim); }
+.hero-rule { width: 100%; height: 1px; background: var(--border); margin: 0.5rem 0 1.75rem; }
+.hero-proof-label {
+  font-size: 0.72rem; color: var(--text-dim); font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.25rem;
+}
+.hero-proof { display: flex; gap: 2rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
+.proof-item { display: flex; flex-direction: column; max-width: 230px; }
+.proof-num { font-family: var(--font-display); font-size: 2.2rem; color: var(--green); line-height: 1; }
+.proof-label { font-size: 0.78rem; color: var(--text-dim); margin-top: 0.3rem; line-height: 1.5; }
+.proof-label em { font-style: normal; font-weight: 600; color: var(--text-mid); }
+.hero-source-note { font-size: 0.72rem; color: var(--text-dim); font-style: italic; }
+/* decorative line */
+.hero-rule {
+  width: 100%; height: 1px; background: var(--border);
+  margin: 3rem 0;
+}
+
+/* ── FULL STACK SECTION ── */
+#fullstack {
+  background: var(--text);
+  color: white;
+  max-width: none;
+  padding: 6rem 2.5rem;
+}
+.fullstack-inner { max-width: 1100px; margin: 0 auto; }
+.fullstack-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.8vw, 2.2rem);
+  color: white; margin-bottom: 0.75rem; line-height: 1.2;
+}
+.fullstack-sub {
+  font-size: 1rem; color: rgba(255,255,255,0.55);
+  max-width: 780px; line-height: 1.7; margin-bottom: 3.5rem;
+}
+/* Stack Architecture Diagram */
+.stack-arch { display: flex; flex-direction: column; gap: 0.75rem; }
+.stack-band { border-radius: 12px; overflow: hidden; position: relative; }
+.stack-band-inner { padding: 1.6rem 2rem; }
+.stack-band.outcomes { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); }
+.stack-band.outcomes .sb-label { color: rgba(255,255,255,0.45); }
+.stack-band.outcomes .sb-title { color: white; }
+.outcomes-chips { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 1rem; }
+.outcome-chip { padding: 0.38rem 0.9rem; border-radius: 20px; font-size: 0.8rem; font-weight: 500; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.8); }
+.stack-band.digital { background: rgba(42,110,71,0.18); border: 1px solid rgba(42,110,71,0.4); }
+.stack-band.digital .sb-label { color: #86efac; }
+.stack-band.digital .sb-title { color: #d1fae5; }
+.digital-block-grid { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 1rem; }
+.dg-cluster-chip { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1rem; border-radius: 8px; cursor: pointer; transition: all 0.15s; flex: 1; min-width: 160px; }
+.dg-cluster-chip:hover { filter: brightness(1.1); transform: translateY(-1px); }
+.dgc-icon { font-size: 1rem; flex-shrink: 0; }
+.dgc-plain { font-size: 0.82rem; font-weight: 600; }
+.dgc-tech { font-size: 0.78rem; font-weight: 600; font-family: var(--font-mono); }
+.dgc-count { font-size: 0.7rem; margin-left: auto; flex-shrink: 0; font-family: var(--font-mono); }
+.stack-band.foundation { background: rgba(180,83,9,0.14); border: 1px solid rgba(180,83,9,0.35); }
+.stack-band.foundation .sb-label { color: #fcd34d; }
+.stack-band.foundation .sb-title { color: #fef3c7; }
+.foundation-items { display: flex; flex-wrap: wrap; gap: 0.65rem; margin-top: 1rem; }
+.fi { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1rem; border-radius: 8px; background: rgba(252,211,77,0.07); border: 1px solid rgba(252,211,77,0.2); font-size: 0.84rem; font-weight: 500; color: #fef3c7; cursor: pointer; transition: all 0.15s; }
+.fi:hover { background: rgba(252,211,77,0.15); transform: translateY(-2px); }
+.fi-icon { font-size: 1.05rem; }
+.stack-connector { display: flex; align-items: center; justify-content: center; padding: 0.15rem 0; color: rgba(255,255,255,0.15); font-size: 0.85rem; gap: 0.75rem; }
+.sc-line { flex: 1; height: 1px; background: rgba(255,255,255,0.05); }
+.sb-label { font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 0.2rem; }
+.sb-title { font-family: var(--font-display); font-size: 1.05rem; }
+.sb-sub { font-size: 0.8rem; color: rgba(255,255,255,0.35); margin-top: 0.2rem; line-height: 1.5; }
+
+/* ── INDIA IMPACT ── */
+#india-impact { background: var(--surface2); padding: 80px 2.5rem 6rem; max-width: none; }
+.impact-inner { max-width: 1200px; margin: 0 auto; }
+
+.impact-top-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 3rem; align-items: start; margin-bottom: 3.5rem;
+}
+@media(max-width:860px){ .impact-top-grid{grid-template-columns:1fr;} }
+
+.impact-lede {
+  font-size: 1.05rem; color: var(--text-mid); line-height: 1.8;
+}
+.impact-lede strong { color: var(--text); font-weight: 600; }
+
+.impact-numbers { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.impact-num { background: var(--surface); border: 1.5px solid var(--border-warm); border-radius: 10px; padding: 1.3rem 1.4rem; box-shadow: var(--shadow-sm); }
+.in-num { font-family: var(--font-display); font-size: 2rem; color: var(--green); line-height: 1; margin-bottom: 0.3rem; }
+.in-label { font-size: 0.79rem; color: var(--text-dim); line-height: 1.4; }
+
+/* Sector tabs, two levels with clear visual hierarchy */
+.sector-nav { margin-bottom: 0; }
+.sector-tabs { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0; }
+.sector-tab {
+  padding: 0.55rem 1.2rem; border-radius: 6px 6px 0 0;
+  border: 1.5px solid var(--border-warm); border-bottom: none;
+  background: var(--surface2); color: var(--text-dim);
+  font-size: 0.84rem; font-weight: 600; cursor: pointer;
+  transition: all 0.15s; font-family: var(--font-body);
+  position: relative; top: 1px;
+}
+.sector-tab:hover { background: var(--surface); color: var(--text); }
+.sector-tab.active {
+  background: var(--green); border-color: var(--green);
+  color: white; z-index: 1;
+}
+
+/* The case study container, visually connected to active sector tab */
+.sector-case-container {
+  background: var(--surface);
+  border: 1.5px solid var(--border-warm);
+  border-radius: 0 8px 8px 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+.sector-case-container.green-accent { border-top-color: var(--green); border-top-width: 3px; }
+
+.cs-tabs { display: flex; gap: 0.35rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.cs-tab {
+  padding: 0.38rem 0.85rem; border-radius: 5px;
+  border: 1.5px solid var(--border-warm);
+  background: var(--bg); color: var(--text-dim);
+  font-size: 0.8rem; font-weight: 500; cursor: pointer;
+  transition: all 0.15s; font-family: var(--font-body);
+}
+.cs-tab:hover { border-color: var(--green); color: var(--text); }
+.cs-tab.active { background: var(--green-light); border-color: var(--green); color: var(--green); font-weight: 600; }
+
+.sector-panel { display: none; }
+.sector-panel.active { display: block; }
+
+.cs-panel { display: none; animation: fadeup 0.22s ease both; }
+.cs-panel.visible { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.25rem; }
+@media(max-width:800px){ .cs-panel.visible{grid-template-columns:1fr;} }
+
+.cs-col { background: var(--surface); border: 1.5px solid var(--border-warm); border-radius: 10px; overflow: hidden; box-shadow: var(--shadow-sm); }
+.cs-col-header { padding: 0.7rem 1.1rem; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; border-bottom: 1px solid var(--border); }
+.cs-col-header.context { background: #fef9f0; color: var(--amber); }
+.cs-col-header.solution { background: var(--green-light); color: var(--green); }
+.cs-col-header.impact { background: var(--surface2); color: var(--text-dim); }
+.cs-col-body { padding: 1.1rem; font-size: 0.86rem; color: var(--text-mid); line-height: 1.7; }
+.cs-stats { display: flex; flex-direction: column; gap: 1rem; }
+.cs-stat-num { font-family: var(--font-display); font-size: 1.9rem; color: var(--green); line-height: 1; }
+.cs-stat-label { font-size: 0.79rem; color: var(--text-dim); margin-top: 0.12rem; }
+
+/* egov role tag */
+.egov-role {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.28rem 0.65rem; border-radius: 4px;
+  font-size: 0.72rem; font-weight: 600;
+  background: var(--green-light); color: var(--green);
+  border: 1px solid var(--green-mid); margin-bottom: 0.75rem;
+}
+
+.mission-banner { margin-top: 3rem; padding: 2rem 2.5rem; background: var(--text); border-radius: 12px; display: grid; grid-template-columns: 1fr auto; gap: 2rem; align-items: start; box-shadow: var(--shadow-lg); }
+@media(max-width:700px){ .mission-banner{grid-template-columns:1fr;} }
+.mb-text strong { display: block; font-family: var(--font-display); font-size: 1.3rem; color: white; margin-bottom: 0.5rem; }
+.mb-text p { font-size: 0.87rem; color: rgba(255,255,255,0.5); line-height: 1.7; }
+.mb-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; flex-shrink: 0; min-width: 200px; }
+.mbs { }
+.mbs-num { font-family: var(--font-display); font-size: 1.8rem; color: #86efac; }
+.mbs-label { font-size: 0.73rem; color: rgba(255,255,255,0.4); margin-top: 0.15rem; line-height: 1.4; }
+
+/* connector arrow */
+.stack-arrow {
+  display: flex; align-items: center; justify-content: center;
+  padding: 0.5rem 0; color: rgba(255,255,255,0.2); font-size: 1.2rem;
+}
+
+/* ── FOUNDATION SECTION ── */
+#foundation { padding-top: 80px; }
+.foundation-intro {
+  background: var(--amber-light);
+  border: 1px solid rgba(180,83,9,0.15);
+  border-radius: 10px; padding: 1.5rem 1.75rem;
+  margin-bottom: 3rem; display: flex; gap: 1rem; align-items: flex-start;
+}
+.foundation-intro-icon { font-size: 1.5rem; flex-shrink: 0; margin-top: 0.1rem; }
+.foundation-intro-text { font-size: 0.92rem; color: var(--text-mid); line-height: 1.7; }
+.foundation-intro-text strong { color: var(--text); font-weight: 600; }
+
+.foundation-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 1.25rem; }
+
+.foundation-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border-warm);
+  border-radius: 12px; overflow: hidden;
+  transition: box-shadow 0.2s, transform 0.2s;
+  box-shadow: var(--shadow-sm);
+}
+.foundation-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.foundation-card-top {
+  padding: 1.5rem 1.5rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+.fc-icon-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.85rem; }
+.fc-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.25rem;
+  background: var(--fc-bg);
+}
+.fc-name {
+  font-family: var(--font-display); font-size: 1.1rem;
+  color: var(--fc-color);
+}
+.fc-desc { font-size: 0.88rem; color: var(--text-mid); line-height: 1.6; }
+
+/* expandable examples area */
+.foundation-card-bottom {
+  padding: 1rem 1.5rem;
+  background: var(--surface2);
+}
+.fc-examples-label {
+  font-size: 0.72rem; font-weight: 600; color: var(--text-dim);
+  text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.6rem;
+}
+.fc-examples { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.fc-example {
+  padding: 0.25rem 0.65rem; border-radius: 4px;
+  font-size: 0.75rem; background: rgba(0,0,0,0.04);
+  border: 1px solid var(--border); color: var(--text-mid);
+}
+.fc-expand-hint {
+  margin-top: 0.75rem;
+  font-size: 0.75rem; color: var(--text-dim);
+  font-style: italic; display: flex; align-items: center; gap: 0.4rem;
+}
+.fc-expand-hint::before { content: '＋'; font-style: normal; font-weight: 600; color: var(--text-dim); }
+
+/* ── DIGITAL BLOCKS SECTION ── */
+#blocks { padding-top: 80px; }
+.blocks-intro-row {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  gap: 2rem; flex-wrap: wrap; margin-bottom: 3rem;
+}
+
+.clusters-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 1.4rem; }
+
+.cluster-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border-warm);
+  border-radius: 12px; padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.cluster-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.cc-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 0.6rem;
+}
+.cc-icon {
+  width: 36px; height: 36px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; background: var(--cc-bg);
+}
+.cc-name {
+  font-family: var(--font-display); font-size: 1.05rem;
+  color: var(--cc-color);
+}
+.cc-plain-name {
+  font-size: 0.75rem; color: var(--text-dim); font-weight: 500; margin-top: 0.1rem;
+}
+body.tech-mode .cc-plain-name { display: none; }
+body:not(.tech-mode) .cc-tech-name { display: none; }
+.cc-tagline { font-size: 0.85rem; color: var(--text-mid); margin-bottom: 1.25rem; line-height: 1.5; }
+
+.blocks-list { display: flex; flex-direction: column; gap: 0.4rem; }
+.block-item {
+  padding: 0.6rem 0.85rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px; transition: all 0.15s;
+  cursor: default;
+}
+.block-item:hover { background: var(--surface2); border-color: var(--cc-color); }
+.bi-name {
+  font-size: 0.84rem; font-weight: 600; color: var(--text);
+  margin-bottom: 0.15rem;
+}
+.bi-plain { font-size: 0.78rem; color: var(--text-mid); line-height: 1.4; }
+.bi-tech { display: none; font-family: var(--font-mono); font-size: 0.7rem; color: var(--cc-color); margin-top: 0.25rem; line-height: 1.4; }
+body.tech-mode .bi-tech { display: block; }
+body.tech-mode .bi-plain { display: none; }
+
+/* ── PRINCIPLES ── */
+#principles { background: var(--green); max-width: none; padding: 5rem 2.5rem; }
+.principles-inner { max-width: 1100px; margin: 0 auto; }
+#principles .section-title { color: white; }
+#principles .section-eyebrow { color: #86efac; }
+#principles .section-eyebrow::before { background: #86efac; }
+#principles .section-sub { color: rgba(255,255,255,0.65); }
+.principles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+.principle-card {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px; padding: 1.4rem;
+  transition: background 0.2s;
+}
+.principle-card:hover { background: rgba(255,255,255,0.13); }
+.p-num { font-family: var(--font-mono); font-size: 0.68rem; color: rgba(255,255,255,0.4); margin-bottom: 0.5rem; }
+.p-name { font-family: var(--font-display); font-size: 1.1rem; color: white; margin-bottom: 0.5rem; }
+.p-desc { font-size: 0.83rem; color: rgba(255,255,255,0.65); line-height: 1.6; }
+
+/* ── TUTORIAL ── */
+#understand { padding-top: 80px; }
+.tutorial-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+@media(max-width:900px){.tutorial-layout{grid-template-columns:1fr}}
+.tutorial-story { position: sticky; top: 72px; }
+.step-progress { display: flex; gap: 0.4rem; margin-bottom: 2rem; }
+.step-dot { height: 3px; flex: 1; border-radius: 2px; background: var(--border-warm); cursor: pointer; transition: all 0.2s; }
+.step-dot.active { background: var(--green); }
+.step-dot.done { background: var(--green-mid); }
+.step-num { font-family: var(--font-mono); font-size: 0.7rem; color: var(--green); margin-bottom: 0.5rem; letter-spacing: 0.08em; }
+.step-title { font-family: var(--font-display); font-size: 1.6rem; line-height: 1.2; margin-bottom: 0.85rem; }
+.step-story { font-size: 0.95rem; color: var(--text-mid); line-height: 1.75; margin-bottom: 1.1rem; }
+.step-plain {
+  padding: 1rem 1.25rem; background: var(--green-light);
+  border-left: 3px solid var(--green);
+  border-radius: 0 8px 8px 0; font-size: 0.88rem; color: var(--text-mid);
+  line-height: 1.65; margin-bottom: 1.5rem;
+}
+body.tech-mode .step-plain { background: var(--blue-light); border-left-color: var(--blue); }
+
+.infra-toggle {
+  display: none; /* hidden unless tech mode */
+  align-items: center; gap: 0.5rem;
+  font-size: 0.78rem; color: var(--text-dim); cursor: pointer;
+  margin-bottom: 1.25rem; user-select: none;
+}
+body.tech-mode .infra-toggle { display: flex; }
+.ts { width: 32px; height: 18px; background: var(--border-warm); border-radius: 9px; position: relative; transition: background 0.2s; border: 1px solid var(--border-warm); }
+.ts::after { content: ''; position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; background: white; border-radius: 50%; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+.ts.on { background: var(--amber); border-color: var(--amber); }
+.ts.on::after { left: 16px; }
+.infra-note { display: none; margin-bottom: 1.25rem; padding: 0.7rem 0.9rem; background: #fffbeb; border: 1px solid #fcd34d; border-radius: 6px; font-family: var(--font-mono); font-size: 0.72rem; color: var(--amber); line-height: 1.5; }
+.infra-note.visible { display: block; }
+
+.step-nav { display: flex; gap: 0.75rem; }
+.btn-step {
+  padding: 0.6rem 1.35rem; border-radius: 6px;
+  font-family: var(--font-body); font-size: 0.88rem; font-weight: 500;
+  border: 1.5px solid var(--border-warm); background: transparent;
+  color: var(--text); cursor: pointer; transition: all 0.15s;
+}
+.btn-step:hover { background: var(--surface2); }
+.btn-step.primary { background: var(--green); color: white; border-color: var(--green); }
+.btn-step.primary:hover { background: #225c3b; }
+.btn-step:disabled { opacity: 0.3; cursor: default; }
+
+/* Tutorial block display, light cards */
+.tutorial-blocks { display: flex; flex-direction: column; gap: 0.85rem; }
+.t-baseplate {
+  background: var(--surface); border: 1.5px solid var(--border-warm);
+  border-radius: 10px; padding: 1rem 1rem 1.2rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  box-shadow: var(--shadow-sm);
+}
+.t-baseplate.lit {
+  border-color: var(--cc-color);
+  box-shadow: 0 0 0 3px var(--cc-glow), var(--shadow-md);
+}
+.tbp-header { display: flex; align-items: center; gap: 0.55rem; margin-bottom: 0.75rem; font-size: 0.82rem; font-weight: 600; color: var(--text-dim); transition: color 0.3s; }
+.t-baseplate.lit .tbp-header { color: var(--cc-color); }
+.tbp-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--cc-color); opacity: 0.25; transition: opacity 0.3s; }
+.t-baseplate.lit .tbp-dot { opacity: 1; animation: pdot 1.4s infinite; }
+@keyframes pdot{0%,100%{transform:scale(1)}50%{transform:scale(1.5)}}
+.tbp-row { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.tbrick {
+  display: inline-block; padding: 0.28rem 0.65rem;
+  border-radius: 4px; font-size: 0.74rem; font-weight: 500;
+  background: var(--bg); border: 1px solid var(--border-warm);
+  color: var(--text-dim); opacity: 0.35; transition: opacity 0.25s, color 0.25s, border-color 0.25s, transform 0.15s;
+}
+.tbrick.active { opacity: 1; color: var(--cc-color); border-color: var(--cc-color); background: var(--cc-bg); }
+.tbrick.snap { animation: bsnap 0.3s cubic-bezier(0.34,1.56,0.64,1) both; }
+@keyframes bsnap{0%{transform:translateY(-14px) scale(0.88);opacity:0}100%{transform:translateY(0) scale(1);opacity:1}}
+
+/* ── IMAGINE ── */
+#imagine { padding-top: 80px; }
+.focus-question { margin-bottom: 2.5rem; }
+.fq-label { font-size: 0.9rem; font-weight: 500; color: var(--text); margin-bottom: 0.85rem; }
+.fq-options { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.fq-btn {
+  padding: 0.6rem 1.15rem; border-radius: 6px;
+  border: 1.5px solid var(--border-warm); background: var(--surface);
+  color: var(--text-mid); font-size: 0.88rem; font-weight: 500;
+  cursor: pointer; transition: all 0.15s; font-family: var(--font-body);
+}
+.fq-btn:hover { border-color: var(--green); color: var(--text); }
+.fq-btn.selected { background: var(--green-light); border-color: var(--green); color: var(--green); }
+
+.domains-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 0.85rem; margin-bottom: 2.5rem; opacity: 0.4; pointer-events: none; transition: opacity 0.3s; }
+.domains-grid.ready { opacity: 1; pointer-events: all; }
+.domain-card {
+  padding: 1.1rem; background: var(--surface);
+  border: 1.5px solid var(--border-warm); border-radius: 10px;
+  cursor: pointer; transition: all 0.2s; text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+.domain-card:hover { border-color: var(--green); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.domain-card.selected { border-color: var(--green); background: var(--green-light); }
+.de { font-size: 1.75rem; display: block; margin-bottom: 0.4rem; }
+.dn { font-family: var(--font-display); font-size: 0.92rem; margin-bottom: 0.2rem; }
+.ds { font-size: 0.74rem; color: var(--text-dim); line-height: 1.4; }
+
+.variant-row { display: none; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; align-items: center; }
+.variant-row.visible { display: flex; }
+.variant-label-txt { font-size: 0.82rem; color: var(--text-dim); width: 100%; margin-bottom: 0.25rem; }
+.vbtn {
+  padding: 0.42rem 0.95rem; border-radius: 5px;
+  border: 1.5px solid var(--border-warm); background: var(--surface);
+  color: var(--text-dim); font-size: 0.82rem; cursor: pointer; transition: all 0.15s; font-family: var(--font-body);
+}
+.vbtn:hover { border-color: var(--amber); color: var(--text); }
+.vbtn.selected { background: var(--amber-light); border-color: var(--amber); color: var(--amber); }
+
+.build-theatre { display: none; animation: fadeup 0.28s ease both; }
+.build-theatre.visible { display: block; }
+@keyframes fadeup{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.theatre-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+@media(max-width:860px){.theatre-layout{grid-template-columns:1fr}}
+.theatre-story { position: sticky; top: 72px; }
+.bp-progress { display: flex; gap: 0.4rem; margin-bottom: 1.75rem; }
+.bp-dot { height: 3px; flex: 1; border-radius: 2px; background: var(--border-warm); cursor: pointer; transition: all 0.2s; }
+.bp-dot.active { background: var(--amber); }
+.bp-dot.done { background: #fcd34d88; }
+.bp-phase { font-family: var(--font-mono); font-size: 0.7rem; color: var(--amber); margin-bottom: 0.4rem; }
+.bp-title { font-family: var(--font-display); font-size: 1.45rem; line-height: 1.2; margin-bottom: 0.75rem; }
+.bp-desc { font-size: 0.92rem; color: var(--text-mid); line-height: 1.75; margin-bottom: 1.1rem; }
+.bp-callout {
+  padding: 0.85rem 1rem; background: var(--amber-light);
+  border-left: 3px solid var(--amber); border-radius: 0 8px 8px 0;
+  font-size: 0.85rem; color: var(--text-mid); line-height: 1.65; margin-bottom: 1.5rem;
+}
+.build-nav { display: flex; gap: 0.75rem; }
+.theatre-blocks { display: flex; flex-direction: column; gap: 0.85rem; }
+
+.cta-banner {
+  margin-top: 3.5rem; padding: 2rem 2.5rem;
+  background: var(--text); border-radius: 12px;
+  display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;
+  box-shadow: var(--shadow-lg);
+}
+.cta-text { flex: 1; min-width: 240px; }
+.cta-text strong { display: block; font-family: var(--font-display); font-size: 1.2rem; color: white; margin-bottom: 0.4rem; }
+.cta-text p { font-size: 0.88rem; color: rgba(255,255,255,0.55); line-height: 1.6; }
+.cta-btn {
+  padding: 0.7rem 1.5rem; border-radius: 6px;
+  background: #86efac; color: #14532d;
+  font-weight: 600; font-size: 0.9rem; text-decoration: none;
+  transition: all 0.15s; white-space: nowrap; font-family: var(--font-body);
+}
+.cta-btn:hover { background: white; }
+
+/* ── DEVELOPERS ── */
+#developers { padding-top: 80px; }
+.dev-notice {
+  display: none;
+  padding: 0.85rem 1.1rem; background: var(--blue-light);
+  border: 1px solid #bfdbfe; border-radius: 8px;
+  font-size: 0.85rem; color: #1e40af; margin-bottom: 2.5rem;
+  line-height: 1.6;
+}
+body.tech-mode .dev-notice { display: block; }
+.dev-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(265px, 1fr)); gap: 1.1rem; margin-bottom: 2.5rem; }
+.dev-card {
+  padding: 1.35rem 1.5rem; background: var(--surface);
+  border: 1.5px solid var(--border-warm); border-radius: 10px;
+  text-decoration: none; color: var(--text); transition: all 0.2s;
+  box-shadow: var(--shadow-sm);
+}
+.dev-card:hover { border-color: var(--c-identity); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.dc-label { font-family: var(--font-mono); font-size: 0.68rem; color: var(--c-identity); margin-bottom: 0.4rem; letter-spacing: 0.08em; }
+.dc-title { font-family: var(--font-display); font-size: 1rem; margin-bottom: 0.35rem; }
+.dc-desc { font-size: 0.82rem; color: var(--text-dim); line-height: 1.5; }
+.service-map { background: var(--surface); border: 1.5px solid var(--border-warm); border-radius: 10px; padding: 1.5rem; box-shadow: var(--shadow-sm); }
+.sm-title { font-family: var(--font-display); font-size: 1rem; margin-bottom: 1rem; }
+.svc-rows { display: flex; flex-direction: column; gap: 0.75rem; }
+.svc-row { display: flex; align-items: baseline; gap: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border); }
+.svc-row:last-child { border-bottom: none; padding-bottom: 0; }
+.svc-label { font-size: 0.75rem; color: var(--text-dim); min-width: 130px; flex-shrink: 0; font-weight: 600; }
+.svc-links { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.svc-link { font-family: var(--font-mono); font-size: 0.7rem; padding: 0.2rem 0.55rem; border-radius: 4px; border: 1px solid var(--border-warm); color: var(--text-dim); text-decoration: none; transition: all 0.15s; }
+.svc-link:hover { border-color: var(--c-identity); color: var(--c-identity); }
+
+footer {
+  padding: 2.5rem; border-top: 1px solid var(--border-warm);
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+  max-width: 1200px; margin: 0 auto;
+}
+.ft { font-size: 0.82rem; color: var(--text-dim); }
+.ft a { color: var(--green); text-decoration: none; font-weight: 500; }
+.fl { display: flex; gap: 1.25rem; }
+.fl a { font-size: 0.82rem; color: var(--text-dim); text-decoration: none; transition: color 0.15s; }
+.fl a:hover { color: var(--text); }
+
+.toggle-hint {
+  font-size: 0.88rem; color: var(--text-dim); line-height: 1.6;
+  padding: 0.85rem 1.1rem; background: var(--surface);
+  border: 1px solid var(--border-warm); border-radius: 8px;
+  margin-bottom: 2.5rem; max-width: 640px;
+}
+.toggle-hint strong { color: var(--green); font-weight: 600; }
+
+/* ── ABOUT EGOV ── */
+#about-egov { background: var(--surface2); padding: 80px 2.5rem 5rem; }
+.about-intro {
+  font-size: 1rem; color: var(--text-mid); line-height: 1.8;
+  max-width: 700px; margin-bottom: 3rem;
+}
+.about-intro strong { color: var(--text); font-weight: 600; }
+.about-quote {
+  padding: 1.25rem 1.5rem;
+  background: var(--green-light); border-left: 3px solid var(--green);
+  border-radius: 0 8px 8px 0; max-width: 680px;
+  font-size: 0.95rem; color: var(--green); line-height: 1.7;
+  margin-bottom: 3rem; font-style: italic;
+}
+.about-quote cite { font-style: normal; font-size: 0.78rem; color: var(--text-dim); display: block; margin-top: 0.5rem; }
+.engagements-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.25rem; margin-bottom: 3rem;
+}
+.engagement-card {
+  background: var(--surface); border: 1.5px solid var(--border-warm);
+  border-radius: 10px; padding: 1.4rem 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+.eg-num {
+  font-family: var(--font-mono); font-size: 0.68rem; color: var(--green);
+  letter-spacing: 0.12em; margin-bottom: 0.6rem;
+}
+.eg-title {
+  font-family: var(--font-display); font-size: 1.05rem;
+  color: var(--text); margin-bottom: 0.5rem; line-height: 1.2;
+}
+.eg-desc { font-size: 0.85rem; color: var(--text-mid); line-height: 1.65; }
+.eg-items { margin-top: 0.75rem; display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.eg-item {
+  font-size: 0.73rem; padding: 0.22rem 0.6rem;
+  border-radius: 4px; background: var(--surface2);
+  border: 1px solid var(--border); color: var(--text-dim);
+}
+.about-contact {
+  display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;
+  padding: 1.75rem 2rem; background: var(--surface);
+  border: 1.5px solid var(--border-warm); border-radius: 10px;
+  box-shadow: var(--shadow-sm);
+}
+.about-contact-text { flex: 1; min-width: 240px; }
+.about-contact-text strong { display: block; font-family: var(--font-display); font-size: 1.1rem; margin-bottom: 0.35rem; }
+.about-contact-text p { font-size: 0.85rem; color: var(--text-dim); line-height: 1.6; }
+.about-contact-text a { color: var(--green); text-decoration: none; font-weight: 500; }
+
+/* ══ MOBILE RESPONSIVE ══ */
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-hamburger { display: flex; }
+
+  section { padding: 96px 1.25rem 3.5rem; }
+  .nav-logo-top { font-size: 0.82rem; }
+  .nav-logo-sub { font-size: 0.6rem; }
+  .status-banner { font-size: 0.68rem; padding: 0.28rem 0.75rem; gap: 0.5rem; }
+  .status-banner-dot { display: none; }
+  .section-sub { max-width: 100%; }
+  .hero-sub { max-width: 100%; }
+  section.full-width { padding-left: 1.25rem; padding-right: 1.25rem; }
+
+  .section-title { font-size: clamp(1.3rem, 6vw, 1.9rem); }
+  .hero-title { font-size: clamp(1.9rem, 8vw, 2.8rem); }
+  .hero-sub { font-size: 0.95rem; }
+  .hero-actions { flex-direction: column; gap: 0.75rem; }
+  .btn-primary, .btn-ghost { width: 100%; text-align: center; }
+  .hero-problem-box { grid-template-columns: 1fr; }
+  .hero-proof { gap: 1.5rem; }
+
+  .fullstack-inner { padding: 0; }
+  .fullstack-title { font-size: clamp(1.2rem, 5vw, 1.7rem); }
+  .stack-band-inner { padding: 1.25rem; }
+  .digital-block-grid { flex-direction: column; }
+  .dg-cluster-chip { min-width: unset; }
+  .foundation-items { gap: 0.5rem; }
+  .fi { font-size: 0.8rem; padding: 0.5rem 0.75rem; }
+
+  .impact-top-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .impact-numbers { grid-template-columns: 1fr 1fr; }
+  .sector-tabs { gap: 0.35rem; }
+  .sector-tab { font-size: 0.8rem; padding: 0.45rem 0.85rem; }
+  .cs-tabs { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 0.5rem; -webkit-overflow-scrolling: touch; }
+  .cs-tab { flex-shrink: 0; font-size: 0.78rem; }
+  .cs-panel.visible { grid-template-columns: 1fr; }
+  .mission-banner { grid-template-columns: 1fr; }
+  .mb-stats { flex-direction: row; justify-content: flex-start; gap: 1.5rem; flex-wrap: wrap; }
+
+  .foundation-grid { grid-template-columns: 1fr; }
+  .clusters-grid { grid-template-columns: 1fr; }
+  .principles-grid { grid-template-columns: 1fr; }
+
+  .tutorial-layout { grid-template-columns: 1fr; }
+  .theatre-layout { grid-template-columns: 1fr; }
+  .tutorial-story, .theatre-story { position: static; }
+
+  .domains-grid { grid-template-columns: repeat(2, 1fr); }
+  .fq-options { flex-direction: column; }
+  .fq-btn { width: 100%; text-align: left; }
+
+  .dev-grid { grid-template-columns: 1fr; }
+  .engagements-grid { grid-template-columns: 1fr; }
+
+  footer { flex-direction: column; align-items: flex-start; gap: 1.25rem; padding: 1.5rem; }
+  .fl { flex-wrap: wrap; gap: 0.75rem; }
+
+  .step-nav, .build-nav { flex-wrap: wrap; }
+  .btn-step { font-size: 0.82rem; }
+
+  .cta-banner { flex-direction: column; }
+}
+
+@media (max-width: 480px) {
+  .impact-numbers { grid-template-columns: 1fr; }
+  .domains-grid { grid-template-columns: 1fr; }
+  .mb-stats { flex-direction: column; gap: 0.75rem; }
+  .hero-proof { flex-direction: column; gap: 1rem; }
+}
+
+/* ── HERO RESEARCH STRIP ─────────────────────────── */
+.hero-why {
+  margin: 1.8rem 0 0;
+  padding: 1.1rem 1.4rem;
+  background: rgba(247,244,239,0.6);
+  border: 1px solid rgba(42,110,71,0.1);
+  border-radius: 8px;
+}
+.hero-why-label {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #78716c;
+  margin-bottom: 0.75rem;
+}
+.hero-why-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+.hero-why-item {}
+.hero-why-stat {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 0.2rem;
+}
+.hero-why-desc {
+  font-size: 0.76rem;
+  line-height: 1.5;
+  color: #78716c;
+}
+.hero-why-cite {
+  display: block;
+  font-size: 0.68rem;
+  color: #a8a29e;
+  font-style: italic;
+  margin-top: 0.15rem;
+}
+.hero-good-label {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #78716c;
+  margin: 1rem 0 0.5rem;
+}
+.hero-good-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+.hero-good-item {
+  font-size: 0.74rem;
+  color: #57534e;
+  background: white;
+  border: 1px solid #e7e5e4;
+  border-radius: 5px;
+  padding: 0.3rem 0.6rem;
+  line-height: 1.4;
+}
+.hero-good-item strong { color: #57534e; font-weight: 600; }
+@media(max-width:640px){
+  .hero-why-row { grid-template-columns: 1fr; gap: 1rem; }
+}
+
+
+/* ── HOW WE WORK — OFFERINGS FRAMEWORK ─────────────── */
+#how-we-work { background: #f7f4ef; }
+.offw-intro {
+  max-width: 680px;
+  font-size: 1rem;
+  line-height: 1.75;
+  color: #44403c;
+  margin-bottom: 2.8rem;
+}
+.offw-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: rgba(42,110,71,0.12);
+  border: 1px solid rgba(42,110,71,0.12);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.offw-card {
+  background: #fff;
+  padding: 1.6rem 1.4rem;
+  cursor: pointer;
+  transition: background 0.18s, box-shadow 0.18s;
+  position: relative;
+  border-bottom: 3px solid transparent;
+}
+.offw-card:hover { background: #f0f9f4; }
+.offw-card.active {
+  background: var(--green);
+  border-bottom-color: #1a4d30;
+}
+.offw-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: #a8a29e;
+  margin-bottom: 0.8rem;
+  letter-spacing: 0.06em;
+}
+.offw-card.active .offw-num { color: rgba(255,255,255,0.55); }
+.offw-icon { font-size: 1.5rem; margin-bottom: 0.55rem; display: block; }
+.offw-name {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.3;
+}
+.offw-card.active .offw-name { color: white; }
+.offw-arrow {
+  position: absolute;
+  bottom: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-top: 13px solid var(--green);
+  display: none;
+  z-index: 2;
+}
+.offw-card.active .offw-arrow { display: block; }
+
+/* Expandable detail panel */
+.offw-panel {
+  margin-top: 1px;
+  background: white;
+  border: 1px solid rgba(42,110,71,0.15);
+  border-radius: 10px;
+  padding: 2rem 2.2rem;
+  display: none;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+.offw-panel.visible { display: grid; }
+.offw-panel-left {}
+.offw-panel-mode-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 0.5rem;
+}
+.offw-panel-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.35rem;
+  color: var(--text);
+  margin-bottom: 0.8rem;
+}
+.offw-panel-desc {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: #44403c;
+  margin-bottom: 1.1rem;
+}
+.offw-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+.offw-tag {
+  font-size: 0.75rem;
+  background: #f0f9f4;
+  color: var(--green);
+  border: 1px solid rgba(42,110,71,0.2);
+  border-radius: 20px;
+  padding: 0.25rem 0.7rem;
+  font-weight: 600;
+}
+.offw-panel-right {}
+.offw-case-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 0.5rem;
+}
+.offw-case-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.1rem;
+  color: var(--text);
+  margin-bottom: 0.6rem;
+}
+.offw-case-body {
+  font-size: 0.86rem;
+  line-height: 1.68;
+  color: #44403c;
+}
+.offw-case-stats {
+  display: flex;
+  gap: 1.2rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+.offw-cs-stat {}
+.offw-cs-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.3rem;
+  color: var(--green);
+}
+.offw-cs-lbl {
+  font-size: 0.72rem;
+  color: #78716c;
+  line-height: 1.3;
+}
+.offw-why-box {
+  margin-top: 2.5rem;
+  padding: 1.4rem 1.6rem;
+  background: #fffbf5;
+  border-left: 3px solid var(--amber);
+  border-radius: 0 8px 8px 0;
+}
+.offw-why-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 0.5rem;
+}
+.offw-why-text {
+  font-size: 0.88rem;
+  line-height: 1.65;
+  color: #57534e;
+  font-style: italic;
+}
+@media(max-width:900px){
+  .offw-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media(max-width:640px){
+  .offw-grid { grid-template-columns: 1fr 1fr; }
+  .offw-panel { grid-template-columns: 1fr; }
+  .offw-panel.visible { display: block; }
+}
+
+
+/* ── ECOSYSTEM UNIVERSE ─────────────────────────────── */
+#ecosystem { background: #fafaf9; }
+.eco-stats-row {
+  display: flex;
+  gap: 1.8rem;
+  flex-wrap: wrap;
+  margin-bottom: 2.4rem;
+}
+.eco-stat-card {
+  background: white;
+  border: 1px solid #e7e5e4;
+  border-radius: 10px;
+  padding: 1.1rem 1.4rem;
+  min-width: 130px;
+}
+.eco-stat-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.8rem;
+  color: var(--green);
+  line-height: 1;
+  margin-bottom: 0.3rem;
+}
+.eco-stat-lbl {
+  font-size: 0.75rem;
+  color: #78716c;
+  line-height: 1.35;
+}
+.eco-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.6rem;
+  align-items: center;
+}
+.eco-filter-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #78716c;
+  margin-right: 0.3rem;
+}
+.eco-fbtn {
+  font-size: 0.78rem;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600;
+  padding: 0.32rem 0.85rem;
+  border-radius: 20px;
+  border: 1.5px solid #d6d3d1;
+  background: white;
+  color: #57534e;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.eco-fbtn:hover { border-color: var(--green); color: var(--green); }
+.eco-fbtn.active { background: var(--green); color: white; border-color: var(--green); }
+.eco-fbtn.role-egov.active { background: #1e3a2f; }
+.eco-fbtn.role-commercial.active { background: #1e40af; border-color: #1e40af; }
+.eco-fbtn.role-dev.active { background: #b45309; border-color: #b45309; }
+.eco-fbtn.role-govt.active { background: #6b21a8; border-color: #6b21a8; }
+.eco-fbtn.role-intl.active { background: #0f766e; border-color: #0f766e; }
+.eco-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.4rem;
+  align-items: center;
+}
+.eco-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  color: #57534e;
+}
+.eco-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.eco-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 0.8rem;
+}
+.eco-card {
+  background: white;
+  border: 1px solid #e7e5e4;
+  border-radius: 9px;
+  padding: 1rem 1.1rem;
+  border-left: 3px solid #d6d3d1;
+  transition: box-shadow 0.15s, transform 0.15s;
+  cursor: default;
+}
+.eco-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); transform: translateY(-1px); }
+.eco-card.role-egov { border-left-color: #1e3a2f; }
+.eco-card.role-commercial { border-left-color: #1e40af; }
+.eco-card.role-dev { border-left-color: #b45309; }
+.eco-card.role-govt { border-left-color: #6b21a8; }
+.eco-card.role-intl { border-left-color: #0f766e; }
+.eco-card.role-pipeline { border-left-color: #a8a29e; }
+.eco-card-geo {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #44403c;
+  margin-bottom: 0.3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.4rem;
+}
+.eco-card-stage {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.15rem 0.5rem;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+.stage-live { background: #dcfce7; color: #15803d; }
+.stage-design { background: #fef9c3; color: #a16207; }
+.eco-card-use {
+  font-size: 0.8rem;
+  color: var(--text);
+  font-weight: 500;
+  margin-bottom: 0.35rem;
+  line-height: 1.35;
+}
+.eco-card-meta {
+  font-size: 0.72rem;
+  color: #78716c;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.eco-card-sector {
+  background: #f5f5f4;
+  border-radius: 4px;
+  padding: 0.1rem 0.4rem;
+}
+.eco-card-by { }
+.eco-new-badge {
+  font-size: 0.65rem;
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+  border-radius: 4px;
+  padding: 0.1rem 0.4rem;
+  font-weight: 600;
+}
+.eco-role-explainer {
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.8rem;
+}
+.eco-role-card {
+  background: white;
+  border: 1px solid #e7e5e4;
+  border-top: 3px solid var(--c);
+  border-radius: 8px;
+  padding: 1rem 1.1rem;
+}
+.eco-role-name {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.35rem;
+}
+.eco-role-desc {
+  font-size: 0.75rem;
+  line-height: 1.55;
+  color: #78716c;
+}
+@media(max-width:900px){ .eco-role-explainer { grid-template-columns: repeat(2,1fr); } }
+@media(max-width:640px){ .eco-grid { grid-template-columns: 1fr; } .eco-role-explainer { grid-template-columns: 1fr; } }
+
+
+/* ── PORTFOLIO MAP ──────────────────────────────────────────────────────── */
+#portfolio { background: #f7f4ef; }
+/* ── PROGRAMME LIST ─────────────────────────────────── */
+.plist-wrap { border: 1px solid #e7e5e4; border-radius: 10px; overflow: hidden; }
+.plist-header {
+  display: grid;
+  grid-template-columns: 160px 1fr 140px 180px 80px;
+  gap: 0;
+  background: #f5f5f4;
+  border-bottom: 1px solid #e7e5e4;
+  padding: 0.55rem 1rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #78716c;
+}
+.plist-row {
+  display: grid;
+  grid-template-columns: 160px 1fr 140px 180px 80px;
+  gap: 0;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #f0efed;
+  cursor: pointer;
+  transition: background 0.12s;
+  border-left: 3px solid transparent;
+}
+.plist-row:last-child { border-bottom: none; }
+.plist-row:hover { background: #fafaf9; }
+.plist-row.expanded { background: #f7f4ef; border-left-color: var(--green); }
+.plist-row.role-egov_direct { border-left-color: #2a6e47; }
+.plist-row.role-commercial_partner { border-left-color: #1e40af; }
+.plist-row.role-development_sector { border-left-color: #b45309; }
+.plist-row.role-govt_body { border-left-color: #6b21a8; }
+.plist-row.role-pipeline { border-left-color: #d6d3d1; }
+.plist-geo { font-size: 0.8rem; font-weight: 600; color: var(--text); align-self: center; }
+.plist-use { font-size: 0.8rem; color: var(--text); align-self: center; padding-right: 1rem; }
+.plist-sec { font-size: 0.72rem; color: #57534e; align-self: center; }
+.plist-by { font-size: 0.72rem; color: #57534e; align-self: center; }
+.plist-stage { align-self: center; }
+.plist-stage-pill {
+  font-size: 0.64rem; font-weight: 700; letter-spacing: 0.05em;
+  text-transform: uppercase; padding: 0.18rem 0.5rem;
+  border-radius: 8px; display: inline-block;
+}
+.plist-stage-pill.live { background: #dcfce7; color: #15803d; }
+.plist-stage-pill.design { background: #fef9c3; color: #a16207; }
+.plist-detail {
+  display: none;
+  grid-column: 1 / -1;
+  background: white;
+  border-top: 1px solid #e7e5e4;
+  padding: 0.9rem 1rem 0.9rem 1.15rem;
+  font-size: 0.8rem;
+  line-height: 1.65;
+  color: #44403c;
+}
+.plist-detail.visible { display: block; }
+.plist-detail-meta {
+  display: flex; flex-wrap: wrap; gap: 0.5rem;
+  margin-top: 0.6rem;
+}
+.plist-dm { font-size: 0.7rem; background: #f5f5f4; border-radius: 4px; padding: 0.15rem 0.5rem; color: #57534e; }
+.plist-dm strong { color: var(--text); }
+.plist-new-badge { font-size: 0.65rem; background: #fef3c7; color: #92400e; border: 1px solid #fde68a; border-radius: 4px; padding: 0.1rem 0.4rem; font-weight: 600; }
+.port-fbtn.f-intl.active { background: #0f766e; border-color: #0f766e; }
+.port-fbtn.f-pipe.active { background: #78716c; border-color: #78716c; }
+@media(max-width:768px){
+  .plist-header { display: none; }
+  .plist-row { grid-template-columns: 1fr auto; grid-template-rows: auto auto; gap: 0.2rem; }
+  .plist-use { grid-column: 1; grid-row: 2; font-size: 0.75rem; color: #57534e; }
+  .plist-sec, .plist-by { display: none; }
+  .plist-stage { grid-column: 2; grid-row: 1; }
+}
+
+
+.port-stat { background:white; border:1px solid #e7e5e4; border-radius:10px; padding:1rem 1.3rem; flex:1; min-width:100px; }
+.port-stat-num { font-family:'DM Serif Display',serif; font-size:1.7rem; color:var(--green); line-height:1.1; margin-bottom:.2rem; }
+.port-stat-lbl { font-size:.72rem; color:#78716c; line-height:1.4; }
+.port-filter-row { display:flex; flex-wrap:wrap; gap:.45rem; align-items:center; margin-bottom:1.4rem; }
+.port-filter-lbl { font-size:.7rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#78716c; margin-right:.3rem; }
+.port-fbtn { font-size:.76rem; font-family:'Plus Jakarta Sans',sans-serif; font-weight:600; padding:.3rem .8rem; border-radius:20px; border:1.5px solid #d6d3d1; background:white; color:#57534e; cursor:pointer; transition:all .15s; white-space:nowrap; }
+.port-fbtn:hover { border-color:var(--green); color:var(--green); }
+.port-fbtn.active { background:var(--green); color:white; border-color:var(--green); }
+.port-fbtn.f-commercial.active { background:#1e40af; border-color:#1e40af; }
+.port-fbtn.f-dev.active { background:#b45309; border-color:#b45309; }
+.port-fbtn.f-govt.active { background:#6b21a8; border-color:#6b21a8; }
+.port-map-wrap { display:grid; grid-template-columns:1fr 340px; gap:1.5rem; align-items:start; }
+.port-map-svg-wrap { background:#d6e8f5; border-radius:12px; overflow:hidden; border:1px solid #b8d4e8; }
+#indiaMapSvg { width:100%; height:auto; display:block; }
+.map-state { fill:#ede9e4; stroke:#c8c4be; cursor:pointer; transition:filter .12s, fill .2s; }
+.map-state:hover { filter:brightness(.9); }
+.map-state.selected { stroke:#1c1917 !important; stroke-width:2 !important; filter:brightness(.85); }
+.map-dot { stroke-width:1.2; }
+.map-label { font-family:'Plus Jakarta Sans',sans-serif; font-size:7px; fill:rgba(28,25,23,.72); font-weight:600; text-anchor:middle; dominant-baseline:middle; pointer-events:none; }
+.map-label-sm { font-size:5.5px; fill:rgba(28,25,23,.5); text-anchor:start; }
+.port-legend { display:flex; flex-wrap:wrap; gap:.7rem; margin-top:.9rem; align-items:center; }
+.port-legend-item { display:flex; align-items:center; gap:.35rem; font-size:.72rem; color:#57534e; }
+.port-ldot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.port-panel-col {}
+.port-panel { background:white; border:1px solid #e7e5e4; border-radius:12px; padding:1.4rem 1.5rem; min-height:340px; position:sticky; top:110px; }
+.mdp-empty { color:#a8a29e; font-size:.85rem; line-height:1.6; padding:2.5rem 0; text-align:center; }
+.mdp-empty-icon { font-size:2rem; display:block; margin-bottom:.5rem; opacity:.4; }
+.mdp-state-name { font-family:'DM Serif Display',serif; font-size:1.25rem; color:var(--text); margin-bottom:.5rem; }
+.mdp-counts { display:flex; gap:.5rem; margin-bottom:1rem; flex-wrap:wrap; }
+.mdp-count { font-size:.72rem; font-weight:700; padding:.2rem .6rem; border-radius:10px; }
+.mdp-count.live { background:#dcfce7; color:#15803d; }
+.mdp-count.design { background:#fef9c3; color:#a16207; }
+.mdp-cards { display:flex; flex-direction:column; gap:.6rem; max-height:460px; overflow-y:auto; }
+.mdp-card { border:1px solid #e7e5e4; border-radius:8px; padding:.85rem 1rem; border-left:3px solid #d6d3d1; }
+.mdp-card.role-egov { border-left-color:#2a6e47; }
+.mdp-card.role-commercial { border-left-color:#1e40af; }
+.mdp-card.role-dev { border-left-color:#b45309; }
+.mdp-card.role-govt { border-left-color:#6b21a8; }
+.mdp-card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:.3rem; gap:.5rem; }
+.mdp-sector { font-size:.67rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#78716c; background:#f5f5f4; padding:.12rem .4rem; border-radius:4px; }
+.mdp-use { font-size:.82rem; font-weight:600; color:var(--text); margin-bottom:.3rem; line-height:1.35; }
+.mdp-meta { display:flex; flex-wrap:wrap; gap:.4rem; align-items:center; }
+.mdp-by { font-size:.72rem; color:#78716c; }
+.mdp-impact { font-size:.7rem; color:var(--green); font-weight:600; }
+.port-national { margin-top:1.2rem; background:white; border:1px solid #e7e5e4; border-radius:10px; padding:1rem 1.4rem; }
+.port-national-label { font-size:.7rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#78716c; margin-bottom:.75rem; }
+.port-national-cards { display:flex; flex-wrap:wrap; gap:.5rem; }
+.port-nat-card { background:#f5f5f4; border-radius:6px; padding:.5rem .75rem; font-size:.76rem; border-left:2px solid var(--green); max-width:220px; }
+.port-nat-name { font-weight:600; color:var(--text); margin-bottom:.12rem; font-size:.78rem; }
+.port-nat-by { font-size:.68rem; color:#78716c; }
+.port-intl-toggle { margin-top:1.4rem; cursor:pointer; background:white; border:1px solid #e7e5e4; border-radius:10px; padding:.9rem 1.4rem; display:flex; align-items:center; justify-content:space-between; transition:background .15s; user-select:none; }
+.port-intl-toggle:hover { background:#f7f4ef; }
+.port-intl-left { display:flex; align-items:center; gap:.7rem; }
+.port-intl-icon { font-size:1.3rem; }
+.port-intl-title { font-size:.88rem; font-weight:700; color:var(--text); }
+.port-intl-sub { font-size:.74rem; color:#78716c; }
+.port-intl-chevron { font-size:.8rem; color:#a8a29e; transition:transform .2s; }
+.port-intl-toggle.open .port-intl-chevron { transform:rotate(180deg); }
+.port-intl-panel { display:none; background:white; border:1px solid #e7e5e4; border-top:none; border-radius:0 0 10px 10px; padding:1.2rem 1.4rem; }
+.port-intl-panel.visible { display:block; }
+.port-intl-inner { display:grid; grid-template-columns:170px 1fr; gap:1.4rem; align-items:start; }
+.port-africa-svg { width:160px; border-radius:8px; display:block; }
+.port-intl-cards { display:flex; flex-direction:column; gap:.5rem; }
+.port-intl-card { font-size:.78rem; padding:.5rem .7rem; background:#f9f7f5; border-radius:6px; border-left:2px solid #0f766e; }
+.port-intl-geo { font-weight:700; color:var(--text); font-size:.75rem; }
+.port-intl-use { color:#57534e; line-height:1.3; }
+.port-intl-meta { font-size:.68rem; color:#a8a29e; margin-top:.15rem; }
+@media(max-width:900px){ .port-map-wrap { grid-template-columns:1fr; } .port-panel { position:static; min-height:200px; } .port-intl-inner { grid-template-columns:1fr; } }
+@media(max-width:640px){ .port-stat { min-width:80px; } }
+</style>
+</head>
+<body>
+
+<!-- STATUS BANNER -->
+<div class="status-banner"><div class="status-banner-dot"></div>Strawman for internal discussion only — please do not circulate<div class="status-banner-dot"></div></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-logo" style="text-decoration:none;">
+    <div class="nav-logo-top"><div class="nav-logo-dot"></div>Digital Building Blocks for better Public Services</div>
+    <div class="nav-logo-sub">An interactive guide by eGov Foundation</div>
+  </a>
+  <div class="nav-links">
+    <a href="#fullstack">The Solution</a>
+    <a href="#how-we-work">How we work</a><a href="#portfolio">The portfolio</a><a href="#india-impact">The impact</a>
+    <a href="#understand">A Case Study</a>
+    <a href="#blocks">Our Approach</a>
+    <a href="#principles">Our Principles</a>
+    <a href="#imagine">Apply This</a>
+    <a href="#about-egov">About eGov</a>
+    <a href="#developers">Technical</a>
+  </div>
+  <button class="nav-hamburger" onclick="toggleMobileNav()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-nav" id="mobileNav">
+  <a href="#fullstack" onclick="closeMobileNav()">The Solution</a>
+  <a href="#how-we-work" onclick="closeMobileNav()">How we work</a><a href="#portfolio" onclick="closeMobileNav()">The portfolio</a><a href="#india-impact" onclick="closeMobileNav()">The impact</a>
+  <a href="#understand" onclick="closeMobileNav()">A Case Study</a>
+  <a href="#blocks" onclick="closeMobileNav()">Our Approach</a>
+  <a href="#principles" onclick="closeMobileNav()">Our Principles</a>
+  <a href="#imagine" onclick="closeMobileNav()">Apply This</a>
+  <a href="#about-egov" onclick="closeMobileNav()">About eGov</a>
+  <a href="#developers" onclick="closeMobileNav()">Technical</a>
+  <div class="mobile-tech-row" onclick="toggleTechMode(); closeMobileNav();">
+    <span>Technical view</span>
+    <div class="tech-switch"></div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-kicker">The problem</div>
+  <h1 class="hero-title">Governments build the same digital infrastructure. <em>Repeatedly. In silos.</em></h1>
+  <p class="hero-sub">Every government that delivers public services — property tax, health campaigns, water connections, social benefits — needs the same underlying digital capabilities: registries, workflows, identity verification, payments, notifications. Today, most build these independently, at significant cost, with limited interoperability and frequent dependency on proprietary vendors. The scale of this gap is measurable: only 39% of citizens in surveyed countries trust their government to deliver services reliably (OECD, 2023), fewer than 1 in 3 countries are on track for accountable public institutions by 2030 (UN SDG 16.6), and over $1 trillion is lost annually to fragmented, inefficient public administration (World Bank, 2022). We need to collectively reimagine and deliver what good public services can look like — and the building blocks approach is one proven path.</p>
+
+  <div class="hero-problem-box">
+    <div class="hpb-left">
+      <div class="hpb-label">The consequence of the current approach</div>
+      <div class="hpb-items">
+        <div class="hpb-item">⟶ &nbsp;Duplicated investment across agencies and governments</div>
+        <div class="hpb-item">⟶ &nbsp;Fragmented data with no single source of truth</div>
+        <div class="hpb-item">⟶ &nbsp;Proprietary systems that governments cannot own or modify</div>
+        <div class="hpb-item">⟶ &nbsp;Citizens navigating disconnected services</div>
+      </div>
+    </div>
+    <div class="hpb-right">
+      <div class="hpb-label">The building blocks alternative</div>
+      <div class="hpb-items">
+        <div class="hpb-item hpb-green">✓ &nbsp;Shared, reusable infrastructure across services and sectors</div>
+        <div class="hpb-item hpb-green">✓ &nbsp;Government-owned, open-source, no vendor dependency</div>
+        <div class="hpb-item hpb-green">✓ &nbsp;Modular, deploy what you need, configure for your context</div>
+        <div class="hpb-item hpb-green">✓ &nbsp;Proven at population scale across multiple countries</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-actions">
+    <a href="#fullstack" class="btn-primary">Explore the approach →</a>
+    <a href="#understand" class="btn-ghost">See a case study</a>
+  </div>
+
+  <div class="hero-rule"></div>
+
+  <div class="hero-proof-label">This approach in practice, selected outcomes from government deployments</div>
+  <div class="hero-proof">
+    <div class="proof-item">
+      <span class="proof-num">1.1Bn+</span>
+      <span class="proof-label">Public services delivered through open DPG-based platforms across 12+ countries · <em>eGov Foundation</em></span>
+    </div>
+    <div class="proof-item">
+      <span class="proof-num">4,400+</span>
+      <span class="proof-label">Urban local bodies that can now build their own municipal services on UPYOG · <em>MoHUA / NIUA</em></span>
+    </div>
+    <div class="proof-item">
+      <span class="proof-num">2Bn+</span>
+      <span class="proof-label">COVID-19 vaccination certificates issued via platforms built by governments on DIVOC, including CoWIN · <em>Ministry of Health</em></span>
+    </div>
+    <div class="proof-item">
+      <span class="proof-num">148Mn</span>
+      <span class="proof-label">Households on digital water scheme tracking systems · <em>Jal Jeevan Mission</em></span>
+    </div>
+  </div>
+  <div class="hero-source-note">Outcomes above are government-reported. Sources linked in the Evidence from India section.</div>
+</section>
+
+<!-- FULL STACK -->
+<section id="fullstack" class="full-width">
+  <div class="fullstack-inner">
+    <div class="section-eyebrow" style="color:#86efac;">The solution</div>
+    <h2 class="fullstack-title">Digital building blocks that help governments improve public service delivery across sectors.</h2>
+    <p class="fullstack-sub">Digital infrastructure alone does not transform public service delivery. Governments that have achieved sustained impact at scale have worked across all three layers simultaneously, investing in the enabling conditions, deploying shared digital infrastructure, and measuring outcomes for citizens. Technology that arrives without policy, institutional capacity, or community trust rarely delivers on its promise.</p>
+
+    <div class="stack-arch">
+
+      <!-- Outcomes -->
+      <div class="stack-band outcomes">
+        <div class="stack-band-inner">
+          <div class="sb-label">What citizens and governments experience</div>
+          <div class="sb-title">Outcomes</div>
+          <div class="sb-sub">The measurable results of a well-functioning system, faster, fairer, more accessible services</div>
+          <div class="outcomes-chips" id="outcomesRow"></div>
+        </div>
+      </div>
+
+      <div class="stack-connector"><div class="sc-line"></div>↕<div class="sc-line"></div></div>
+
+      <!-- Digital -->
+      <div class="stack-band digital">
+        <div class="stack-band-inner">
+          <div class="sb-label">Open digital infrastructure · DIGIT</div>
+          <div class="sb-title">Digital Building Blocks</div>
+          <div class="sb-sub">Six functional clusters, twenty-four reusable services. Each cluster shown here, click any to explore the full detail below.</div>
+          <div class="digital-block-grid" id="digitalBlockGrid"></div>
+          <a href="#blocks" style="display:inline-block;margin-top:1.1rem;font-size:0.78rem;color:#86efac;font-family:var(--font-mono);letter-spacing:0.05em;text-decoration:none;opacity:0.75;transition:opacity 0.15s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.75">↓ &nbsp;See all 24 building blocks with full descriptions</a>
+        </div>
+      </div>
+
+      <div class="stack-connector"><div class="sc-line"></div>↕<div class="sc-line"></div></div>
+
+      <!-- Foundation -->
+      <div class="stack-band foundation">
+        <div class="stack-band-inner">
+          <div class="sb-label">Enabling conditions · Non-digital foundations</div>
+          <div class="sb-title">The Conditions That Make It Work</div>
+          <div class="sb-sub">Without these, even the best technology fails to deliver lasting change</div>
+          <div class="foundation-items" id="foundationItems"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- HOW WE WORK -->
+<section id="how-we-work">
+  <div class="section-eyebrow">How eGov works</div>
+  <h2 class="section-title">Five modes of engagement. One coherent mission.</h2>
+  <p class="offw-intro">eGov Foundation does not have a single fixed role. Depending on where a government or partner is in their digital transformation journey, eGov steps in differently — as strategist, platform provider, implementation partner, capacity builder, or ecosystem architect. These five modes are not mutually exclusive: a single state engagement typically involves several, sequenced over time. Together they form the coherent India strategy that has made DIGIT one of the most widely deployed open-source governance platforms in the world.</p>
+
+  <div class="offw-grid" id="offwGrid">
+    <!-- Cards rendered by JS -->
+  </div>
+
+  <div class="offw-panel" id="offwPanel">
+    <div class="offw-panel-left">
+      <div class="offw-panel-mode-label" id="offwModeLabel"></div>
+      <div class="offw-panel-title" id="offwPanelTitle"></div>
+      <div class="offw-panel-desc" id="offwPanelDesc"></div>
+      <div class="offw-tags" id="offwTags"></div>
+    </div>
+    <div class="offw-panel-right">
+      <div class="offw-case-label">Example from the field</div>
+      <div class="offw-case-title" id="offwCaseTitle"></div>
+      <div class="offw-case-body" id="offwCaseBody"></div>
+      <div class="offw-case-stats" id="offwCaseStats"></div>
+    </div>
+  </div>
+
+</section>
+
+<!-- PORTFOLIO LIST -->
+<section id="portfolio">
+  <div class="section-eyebrow">Solutions built by the eGov community</div>
+  <h2 class="section-title">Portfolio of programs.</h2>
+  <p class="section-sub">Each of eGov's five modes of engagement leaves a different footprint. Across advisory work, platform deployment, implementation support, capacity building, and ecosystem development — a portfolio of 70+ programmes has taken shape across 20+ states and 11 sectors. Most were not built by eGov. That is precisely the point.</p>
+  <div class="port-stats-row" id="portStatsRow"></div>
+  <div class="port-filter-row">
+    <span class="port-filter-lbl">Filter by:</span>
+    <button class="port-fbtn active" onclick="portListFilter('all',this)">All</button>
+    <button class="port-fbtn" onclick="portListFilter('eGov direct',this)">eGov direct</button>
+    <button class="port-fbtn f-commercial" onclick="portListFilter('Commercial partner',this)">Commercial partners</button>
+    <button class="port-fbtn f-dev" onclick="portListFilter('Development sector',this)">Development sector</button>
+    <button class="port-fbtn f-govt" onclick="portListFilter('Govt / public body',this)">Govt / public body</button>
+    <button class="port-fbtn f-intl" onclick="portListFilter('International',this)">International</button>
+    <button class="port-fbtn f-pipe" onclick="portListFilter('Pipeline',this)">Pipeline</button>
+  </div>
+  <div class="plist-wrap">
+    <div class="plist-header">
+      <span class="plist-hgeo">Geography</span>
+      <span class="plist-huse">Programme</span>
+      <span class="plist-hsec">Sector</span>
+      <span class="plist-hby">Implementing partner</span>
+      <span class="plist-hstage">Stage</span>
+    </div>
+    <div id="portList"></div>
+  </div>
+  <div class="port-intl-toggle" id="intlToggle" onclick="toggleIntl()">
+    <div class="port-intl-left">
+      <span class="port-intl-icon">🌍</span>
+      <div><div class="port-intl-title">International deployments</div><div class="port-intl-sub">8 programmes across Mozambique, Liberia, Senegal and Nigeria — click to expand</div></div>
+    </div>
+    <span class="port-intl-chevron">▼</span>
+  </div>
+  <div class="port-intl-panel" id="intlPanel">
+    <div class="port-intl-cards" id="intlCards"></div>
+  </div>
+</section>
+
+<!-- INDIA IMPACT -->
+<section id="india-impact" class="full-width">
+  <div class="impact-inner">
+    <div class="section-eyebrow">The impact</div>
+    <h2 class="section-title">What this approach has unlocked for India.</h2>
+
+    <div class="impact-top-grid">
+      <div class="impact-lede">
+        <p>India offers some of the most extensive evidence available for what the building blocks approach can achieve at population scale, across local governance, public health, water, sanitation, and public finance. The outcomes documented here belong to the governments that led and now own these systems. eGov Foundation has been a consistent technical and institutional partner across many of these programmes, contributing open digital infrastructure, programme architecture, and capacity building.</p>
+        <br>
+        <p>These impact stories are drawn from published government sources. They illustrate how the same underlying building blocks have been configured differently across sectors, scales, and institutional contexts.</p>
+      </div>
+      <div class="impact-numbers" id="impactNumbers"></div>
+    </div>
+
+    <div class="sector-nav">
+      <div class="sector-tabs" id="sectorTabs"></div>
+      <div class="sector-case-container green-accent">
+        <div class="cs-tabs" id="csTabs"></div>
+        <div id="csPanels"></div>
+      </div>
+    </div>
+
+    <div class="mission-banner">
+      <div class="mb-text">
+        <strong>UPYOG, India's National Urban Governance Platform</strong>
+        <p>In February 2021, MoHUA and MEITY jointly launched the National Urban Digital Mission (NUDM), anchored at NIUA. NUDM partnered with eGov Foundation to revamp and scale DIGIT, which became the technical foundation for UPYOG, the Urban Platform for deliverY of Online Governance. eGov's contribution spanned programme design, architecture, change management, capacity building, and over 20,000 hours of training. UPYOG is now fully owned and operated by MoHUA through NIUA, certified as a Digital Public Good by the DPGA, and recipient of the Gold Award at the ETGovernment DigiTech Awards 2025.</p>
+        <p style="margin-top:0.75rem;font-size:0.8rem;color:rgba(255,255,255,0.35);">Impact figures sourced from NUDM/NIUA official publications.</p>
+      </div>
+      <div class="mb-stats">
+        <div class="mbs"><div class="mbs-num">4,400+</div><div class="mbs-label">Urban local bodies in scope nationally</div></div>
+        <div class="mbs"><div class="mbs-num">30</div><div class="mbs-label">States & UTs signed on to UPYOG</div></div>
+        <div class="mbs"><div class="mbs-num">16</div><div class="mbs-label">Urban service modules on the platform</div></div>
+        <div class="mbs"><div class="mbs-num">70</div><div class="mbs-label">Empanelled technical implementation partners</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- TUTORIAL -->
+<section id="understand">
+  <div class="section-eyebrow">A case study</div>
+  <h2 class="section-title">Building blocks for property tax collection.</h2>
+  <p class="section-sub">Property tax collection is one of the foundational revenue services of local government, and historically one of the most difficult to deliver with equity, efficiency, and accountability at scale. This walkthrough shows which building blocks activate at each stage of the service. The same pattern, reconfigured for different rules and registries, underlies health campaigns, disaster relief systems, and pollution enforcement, the blocks are the same, the configuration changes.</p>
+  <p class="toggle-hint">💡 Use the <strong>Technical view</strong> toggle at the bottom right to reveal the underlying service names, API references, and infrastructure details at each stage, useful for technical teams exploring implementation.</p>
+
+  <div class="tutorial-layout">
+    <div class="tutorial-story">
+      <div class="step-progress" id="stepProgress"></div>
+      <div class="step-num" id="stepNum">STAGE 1 OF 7</div>
+      <h3 class="step-title" id="stepTitle"></h3>
+      <p class="step-story" id="stepStory"></p>
+      <div class="step-plain" id="stepPlain"></div>
+      <label class="infra-toggle" onclick="toggleInfra()">
+        <div class="ts" id="infraSwitch"></div>
+        Show infrastructure layer
+      </label>
+      <div class="infra-note" id="infraNote"></div>
+      <div class="step-nav">
+        <button class="btn-step" id="btnPrev" onclick="prevStep()">← Previous</button>
+        <button class="btn-step primary" id="btnNext" onclick="nextStep()">Next stage →</button>
+      </div>
+    </div>
+    <div class="tutorial-blocks" id="tutorialBlocks"></div>
+  </div>
+</section>
+
+<!-- DIGITAL BLOCKS -->
+<section id="blocks">
+  <div class="section-eyebrow">Our approach</div>
+  <h2 class="section-title">Building blocks designed to solve multiple governance needs, delivering better public services for citizens.</h2>
+  <p class="section-sub">The building blocks approach treats digital governance infrastructure the way we treat roads or electricity grids, as shared public goods that any service can utilise, rather than systems independently constructed for each application. DIGIT offers twenty-four such blocks across six functional areas. Governments configure and combine them for their specific context, retaining full ownership and control.</p>
+  <p class="toggle-hint">💡 Use the <strong>Technical view</strong> toggle at the bottom right of this page to reveal the underlying service names, API references, and architecture details for each block, useful for technical teams exploring implementation.</p>
+
+  <div class="clusters-grid" id="clustersGrid"></div>
+</section>
+
+<!-- PRINCIPLES -->
+<section id="principles" class="full-width">
+  <div class="principles-inner">
+    <div class="section-eyebrow" style="color:#86efac;">Our principles</div>
+    <h2 class="section-title" style="color:white;">Built for governments. Designed to be shared.</h2>
+    <p class="section-sub">These seven principles distinguish open digital public infrastructure from conventional government IT procurement, and explain why the building blocks approach can achieve population-scale impact where bespoke systems have repeatedly failed.</p>
+    <div class="principles-grid" id="principlesGrid"></div>
+  </div>
+</section>
+
+<section id="foundation">
+  <div class="section-eyebrow">The enablers</div>
+  <h2 class="section-title">Sustained digital transformation needs more than technology.</h2>
+  <p class="section-sub">Experience across countries and contexts shows that the most significant barriers to effective public service delivery are rarely technical. They are institutional, legal, social, and human. These enabling conditions must be developed alongside, and often prior to, any digital investment.</p>
+
+  <div class="foundation-intro">
+    <div class="foundation-intro-icon">◎</div>
+    <div class="foundation-intro-text"><strong>Digital transformation is not primarily a technology problem.</strong> Governments and support organisations that have achieved sustained impact consistently report that institutional arrangements, legal frameworks, data governance, community trust, and human capacity are the decisive factors. Each of the conditions below represents an area requiring deliberate, multi-stakeholder investment, and each one is as important as the technology itself. This section will grow in depth as field experience is documented.</div>
+  </div>
+
+  <div class="foundation-grid" id="foundationGrid"></div>
+</section>
+
+<!-- IMAGINE -->
+<section id="imagine">
+  <div class="section-eyebrow">Applying this approach in your context</div>
+  <h2 class="section-title">A few examples of how these digital building blocks can help you.</h2>
+  <p class="section-sub">The building blocks described in this guide are domain-agnostic. The same infrastructure that enables property tax collection has been configured, by different governments, in different institutional contexts, for disease surveillance, flood relief disbursement, farmer subsidy management, and pollution enforcement. The combinations below are illustrative, not prescriptive. They are intended to provoke questions, not answer them.</p>
+
+  <div class="focus-question">
+    <p style="font-size:0.88rem;color:var(--text-dim);margin-bottom:1.5rem;line-height:1.65;max-width:600px;">Start by selecting the type of governance challenge you are working on, then pick a sector. The building blocks will assemble phase by phase, showing one possible way the infrastructure could be configured. Use this as a starting point for discussion, not a finished architecture.</p>
+    <div class="fq-label">What is the core governance challenge you are working on?</div>
+    <div class="fq-options">
+      <button class="fq-btn" onclick="selectFocus(this)">📋 Establishing authoritative registries of entities</button>
+      <button class="fq-btn" onclick="selectFocus(this)">⚙️ Managing multi-stakeholder processes and approvals</button>
+      <button class="fq-btn" onclick="selectFocus(this)">📣 Reaching and informing large populations</button>
+      <button class="fq-btn" onclick="selectFocus(this)">🔍 Strengthening accountability and enforcement</button>
+    </div>
+  </div>
+
+  <div class="domains-grid" id="domainsGrid"></div>
+  <div class="variant-row" id="variantRow"><div class="variant-label-txt">Which dimension of this challenge are you most focused on?</div></div>
+
+  <div class="build-theatre" id="buildTheatre">
+    <div class="theatre-layout">
+      <div class="theatre-story">
+        <div class="bp-progress" id="buildProgress"></div>
+        <div class="bp-phase" id="buildPhase"></div>
+        <h3 class="bp-title" id="buildTitle"></h3>
+        <p class="bp-desc" id="buildDesc"></p>
+        <div class="bp-callout" id="buildCallout"></div>
+        <div class="build-nav">
+          <button class="btn-step" id="btnBuildPrev" onclick="prevBuildStep()">← Back</button>
+          <button class="btn-step primary" id="btnBuildNext" onclick="nextBuildStep()">Next phase →</button>
+        </div>
+      </div>
+      <div class="theatre-blocks" id="theatreBlocks"></div>
+    </div>
+    <div class="cta-banner">
+      <div class="cta-text">
+        <strong>Interested in exploring this further?</strong>
+        <p>eGov Foundation is a non-profit organisation that works with governments and partners to design, deploy, and sustain open digital infrastructure. DIGIT, the platform underlying many of the examples in this guide, is a certified Digital Public Good available at no cost. If the approach described here is relevant to a challenge you are working on, eGov would welcome the conversation.</p>
+      </div>
+      <a href="https://egov.org.in/contact/" target="_blank" class="cta-btn">Connect with eGov Foundation →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT EGOV -->
+<section id="about-egov">
+  <div class="section-eyebrow">About eGov Foundation</div>
+  <h2 class="section-title">How eGov works with government partners.</h2>
+
+  <p class="about-intro">
+    eGov Foundation is a non-profit organisation founded in 2003, working at the intersection of open digital infrastructure and governance reform. eGov does not sell software licences and does not earn revenue from the use of DIGIT, the platform is a certified Digital Public Good, available to any government at no cost. <strong>eGov's role is to help governments succeed with this approach</strong>, from early strategy through to long-term institutionalisation, and then step back.
+  </p>
+
+  <div class="about-quote">
+    "When the engagement ends, state officials own the knowledge and the digital infrastructure, not eGov."
+    <cite>- eGov Foundation's operating principle across all government partnerships</cite>
+  </div>
+
+  <div class="engagements-grid">
+    <div class="engagement-card">
+      <div class="eg-num">01</div>
+      <div class="eg-title">Strategy &amp; Advisory</div>
+      <div class="eg-desc">Embedded advisory teams work alongside state departments and central ministries, helping governments develop a DPI strategy, build a shared vision across stakeholders, and navigate the institutional complexity of large-scale digital transformation.</div>
+      <div class="eg-items">
+        <span class="eg-item">DPI acceleration units</span>
+        <span class="eg-item">State Data Specialist</span>
+        <span class="eg-item">Transformation Architect</span>
+      </div>
+    </div>
+    <div class="engagement-card">
+      <div class="eg-num">02</div>
+      <div class="eg-title">Open Platforms &amp; Products</div>
+      <div class="eg-desc">DIGIT, the open-source platform underlying this guide, is eGov's core technical contribution. It is well-documented, has clear APIs and a certification pathway, and is deployable by certified system integrators without eGov's direct involvement.</div>
+      <div class="eg-items">
+        <span class="eg-item">DIGIT platform</span>
+        <span class="eg-item">Ready-to-deploy products</span>
+        <span class="eg-item">Certified SI network</span>
+      </div>
+    </div>
+    <div class="engagement-card">
+      <div class="eg-num">03</div>
+      <div class="eg-title">Implementation Support</div>
+      <div class="eg-desc">For governments beginning deployment, eGov provides embedded implementation support, working inside state departments to configure, roll out, and stabilise digital services. The goal is a functioning system and a capable government team, not an ongoing dependency.</div>
+      <div class="eg-items">
+        <span class="eg-item">Programme Advisory Lead</span>
+        <span class="eg-item">Solutioning</span>
+        <span class="eg-item">Time-bound by design</span>
+      </div>
+    </div>
+    <div class="engagement-card">
+      <div class="eg-num">04</div>
+      <div class="eg-title">Local Capacity &amp; Self-Sufficiency</div>
+      <div class="eg-desc">eGov invests in building the public sector's own capacity to manage, adapt, and extend digital infrastructure, through the eGov Academy, Centres for Public Service Excellence, open playbooks, and fellowship programmes that build communities of practice within government.</div>
+      <div class="eg-items">
+        <span class="eg-item">eGov Academy</span>
+        <span class="eg-item">CPSEs</span>
+        <span class="eg-item">Outcome Playbooks</span>
+        <span class="eg-item">Fellowship</span>
+      </div>
+    </div>
+    <div class="engagement-card">
+      <div class="eg-num">05</div>
+      <div class="eg-title">Ecosystem Development</div>
+      <div class="eg-desc">Beyond individual government deployments, eGov works to build the broader ecosystem, certifying implementation partners, supporting RFP design so governments can procure independently, and convening actors across government, civil society, and the market to sustain DPIs beyond any single organisation.</div>
+      <div class="eg-items">
+        <span class="eg-item">Partner programme</span>
+        <span class="eg-item">RFP advisory</span>
+        <span class="eg-item">Certified partner network</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="about-contact">
+    <div class="about-contact-text">
+      <strong>Interested in working with eGov?</strong>
+      <p>eGov works with national and state governments, multilateral organisations, and non-profit partners across India and internationally. To explore whether and how eGov can support your programme, visit <a href="https://egov.org.in" target="_blank">egov.org.in</a> or contact the team directly.</p>
+    </div>
+    <a href="https://egov.org.in/contact/" target="_blank" class="btn-primary" style="white-space:nowrap;">Contact eGov Foundation →</a>
+  </div>
+</section>
+
+<!-- DEVELOPERS -->
+<section id="developers">
+  <div class="section-eyebrow">Technical appendix</div>
+  <h2 class="section-title">Open source and publicly available.</h2>
+  <p class="section-sub">The platform underlying the examples in this guide, DIGIT, is MIT-licensed, actively maintained by eGov Foundation and a wider community of contributors, and deployed at scale across multiple countries. All source code, documentation, and API specifications are publicly available. The links below are for technical teams who want to examine the architecture or begin deployment.</p>
+  <div class="dev-notice">Technical view is on. All plain-language labels are showing their underlying service names. You can also hover over any block above for API and architecture details.</div>
+  <div class="dev-grid">
+    <a href="https://github.com/egovernments/Digit-Core" target="_blank" class="dev-card"><div class="dc-label">GITHUB REPO</div><div class="dc-title">Digit-Core</div><div class="dc-desc">The main repository. Core services, accelerators, utilities, and build configs. MIT licensed.</div></a>
+    <a href="https://github.com/egovernments/Digit-Core/tree/master/core-services" target="_blank" class="dev-card"><div class="dc-label">SOURCE CODE</div><div class="dc-title">Core Services</div><div class="dc-desc">Individual microservice folders, each independently deployable, documented, and configurable.</div></a>
+    <a href="https://github.com/egovernments/Digit-Core/tree/master/tutorials/backend-developer-guide" target="_blank" class="dev-card"><div class="dc-label">TUTORIAL</div><div class="dc-title">Backend Developer Guide</div><div class="dc-desc">Step-by-step guide to building a new service on DIGIT, from skeleton to deployment.</div></a>
+    <a href="https://core.digit.org/guides/installation-guide" target="_blank" class="dev-card"><div class="dc-label">DOCUMENTATION</div><div class="dc-title">Installation Guide</div><div class="dc-desc">Get DIGIT running locally or on cloud. Kubernetes-based, well documented.</div></a>
+    <a href="https://digit-api.apidog.io/" target="_blank" class="dev-card"><div class="dc-label">API REFERENCE</div><div class="dc-title">API Playground</div><div class="dc-desc">Interactive API explorer for all DIGIT core services. Test endpoints from the browser.</div></a>
+    <a href="https://core.digit.org/accelerators/sandbox" target="_blank" class="dev-card"><div class="dc-label">SANDBOX</div><div class="dc-title">Live Environment</div><div class="dc-desc">Access a running DIGIT instance before setting up your own.</div></a>
+  </div>
+  <div class="service-map">
+    <div class="sm-title">Direct links to service source code</div>
+    <div class="svc-rows" id="serviceRows"></div>
+  </div>
+</section>
+
+<!-- FLOATING TECH TOGGLE -->
+<div class="tech-float" onclick="toggleTechMode()" title="Toggle technical view, shows underlying service names and API details throughout">
+  <span class="tf-icon">⚙</span>
+  <span class="tf-label" id="tfLabel">Technical view</span>
+  <div class="tf-switch" id="tfSwitch"></div>
+</div>
+
+<footer>
+  <div class="ft">
+    <strong style="color:var(--text);font-weight:600;">Digital Building Blocks for Public Services</strong>, An interactive guide produced by <a href="https://egov.org.in" target="_blank">eGov Foundation</a>, a non-profit organisation working on open digital infrastructure for governance. The underlying platform, <a href="https://github.com/egovernments/Digit-Core" target="_blank">DIGIT</a>, is a certified Digital Public Good under the UN-endorsed DPG Standard. All government-reported outcomes are sourced from official publications.
+  </div>
+  <div class="fl">
+    <a href="https://core.digit.org" target="_blank">DIGIT Documentation</a>
+    <a href="https://www.digitalpublicgoods.net/registry/" target="_blank">DPG Registry</a>
+    <a href="https://egov.org.in/about-us/our-approach/" target="_blank">eGov's Approach</a>
+    <a href="https://egov.org.in/contact/" target="_blank">Contact eGov</a>
+  </div>
+</footer>
+
+<script>
+// ══════════════════════════════
+// DATA
+// ══════════════════════════════
+const clusters = [
+  { id:'identity', plainName:'Who Can Access What', techName:'Identity & Trust',
+    color:'#4f46e5', bg:'#eef2ff', glow:'rgba(79,70,229,0.12)', icon:'🔐',
+    tagline:'Making sure the right people can access the right things, and nobody else.',
+    blocks:[
+      {id:'user', plain:'Manages everyone who uses the system, citizens, officers, administrators.', tech:'User registration, auth, profile management. REST CRUD. Tenant-aware.', pName:'People & Accounts', tName:'User Service'},
+      {id:'access', plain:'Decides exactly who is allowed to do what, read, write, approve, reject.', tech:'Role-based access control (RBAC). Action-level permissions. Multi-tenant.', pName:'Roles & Permissions', tName:'Access Control'},
+      {id:'otp', plain:'Verifies that a real person is logging in using a one-time code.', tech:'Time-bound OTP via SMS/email. Configurable TTL and retry logic.', pName:'Identity Verification', tName:'OTP Service'},
+      {id:'api-gateway', plain:'The secure front door, every request is checked here before anything else happens.', tech:'Zuul-based gateway. Auth verification, rate limiting, request routing.', pName:'Secure Entry Point', tName:'API Gateway'},
+      {id:'encryption', plain:'Keeps sensitive information like names and phone numbers private.', tech:'AES-256 encryption for PII fields. Centralized key management.', pName:'Data Privacy', tName:'Encryption Service'},
+      {id:'audit', plain:'Keeps a permanent, unalterable record of everything that happens in the system.', tech:'Append-only audit log. Kafka-backed. Tamper-evident compliance trail.', pName:'Audit Trail', tName:'Audit Service'},
+    ]},
+  { id:'registry', plainName:'Your Single Source of Truth', techName:'Registries & Data',
+    color:'#2a6e47', bg:'#e8f3ed', glow:'rgba(42,110,71,0.12)', icon:'📊',
+    tagline:'One authoritative record for every entity, property, person, facility, vehicle, or plot of land.',
+    blocks:[
+      {id:'mdms', plain:'Store structured information about any type of entity, properties, businesses, farmers, industrial plants.', tech:'Master Data Management Service V2. Hierarchical, multi-tenant, schema-flexible.', pName:'Entity Registry', tName:'MDMS'},
+      {id:'boundary', plain:'Maps every entity to the right geographic area, from national level down to ward or village.', tech:'Hierarchical boundary definitions. GeoJSON support. Configurable levels.', pName:'Geographic Hierarchy', tName:'Boundary Service'},
+      {id:'id-gen', plain:'Gives every record in the system a unique, official identifier.', tech:'Configurable ID patterns. Sequence-based. Format: PT/2024/000001.', pName:'Unique IDs', tName:'ID Generation'},
+      {id:'indexer', plain:'Makes every record instantly searchable, across millions of entries.', tech:'Elasticsearch-backed. Kafka consumer. YAML-configured index mapping.', pName:'Search', tName:'Indexer'},
+      {id:'persister', plain:'Ensures data is written to the database reliably, without loss.', tech:'Kafka-based async persistence. PostgreSQL backend. Retry logic built-in.', pName:'Reliable Storage', tName:'Persister'},
+      {id:'location', plain:'Master data for localities, wards, and addresses, the official geographic vocabulary.', tech:'Hierarchical location master. Integrates with boundary service.', pName:'Address Master', tName:'Location'},
+    ]},
+  { id:'workflow', plainName:'How Work Gets Done', techName:'Workflow & Process',
+    color:'#b45309', bg:'#fef3c7', glow:'rgba(180,83,9,0.12)', icon:'⚙️',
+    tagline:'Turns a registry into a governed process, with approvals, escalations, and accountability at every step.',
+    blocks:[
+      {id:'workflow-svc', plain:'A configurable approval engine, apply, verify, inspect, approve, reject. Any number of steps, any configuration.', tech:'State machine engine. Configurable transitions, roles, SLAs, escalations. YAML-driven.', pName:'Approval Engine', tName:'Workflow Engine'},
+      {id:'service-request', plain:'The official form where any citizen request or application begins.', tech:'Generic service request creation and tracking. Hooks into workflow engine.', pName:'Citizen Application Form', tName:'Service Request'},
+    ]},
+  { id:'notifications', plainName:'Keeping Everyone Informed', techName:'Notifications',
+    color:'#0369a1', bg:'#eff6ff', glow:'rgba(3,105,161,0.12)', icon:'📣',
+    tagline:'Reaching citizens and officers at every step, in any language, on any channel.',
+    blocks:[
+      {id:'sms', plain:'Text message updates and alerts sent to any phone, in seconds.', tech:'Pluggable SMS provider. Template-based. Multi-language via localization.', pName:'SMS Alerts', tName:'SMS Notifications'},
+      {id:'email', plain:'Email notifications with documents attached, notices, certificates, receipts.', tech:'SMTP-based. Mustache template-driven. File attachments supported.', pName:'Email Alerts', tName:'Email Notifications'},
+      {id:'localization', plain:'Every message, every document, in any language and script.', tech:'Key-value message store. Tenant and locale-specific overrides. Runtime configurable.', pName:'Multiple Languages', tName:'Localization'},
+      {id:'url-shortener', plain:'Shortens long web links so they fit inside a text message.', tech:'Custom URL shortening service. Click analytics included.', pName:'Short Links', tName:'URL Shortener'},
+    ]},
+  { id:'documents', plainName:'Official Records & Certificates', techName:'Documents & Records',
+    color:'#7c3aed', bg:'#f5f3ff', glow:'rgba(124,58,237,0.12)', icon:'📄',
+    tagline:'Generate official certificates, store evidence, and retrieve documents on demand.',
+    blocks:[
+      {id:'filestore', plain:'Upload, store, and retrieve any file, inspection photos, satellite images, signed documents.', tech:'S3-compatible object storage. Multi-tenant. Signed URLs. Version support.', pName:'File Storage', tName:'FileStore'},
+      {id:'pdf', plain:'Generate official certificates, receipts, and notices as downloadable PDFs.', tech:'Mustache template-based PDF. Per-service configurable. QR code support.', pName:'Certificate Generation', tName:'PDF Generation'},
+    ]},
+  { id:'payments', plainName:'Collecting Fees & Fines', techName:'Payments',
+    color:'#be123c', bg:'#fff1f2', glow:'rgba(190,18,60,0.12)', icon:'💳',
+    tagline:'Collect any type of payment, fees, fines, levies, and disburse benefits. Everything tracked and reconciled.',
+    blocks:[
+      {id:'pg', plain:'Accepts payments via UPI, cards, net banking, or cash, at population scale, with full reconciliation.', tech:'Pluggable payment provider. Demand–bill–receipt lifecycle. Reconciliation built-in.', pName:'Payment Collection', tName:'Payment Gateway'},
+    ]},
+];
+
+const foundationLayers = [
+  { id:'policy', name:'Policy & Legal Framework', icon:'⚖️', color:'#92400e', bg:'#fef3c7',
+    desc:'Digital systems require legal grounding to function with authority and legitimacy. This includes enabling legislation, data protection frameworks, mandates for interoperability, and clear rules governing access to public services. Without these, even technically sound systems cannot be enforced, trusted, or sustained.',
+    examples:['Enabling legislation','Data protection law','Right to access rules','Interoperability standards','Service delivery mandates'],
+    expandHint:'Document the specific laws, acts, and policy frameworks relevant to this context',
+  },
+  { id:'institutions', name:'Institutions & Governance', icon:'🏛️', color:'#065f46', bg:'#ecfdf5',
+    desc:'Sustainable digital transformation requires clear institutional ownership, bodies that are accountable for the system, empowered to make decisions, and capable of coordinating across agencies and levels of government. Fragmented institutional arrangements are among the most common causes of failed digital initiatives.',
+    examples:['Nodal agency designation','Inter-departmental coordination','Grievance redressal body','Oversight and audit mechanisms','Sustainable funding model'],
+    expandHint:'Map the institutional landscape: who holds authority, who funds, who arbitrates',
+  },
+  { id:'data-gov', name:'Data Governance', icon:'🔒', color:'#1e40af', bg:'#eff6ff',
+    desc:'Data collected by government systems belongs to citizens. Governing it responsibly requires clarity on ownership, consent, access, retention, and quality. Without agreed data governance frameworks, digital systems can undermine the privacy and rights of the communities they are meant to serve.',
+    examples:['Data ownership policy','Consent and privacy framework','Cross-agency data sharing rules','Data quality standards','Retention and deletion schedule'],
+    expandHint:'Define the data governance framework, especially consent, privacy, and cross-agency sharing',
+  },
+  { id:'community', name:'Community & Citizens', icon:'👥', color:'#7c2d12', bg:'#fff7ed',
+    desc:'Governments deliver services to people. The communities those services affect must be engaged in design, consulted on tradeoffs, and given meaningful recourse when things go wrong. Inclusive access, across languages, literacy levels, connectivity, and ability, is not an add-on; it is a design requirement.',
+    examples:['Participatory design processes','Multilingual access','Digital literacy support','Grievance and feedback mechanisms','Equity and inclusion audits'],
+    expandHint:'Define the community engagement and inclusion strategy, who is at risk of being left out?',
+  },
+  { id:'capacity', name:'Capacity & Change Management', icon:'🎓', color:'#4a044e', bg:'#fdf4ff',
+    desc:'Technology changes what is possible. It does not automatically change how organisations work. Realising the benefits of digital infrastructure requires sustained investment in people, training front-line officers, managing organisational change, building internal technical capacity, and planning for long-term stewardship beyond the initial deployment.',
+    examples:['Officer training programme','Change management plan','Internal technical capacity','Vendor transition planning','Continuous improvement processes'],
+    expandHint:'Define the capacity building plan, what skills, structures, and change processes are needed?',
+  },
+];
+
+const outcomes = [
+  'Equitable access to public services', 'Faster permit and licence issuance', 'Increased own-source revenue', 'Reduced leakage in benefit delivery',
+  'Accountability across the service chain', 'Data-informed policy decisions', 'Reduced cost per transaction', 'Services accessible in local languages',
+];
+
+const principles = [
+  {n:'Modular', d:'Each building block addresses a single, well-defined function. Governments can adopt individual components without committing to a full platform replacement, reducing risk and enabling incremental transformation.'},
+  {n:'Reusable', d:'Infrastructure built once is available to every service that follows. The same notification system that sends a tax receipt also sends a vaccination reminder or a flood alert, at no additional development cost.'},
+  {n:'Interoperable', d:'All services expose standard, open APIs. This enables different agencies, systems, and even different countries to exchange data without custom integration work, a prerequisite for whole-of-government service delivery.'},
+  {n:'Open Source', d:'MIT licensed with no proprietary lock-in. Governments retain full ownership of their deployments. A global community of contributors maintains and improves the codebase. Certified as a Digital Public Good under the DPGA standard.'},
+  {n:'Multi-Tenant', d:'A single shared deployment can serve thousands of agencies simultaneously, each with its own data, rules, and configuration. This model dramatically reduces the per-unit cost of digital transformation.'},
+  {n:'Secure by Design', d:'Data protection, role-based access control, encrypted storage, and tamper-evident audit trails are built into the architecture, not added as afterthoughts. Compliance is structural, not procedural.'},
+  {n:'Population Scale', d:'The architecture is designed for tens of millions of concurrent transactions. Proven across 1,000+ urban local bodies in India and national health campaigns in Africa, this is not a pilot-scale system.'},
+];
+
+const tutorialSteps = [
+  {title:'The property record already exists', story:'Before any service can be delivered, the property must exist as an official record, with a unique government-issued ID, linked to its city, ward, and locality.', plain:'A single source of truth: every property in the city is registered with a unique ID. The Boundary Service links it to State → District → City → Ward → Locality. Nothing can happen without this foundation.', tPlain:'Property Registry (MDMS) stores every property. Boundary Service maps geography. ID Generation creates canonical IDs like PT/BLR/2024/000142.', blocksActive:['mdms','boundary','id-gen','location'], hCluster:'registry', infra:'Data sits in PostgreSQL via the Persister. The Indexer maintains an Elasticsearch copy for fast search across millions of records.'},
+  {title:'The citizen logs in safely', story:'A mobile number is entered. A one-time code arrives within seconds. The system confirms the person is who they say they are, and checks what they are allowed to see.', plain:'The system verifies identity without passwords, a simple code sent to your phone. It then checks your role: a citizen can see their own property. An officer can see their whole ward. An administrator can see the whole city.', tPlain:'User Service identifies the citizen. OTP Service confirms via phone. Access Control enforces role-based permissions. API Gateway authenticates every request.', blocksActive:['user','otp','api-gateway','access'], hCluster:'identity', infra:'Every request passes through the API Gateway before touching any service. Encryption Service protects all personal data (name, mobile) at rest.'},
+  {title:'An official demand notice is produced', story:'The system calculates the annual tax due, based on property type, area, and usage, and generates a formal notice.', plain:'The notice is produced automatically, using a city-approved template. It arrives in the citizen\'s preferred language, Hindi, Kannada, Tamil, or English, and is stored as an official document.', tPlain:'PDF Service generates the notice using a Mustache template. Localization Service renders it in the configured language. FileStore stores the resulting document.', blocksActive:['pdf','localization','filestore'], hCluster:'documents', infra:'The generated PDF is stored in FileStore (S3-compatible). A signed URL is attached to the transaction record for download at any time.'},
+  {title:'Payment is made in seconds', story:'The citizen taps "Pay Now." The full amount is processed, through UPI, card, or net banking, in under three seconds.', plain:'Multiple payment options work together through one system. The payment creates a demand, processes the transaction, and records the receipt, all in one flow. A receipt number is generated immediately.', tPlain:'Payment Gateway manages the full lifecycle: demand → payment → receipt. Multiple providers pluggable. Reconciliation built-in.', blocksActive:['pg'], hCluster:'payments', infra:'Payment status is published to Kafka. Notification and receipt services consume this event asynchronously, the payment flow is never blocked waiting for SMS delivery.'},
+  {title:'A confirmation arrives by SMS', story:'"Your property tax of ₹4,200 has been received. Receipt No: PT2024-089123." Delivered within seconds, in the right language.', plain:'The confirmation is automatic, triggered the moment payment is confirmed. It arrives in the citizen\'s language, with a link to download the official receipt.', tPlain:'SMS Notification is triggered by the payment event. URL Shortener compresses the receipt link. Localization renders the message in the configured language.', blocksActive:['sms','url-shortener','localization'], hCluster:'notifications', infra:'The notification service listens on Kafka for payment events and fires SMS asynchronously. Provider failures don\'t block the payment confirmation.'},
+  {title:'Officers can search and verify instantly', story:'A tax officer needs to check any payment. They find it in seconds, by name, property ID, receipt number, or ward.', plain:'All records are instantly searchable across every field. An officer in one ward only sees their ward. The system enforces these boundaries automatically, no configuration needed per user.', tPlain:'Indexer maintains Elasticsearch copy of all records. Access Control scopes queries by role and tenant automatically.', blocksActive:['indexer','access','boundary'], hCluster:'registry', infra:'The Indexer is an Elasticsearch consumer of Kafka events, near-real-time search. Access Control enforces jurisdiction at the query level.'},
+  {title:'Every action is permanently on record', story:'A court, an auditor, or a senior official can verify every step that happened in this transaction, who did what, when, and why.', plain:'Every action in the system is recorded in a permanent log that cannot be edited or deleted. This is the system\'s accountability backbone, and it works automatically, without any extra effort from officers.', tPlain:'Audit Service keeps an immutable, append-only log. Kafka-backed. The Persister handles durable writes with retry logic.', blocksActive:['audit','persister'], hCluster:'identity', infra:'Audit Service is Kafka-backed and append-only. No record can be retroactively modified. Persister has retry logic so no write is silently lost.'},
+];
+
+const domains = [
+  {id:'climate',name:'Climate & Environment',emoji:'🌍',scenario:'Pollution monitoring & enforcement',
+   variants:['Industrial emissions','Community air quality reporting','Forest & land use registry'],
+   phases:[
+    {title:'Register every regulated entity', desc:'Every industrial plant, vehicle fleet, or waste facility becomes an official record, with a unique ID, linked to the right regulatory jurisdiction, and classified by category and risk.', callout:'The same registry that holds properties now holds polluters. The Boundary Service maps each entity to the right Pollution Control Board.',blocks:['mdms','boundary','id-gen','location']},
+    {title:'Build the inspection and enforcement workflow', desc:'Field officers receive assigned inspections on mobile. They log findings, attach photos as evidence, and raise violations. Each violation triggers an escalation path configured by the Board.', callout:'The Workflow Engine runs the process: Assigned → Inspected → Violation Raised → Notice Issued → Penalty Collected → Closed.',blocks:['workflow-svc','service-request','filestore','user','access']},
+    {title:'Notices, penalties, alerts, closed loop', desc:'Violation notices are generated as PDFs and served officially. Penalties are collected through the payment system. Community members receive alerts. Every action is permanently audited.', callout:'The same infrastructure that delivers a property tax receipt now delivers a pollution violation notice, legally signed, in the operator\'s language, with a payment link.',blocks:['pdf','pg','sms','audit','indexer','localization']},
+  ]},
+  {id:'health',name:'Public Health',emoji:'🏥',scenario:'Health worker coordination & case tracking',
+   variants:['Disease surveillance','Vaccination campaigns','Community health worker registry'],
+   phases:[
+    {title:'Register health workers and facilities', desc:'Health workers, facilities, and household clusters are registered as official records, each assigned a unique ID, linked to their geographic boundary, with roles and access defined by level.',callout:'DIGIT was adapted for this in health campaigns across multiple African countries, the registry and boundary layers proved directly transferable.',blocks:['mdms','boundary','id-gen','user','access']},
+    {title:'Case reporting and assignment workflow', desc:'A health worker files a suspected case via a service request. It escalates to a supervisor, triggers a home visit assignment, and closes with the outcome recorded. SLAs are tracked automatically.',callout:'Workflow Engine state machine: Reported → Supervisor Reviewed → Visit Assigned → Outcome Recorded → Case Closed.',blocks:['workflow-svc','service-request','filestore','localization']},
+    {title:'Alerts, searchable records, full audit', desc:'SMS alerts go to families. All case data is searchable across the geography. Every action is audited. Administrators have a live view across the whole district.',callout:'The notification and audit layers are identical to the property tax system, built once, reused across every domain at no extra cost.',blocks:['sms','audit','indexer','pdf','persister']},
+  ]},
+  {id:'disaster',name:'Disaster Response',emoji:'🚨',scenario:'Flood relief application & disbursement',
+   variants:['Relief applications & verification','Pre-register vulnerable households','Resource & supply tracking'],
+   phases:[
+    {title:'Pre-register vulnerable households', desc:'During normal times, register flood-prone households by geographic boundary. A canonical ID for every household, linked to administrative hierarchy. When disaster strikes, the registry is already there.',callout:'Activation takes days instead of months because the foundation was already built.',blocks:['mdms','boundary','id-gen','encryption']},
+    {title:'Run the relief application process', desc:'Affected families apply via SMS or a simple form. Applications are assigned to officers for field verification. Every approval is recorded with the officer\'s name, ID, and timestamp.',callout:'The Workflow Engine ensures no application falls through, and every approval is traceable to a named official.',blocks:['service-request','workflow-svc','user','access','filestore']},
+    {title:'Disburse and confirm', desc:'Approved relief goes through the payment gateway. Recipients receive SMS confirmation. The full trail from application to receipt is audited and publicly accountable.',callout:'A district with 50,000 flood-affected households could move from application to verified disbursement in days, not months.',blocks:['pg','sms','pdf','audit','indexer']},
+  ]},
+  {id:'agriculture',name:'Agriculture',emoji:'🌾',scenario:'Farmer registry & subsidy disbursement',
+   variants:['Subsidy scheme management','Crop insurance verification','Input supply chain tracking'],
+   phases:[
+    {title:'One unified farmer registry', desc:'A single registry consolidates farmer data across all schemes, linked to land records and geographic boundaries. One canonical ID per farmer, across every government programme.',callout:'This single step eliminates ghost beneficiaries and duplicate claims, one of the biggest sources of subsidy leakage.',blocks:['mdms','boundary','id-gen','encryption','location']},
+    {title:'Application and field verification', desc:'Farmers apply via a service request. The workflow routes to patwaris for land verification, then district officers for approval. Every step is time-stamped and role-assigned.',callout:'The same Workflow Engine that handles a building permit handles subsidy verification, different configuration, same proven infrastructure.',blocks:['service-request','workflow-svc','user','access','filestore']},
+    {title:'Disbursement with a full audit trail', desc:'Approved subsidies go through the payment gateway. Farmers receive SMS updates at every step, in their language. Officers have a live dashboard across the whole geography.',callout:'At state scale, this consolidates registries across dozens of scheme-specific databases on shared infrastructure, substantially reducing cost and eliminating data duplication.',blocks:['pg','sms','pdf','localization','audit','indexer']},
+  ]},
+  {id:'urban',name:'Urban Governance',emoji:'🏙️',scenario:'Trade licenses, permits & grievance redressal',
+   variants:['Trade license management','Building permits','Citizen grievance redressal'],
+   phases:[
+    {title:'Register every business and property', desc:'Every business, property, and vendor gets a canonical ID, linked to ward and locality. This single registry is the foundation for every urban service, all sharing the same infrastructure.',callout:'DIGIT already runs this for 1,000+ Indian cities, property tax, trade licenses, water connections, and building permits all on shared infrastructure simultaneously.',blocks:['mdms','boundary','id-gen','location']},
+    {title:'Application to approval workflow', desc:'A business applies for a trade license. The workflow routes through verification, inspection scheduling, and final approval. Citizens track status in real time.',callout:'The same workflow handles a 3-step license renewal and a 12-step building permit, different configurations, one engine.',blocks:['service-request','workflow-svc','user','access','filestore']},
+    {title:'Payment, certificate, full audit', desc:'License fees are collected. A certificate is generated. An audit trail records every decision. Citizens get SMS updates throughout.',callout:'Each additional service deployed on this shared infrastructure requires significantly less investment than an independently developed system, and can be operational in weeks rather than years.',blocks:['pg','pdf','sms','audit','indexer','localization']},
+  ]},
+];
+
+const serviceLinks = [
+  {label:'User & Access',links:[{name:'egov-user',url:'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-user'},{name:'egov-accesscontrol',url:'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-accesscontrol'}]},
+  {label:'Workflow',links:[{name:'egov-workflow-v2',url:'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-workflow-v2'}]},
+  {label:'Master Data',links:[{name:'egov-mdms-service',url:'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-mdms-service'},{name:'boundary-service',url:'https://github.com/egovernments/Digit-Core/tree/master/core-services/boundary-service'}]},
+  {label:'Notifications',links:[{name:'egov-notification-sms',url:'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-notification-sms'},{name:'egov-notification-mail',url:'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-notification-mail'}]},
+  {label:'Documents',links:[{name:'pdf-service',url:'https://github.com/egovernments/Digit-Core/tree/master/core-services/pdf-service'},{name:'egov-filestore',url:'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-filestore'}]},
+  {label:'Data & Search',links:[{name:'egov-indexer',url:'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-indexer'},{name:'egov-persister',url:'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-persister'},{name:'egov-idgen',url:'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-idgen'}]},
+  {label:'Security',links:[{name:'egov-enc-service',url:'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-enc-service'},{name:'egov-otp',url:'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-otp'}]},
+  {label:'Payment',links:[{name:'egov-pg-service',url:'https://github.com/egovernments/Digit-Core/tree/master/core-services/egov-pg-service'}]},
+];
+
+// STATE
+let techMode = false, showInfra = false;
+let currentStep = 0, selectedDomain = null, currentBuildStep = 0;
+
+function getCluster(blockId) { return clusters.find(c => c.blocks.some(b => b.id === blockId)); }
+
+function toggleMobileNav() {
+  document.getElementById('mobileNav').classList.toggle('open');
+}
+function closeMobileNav() {
+  document.getElementById('mobileNav').classList.remove('open');
+}
+
+// Close mobile nav when clicking outside
+document.addEventListener('click', function(e) {
+  const nav = document.getElementById('mobileNav');
+  const btn = document.querySelector('.nav-hamburger');
+  if (nav.classList.contains('open') && !nav.contains(e.target) && !btn.contains(e.target)) {
+    nav.classList.remove('open');
+  }
+});
+
+// ── TOGGLE TECH MODE ──
+function toggleTechMode() {
+  techMode = !techMode;
+  document.body.classList.toggle('tech-mode', techMode);
+
+  // Floating pill label
+  const lbl = document.getElementById('tfLabel');
+  if (lbl) lbl.textContent = techMode ? 'Technical view: ON' : 'Technical view';
+
+  // Fullstack diagram cluster chip names
+  document.querySelectorAll('.dgc-plain').forEach(el => el.style.display = techMode ? 'none' : '');
+  document.querySelectorAll('.dgc-tech').forEach(el => el.style.display = techMode ? '' : 'none');
+
+  // Block name spans, bi-pname/bi-tname (inline style overrides)
+  document.querySelectorAll('.bi-pname').forEach(el => el.style.display = techMode ? 'none' : '');
+  document.querySelectorAll('.bi-tname').forEach(el => el.style.display = techMode ? '' : 'none');
+
+  // Fullstack diagram cluster chips
+  document.querySelectorAll('.dgc-plain').forEach(el => el.style.display = techMode ? 'none' : '');
+  document.querySelectorAll('.dgc-tech').forEach(el => el.style.display = techMode ? '' : 'none');
+
+  // Cluster header names
+  document.querySelectorAll('.cc-tech-name').forEach(el => el.style.display = techMode ? '' : 'none');
+
+  // Tutorial block panel names
+  document.querySelectorAll('.tbp-tname').forEach(el => el.style.display = techMode ? '' : 'none');
+  document.querySelectorAll('.tb-tname').forEach(el => el.style.display = techMode ? '' : 'none');
+
+  // Tutorial step plain/tech text swap
+  const stepPlainEl = document.getElementById('stepPlain');
+  if (stepPlainEl && typeof currentStep !== 'undefined' && tutorialSteps[currentStep]) {
+    stepPlainEl.textContent = techMode
+      ? tutorialSteps[currentStep].tPlain
+      : tutorialSteps[currentStep].plain;
+  }
+}
+
+// ── RENDER FULL STACK ──
+function renderFullStack() {
+  // Outcomes
+  const or = document.getElementById('outcomesRow');
+  outcomes.forEach(o => { const ch=document.createElement('div'); ch.className='outcome-chip'; ch.textContent=o; or.appendChild(ch); });
+
+  // Digital layer, 6 cluster chips only, toggleable
+  // (detail lives in the Building Blocks section below)
+  const grid = document.getElementById('digitalBlockGrid');
+  clusters.forEach(c => {
+    const chip = document.createElement('div');
+    chip.className = 'dg-cluster-chip';
+    chip.style.cssText = `background:${c.color}18;border:1px solid ${c.color}44;`;
+    chip.innerHTML = `
+      <span class="dgc-icon">${c.icon}</span>
+      <span class="dgc-plain" style="color:${c.color};">${c.plainName}</span>
+      <span class="dgc-tech" style="color:${c.color};display:none;">${c.techName}</span>
+      <span class="dgc-count" style="color:${c.color}88;">${c.blocks.length} blocks</span>`;
+    chip.onclick = () => document.getElementById('blocks').scrollIntoView({behavior:'smooth'});
+    grid.appendChild(chip);
+  });
+
+  // Foundation items
+  const fi = document.getElementById('foundationItems');
+  foundationLayers.forEach(f => {
+    const item = document.createElement('div'); item.className='fi';
+    item.innerHTML = `<span class="fi-icon">${f.icon}</span>${f.name}`;
+    item.onclick = () => document.getElementById('foundation').scrollIntoView({behavior:'smooth'});
+    fi.appendChild(item);
+  });
+}
+
+// ── INDIA IMPACT DATA ──
+const impactNumbers = [
+  {num:'1.1Bn+', label:'Public services delivered through eGov\'s Digital Public Goods'},
+  {num:'2,000+', label:'Cities and urban local bodies on DIGIT-based platforms'},
+  {num:'24,000+', label:'Gram panchayats covered under water & sanitation programmes'},
+  {num:'5', label:'Sectors: urban governance, health, water, finance, justice'},
+  {num:'20 yrs', label:'Of sustained engagement with governments across India'},
+  {num:'2Bn', label:'COVID-19 vaccination certificates issued via DIVOC'},
+];
+
+const sectors = [
+  {
+    id: 'urban', label: 'Urban Governance', cases: [
+      {
+        tab: 'Andhra Pradesh, Puraseva',
+        egovRole: 'Platform architecture · Implementation support',
+        context: 'A newly formed state with low own-source revenue and a mandate to improve urban governance. Outdated systems and paper-based processes hindered efficiency across urban local bodies.',
+        solution: 'Deployed Puraseva, an integrated platform for 25+ citizen services across the state. Multi-channel access via mobile, web, and WhatsApp. Integrated billing and real-time dashboards for administrators.',
+        stats: [{num:'250%+',label:'Increase in state revenue over 6 years'},{num:'112→12 days',label:'Service request closure time reduced'},{num:'96%',label:'ULB employees reported improved quality of work'}]
+      },
+      {
+        tab: 'Punjab, DIGIT Rollout',
+        egovRole: 'Platform · Capacity building · Atmanirbhar State model',
+        context: 'Local Government Department wanted to digitise services across 160+ cities. Previous commercial RFPs worth ₹2 billion had been attempted without success.',
+        solution: 'DIGIT platform deployed with 10 modules. An Atmanirbhar State team of 20+ people was built to manage and maintain the system in-house, fully government-owned from day one.',
+        stats: [{num:'100 ULBs',label:'Onboarded in first 100 days'},{num:'25–30%',label:'Increase in revenue collection'},{num:'90%',label:'Citizen grievance resolution rate'}]
+      },
+      {
+        tab: 'eChhawani, 62 Cantonments',
+        egovRole: 'Platform · National rollout · Standardisation',
+        context: '62 Cantonment Boards across India needed to digitise citizen-facing services. Systems were siloed, non-standard, and at varied levels of digitisation across the country.',
+        solution: 'DIGIT deployed as eChhawani uniformly across all 62 boards. Standardised workflows, a self-service citizen portal, and a centralised monitoring dashboard. 10 service modules deployed.',
+        stats: [{num:'30–35%',label:'Jump in revenue collection'},{num:'60–65%',label:'Increase in grievance reporting & resolution'},{num:'25 lakh',label:'Citizens covered across cantonments'}]
+      },
+    ]
+  },
+  {
+    id: 'health', label: 'Public Health', cases: [
+      {
+        tab: 'India, CoWIN & DIVOC',
+        egovRole: 'Platform development · National scale deployment',
+        context: "India\'s COVID-19 vaccination programme needed secure, verifiable digital certificates, accessible across channels, in low-internet environments, at a scale never attempted before.",
+        solution: 'DIVOC, an open-source platform for tamper-proof, QR code-based certificates integrated with CoWIN. Designed for offline environments. Multi-channel access including WhatsApp and DigiLocker.',
+        stats: [{num:'0→1.9Bn',label:'Certificates issued within the first year of deployment'},{num:'2Bn+',label:'Total COVID vaccination certificates delivered via DIVOC'},{num:'Recognised',label:'With national recognition for design and implementation'}]
+      },
+      {
+        tab: 'India, 10 Bed ICU',
+        egovRole: 'Platform · Implementation across 210+ cities',
+        context: 'Public hospitals lacked digital systems to manage critical care capacity, making it impossible to monitor ICU bed availability or patient outcomes at scale during health emergencies.',
+        solution: 'A lightweight, low-bandwidth ICU management system deployed across district hospitals nationally. Real-time bed tracking, patient monitoring, and outcome reporting, usable in low-connectivity environments.',
+        stats: [{num:'210+',label:'Cities live across India'},{num:'Real-time',label:'ICU bed data for health administrators'},{num:'Low BW',label:'Designed for district hospital connectivity'}]
+      },
+    ]
+  },
+  {
+    id: 'water', label: 'Water & Sanitation', cases: [
+      {
+        tab: 'India, Jal Jeevan Mission',
+        egovRole: 'Platform · National programme digitisation',
+        context: "India\'s Jal Jeevan Mission committed to providing piped drinking water to every rural household. The challenge: monitoring and managing water schemes across 600,000 villages at national scale.",
+        solution: 'Digital infrastructure to register, track and monitor water scheme delivery, enabling national visibility of a previously opaque programme. From scheme registration to O&M monitoring.',
+        stats: [{num:'600K',label:'Villages in scope across India'},{num:'148Mn',label:'Households on DIGIT-enabled water systems'},{num:'5,000+',label:'Rural local bodies managing O&M digitally'}]
+      },
+    ]
+  },
+  {
+    id: 'finance', label: 'Public Finance', cases: [
+      {
+        tab: 'Odisha, MUKTA Wages',
+        egovRole: 'Platform · Direct benefit transfer implementation',
+        context: "Odisha\'s urban employment guarantee scheme needed to reach daily wage workers faster. Payment delays and manual processes created leakage and administrative burden across the programme.",
+        solution: "DIGIT\'s iFix financial data exchange platform enabled direct benefit transfers to wage-seekers. Automated payments, streamlined enrolment, budget management and risk identification, fully digitised.",
+        stats: [{num:'90%',label:'Reduction in time to pay workers'},{num:'1,365',label:'Community projects completed'},{num:'Direct',label:'Bank transfers to all wage-seekers, eliminating leakage'}]
+      },
+      {
+        tab: 'Odisha, Social Benefits',
+        egovRole: 'Platform · Self Help Group digitisation',
+        context: 'Self Help Groups across Odisha were managing social benefit delivery through manual, paper-based processes, causing delays, errors, and limited visibility for programme administrators.',
+        solution: 'Social Benefits Delivery System built on DIGIT, enabling SHGs to manage enrolment, entitlements, and disbursements digitally. Full audit trail and programme-level dashboards.',
+        stats: [{num:'4,000+',label:'Self Help Groups empowered'},{num:'Transparent',label:'Benefit tracking from scheme to recipient'},{num:'Digital',label:'End-to-end entitlement management'}]
+      },
+    ]
+  },
+];
+
+// ── RENDER INDIA IMPACT ──
+function renderIndiaImpact() {
+  const numGrid=document.getElementById('impactNumbers');
+  impactNumbers.forEach(n => { const el=document.createElement('div'); el.className='impact-num'; el.innerHTML=`<div class="in-num">${n.num}</div><div class="in-label">${n.label}</div>`; numGrid.appendChild(el); });
+
+  let currentSector=0, currentCase=0;
+
+  const sectorTabBar=document.getElementById('sectorTabs');
+  const caseTabBar=document.getElementById('csTabs');
+  const panels=document.getElementById('csPanels');
+
+  function renderCaseTabs(sIdx) {
+    caseTabBar.innerHTML=''; panels.innerHTML='';
+    currentCase=0;
+    const sector=sectors[sIdx];
+    sector.cases.forEach((cs,i) => {
+      const tab=document.createElement('button'); tab.className='cs-tab'+(i===0?' active':'');
+      tab.textContent=cs.tab; tab.onclick=()=>{ currentCase=i; renderCasePanel(sIdx,i); document.querySelectorAll('.cs-tab').forEach((t,idx)=>t.className='cs-tab'+(idx===i?' active':'')); };
+      caseTabBar.appendChild(tab);
+    });
+    renderCasePanel(sIdx,0);
+  }
+
+  function renderCasePanel(sIdx,cIdx) {
+    panels.innerHTML='';
+    const cs=sectors[sIdx].cases[cIdx];
+    const statsHTML=cs.stats.map(s=>`<div><div class="cs-stat-num">${s.num}</div><div class="cs-stat-label">${s.label}</div></div>`).join('');
+    const panel=document.createElement('div'); panel.className='cs-panel visible';
+    panel.innerHTML=`
+      <div class="cs-col"><div class="cs-col-header context">Context</div><div class="cs-col-body">${cs.context}</div></div>
+      <div class="cs-col"><div class="cs-col-header solution">eGov\'s Contribution</div><div class="cs-col-body"><div class="egov-role">eGov role: ${cs.egovRole}</div>${cs.solution}</div></div>
+      <div class="cs-col"><div class="cs-col-header impact">Impact</div><div class="cs-col-body"><div class="cs-stats">${statsHTML}</div></div></div>`;
+    panels.appendChild(panel);
+  }
+
+  sectors.forEach((s,i) => {
+    const tab=document.createElement('button'); tab.className='sector-tab'+(i===0?' active':'');
+    tab.textContent=s.label;
+    tab.onclick=()=>{
+      currentSector=i; currentCase=0;
+      document.querySelectorAll('.sector-tab').forEach((t,idx)=>t.className='sector-tab'+(idx===i?' active':''));
+      renderCaseTabs(i);
+    };
+    sectorTabBar.appendChild(tab);
+  });
+
+  renderCaseTabs(0);
+}
+
+// ── RENDER FOUNDATION ──
+function renderFoundation() {
+  const grid = document.getElementById('foundationGrid');
+  foundationLayers.forEach(f => {
+    const card = document.createElement('div'); card.className='foundation-card';
+    card.style.setProperty('--fc-color', f.color); card.style.setProperty('--fc-bg', f.bg);
+    const exHTML = f.examples.map(e => `<span class="fc-example">${e}</span>`).join('');
+    card.innerHTML = `
+      <div class="foundation-card-top">
+        <div class="fc-icon-row">
+          <div class="fc-icon" style="background:${f.bg};border:1px solid ${f.color}22;">${f.icon}</div>
+          <div class="fc-name" style="color:${f.color};">${f.name}</div>
+        </div>
+        <div class="fc-desc">${f.desc}</div>
+      </div>
+      <div class="foundation-card-bottom">
+        <div class="fc-examples-label">Key elements</div>
+        <div class="fc-examples">${exHTML}</div>
+        <div class="fc-expand-hint">${f.expandHint}</div>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+// ── RENDER CLUSTERS ──
+function renderClusters() {
+  const grid = document.getElementById('clustersGrid');
+  clusters.forEach(c => {
+    const card = document.createElement('div'); card.className='cluster-card';
+    card.style.setProperty('--cc-color', c.color); card.style.setProperty('--cc-bg', c.bg);
+    const blocksHTML = c.blocks.map(b => `
+      <div class="block-item">
+        <div class="bi-name"><span class="bi-pname">${b.pName}</span><span class="bi-tname" style="display:none;">${b.tName}</span></div>
+        <div class="bi-plain">${b.plain}</div>
+        <div class="bi-tech" style="color:${c.color};">${b.tech}</div>
+      </div>`).join('');
+    card.innerHTML = `
+      <div class="cc-header">
+        <div class="cc-icon" style="background:${c.bg};border:1px solid ${c.color}22;">${c.icon}</div>
+        <div>
+          <div class="cc-name" style="color:${c.color};">${c.plainName}<span class="cc-tech-name" style="display:none;">, ${c.techName}</span></div>
+        </div>
+      </div>
+      <div class="cc-tagline">${c.tagline}</div>
+      <div class="blocks-list">${blocksHTML}</div>`;
+    grid.appendChild(card);
+  });
+}
+
+// ── RENDER PRINCIPLES ──
+function renderPrinciples() {
+  const grid = document.getElementById('principlesGrid');
+  principles.forEach((p,i) => {
+    const card = document.createElement('div'); card.className='principle-card';
+    card.innerHTML = `<div class="p-num">0${i+1}</div><div class="p-name">${p.n}</div><div class="p-desc">${p.d}</div>`;
+    grid.appendChild(card);
+  });
+}
+
+// ── RENDER TUTORIAL ──
+function renderTutorial() {
+  const progress = document.getElementById('stepProgress');
+  tutorialSteps.forEach((_,i) => { const d=document.createElement('div'); d.className='step-dot'; d.onclick=()=>goToStep(i); progress.appendChild(d); });
+  const container = document.getElementById('tutorialBlocks');
+  clusters.forEach(c => {
+    const panel = document.createElement('div'); panel.className='t-baseplate'; panel.id=`t-${c.id}`;
+    panel.style.setProperty('--cc-color',c.color); panel.style.setProperty('--cc-bg',c.bg); panel.style.setProperty('--cc-glow',c.glow);
+    const bricks = c.blocks.map(b=>`<div class="tbrick" id="tb-${b.id}">${b.pName}<span class="tb-tname" style="display:none;"> (${b.tName})</span></div>`).join('');
+    panel.innerHTML=`<div class="tbp-header"><div class="tbp-dot"></div>${c.icon} <span class="tbp-pname">${c.plainName}</span><span class="tbp-tname" style="display:none;">, ${c.techName}</span></div><div class="tbp-row">${bricks}</div>`;
+    container.appendChild(panel);
+  });
+  updateStep();
+}
+
+function updateStep() {
+  const s = tutorialSteps[currentStep];
+  document.getElementById('stepNum').textContent = `STAGE ${currentStep+1} OF ${tutorialSteps.length}`;
+  document.getElementById('stepTitle').textContent = s.title;
+  document.getElementById('stepStory').textContent = s.story;
+  document.getElementById('stepPlain').textContent = techMode ? s.tPlain : s.plain;
+  const infEl = document.getElementById('infraNote');
+  if (s.infra) { infEl.textContent='⬡ '+s.infra; infEl.className='infra-note'+(showInfra?' visible':''); } else { infEl.className='infra-note'; }
+  document.querySelectorAll('.step-dot').forEach((d,i)=>d.className='step-dot'+(i===currentStep?' active':i<currentStep?' done':''));
+  document.getElementById('btnPrev').disabled=currentStep===0;
+  document.getElementById('btnNext').textContent=currentStep===tutorialSteps.length-1?'Try your domain →':'Next stage →';
+  document.querySelectorAll('[id^="t-"].t-baseplate').forEach(el=>el.classList.remove('lit'));
+  document.querySelectorAll('#tutorialBlocks .tbrick').forEach(el=>el.classList.remove('active','snap'));
+  s.blocksActive.forEach((id,idx)=>{
+    const el=document.getElementById(`tb-${id}`); if(!el)return;
+    setTimeout(()=>{ el.classList.add('active','snap'); setTimeout(()=>el.classList.remove('snap'),360); },idx*85);
+    const c=getCluster(id); if(!c)return;
+    setTimeout(()=>{ const p=document.getElementById(`t-${c.id}`); if(p)p.classList.add('lit'); },idx*85+50);
+  });
+}
+function nextStep(){ if(currentStep<tutorialSteps.length-1){currentStep++;updateStep();}else{document.getElementById('imagine').scrollIntoView({behavior:'smooth'});} }
+function prevStep(){ if(currentStep>0){currentStep--;updateStep();} }
+function goToStep(i){ currentStep=i; updateStep(); }
+function toggleInfra(){ showInfra=!showInfra; document.getElementById('infraSwitch').className='ts'+(showInfra?' on':''); const s=tutorialSteps[currentStep]; if(s.infra)document.getElementById('infraNote').className='infra-note'+(showInfra?' visible':''); }
+
+// ── TECH MODE affects tutorial text ──
+// (handled by the single toggleTechMode function defined above)
+
+// ── RENDER DOMAINS ──
+function renderDomains() {
+  const grid=document.getElementById('domainsGrid');
+  domains.forEach(d=>{ const card=document.createElement('div'); card.className='domain-card'; card.id=`domain-${d.id}`;
+    card.innerHTML=`<span class="de">${d.emoji}</span><div class="dn">${d.name}</div><div class="ds">${d.scenario}</div>`;
+    card.onclick=()=>selectDomain(d.id); grid.appendChild(card); });
+  const container=document.getElementById('theatreBlocks');
+  clusters.forEach(c=>{ const panel=document.createElement('div'); panel.className='t-baseplate'; panel.id=`i-${c.id}`;
+    panel.style.setProperty('--cc-color',c.color); panel.style.setProperty('--cc-bg',c.bg); panel.style.setProperty('--cc-glow',c.glow);
+    const bricks=c.blocks.map(b=>`<div class="tbrick" id="ib-${b.id}">${b.pName}</div>`).join('');
+    panel.innerHTML=`<div class="tbp-header"><div class="tbp-dot"></div>${c.icon} ${c.plainName}</div><div class="tbp-row">${bricks}</div>`;
+    container.appendChild(panel); });
+}
+
+function selectFocus(btn) { document.querySelectorAll('.fq-btn').forEach(b=>b.classList.remove('selected')); btn.classList.add('selected'); document.getElementById('domainsGrid').classList.add('ready'); }
+
+function selectDomain(id) {
+  const domain=domains.find(d=>d.id===id); if(!domain)return;
+  selectedDomain=id;
+  document.querySelectorAll('.domain-card').forEach(c=>c.classList.remove('selected'));
+  document.getElementById(`domain-${id}`).classList.add('selected');
+  const vr=document.getElementById('variantRow');
+  Array.from(vr.querySelectorAll('.vbtn')).forEach(el=>el.remove());
+  domain.variants.forEach((v,i)=>{ const btn=document.createElement('button'); btn.className='vbtn'+(i===0?' selected':'');
+    btn.textContent=v; btn.onclick=()=>{ document.querySelectorAll('.vbtn').forEach(b=>b.classList.remove('selected')); btn.classList.add('selected'); };
+    vr.appendChild(btn); });
+  vr.className='variant-row visible';
+  currentBuildStep=0; resetTheatre();
+  document.getElementById('buildTheatre').className='build-theatre visible';
+  buildProgress(domain); updateBuildStep(domain);
+  setTimeout(()=>document.getElementById('buildTheatre').scrollIntoView({behavior:'smooth',block:'nearest'}),120);
+}
+
+function resetTheatre() {
+  document.querySelectorAll('#theatreBlocks .t-baseplate').forEach(el=>el.classList.remove('lit'));
+  document.querySelectorAll('#theatreBlocks .tbrick').forEach(el=>el.classList.remove('active','snap'));
+}
+function buildProgress(domain) {
+  const p=document.getElementById('buildProgress'); p.innerHTML='';
+  domain.phases.forEach((_,i)=>{ const d=document.createElement('div'); d.className='bp-dot'; d.onclick=()=>goToBuildStep(i); p.appendChild(d); });
+}
+function updateBuildStep(domain) {
+  const phase=domain.phases[currentBuildStep];
+  document.getElementById('buildPhase').textContent=`PHASE ${currentBuildStep+1} OF ${domain.phases.length}, ${domain.name.toUpperCase()}`;
+  document.getElementById('buildTitle').textContent=phase.title;
+  document.getElementById('buildDesc').textContent=phase.desc;
+  document.getElementById('buildCallout').textContent=phase.callout;
+  document.querySelectorAll('#buildProgress .bp-dot').forEach((d,i)=>d.className='bp-dot'+(i===currentBuildStep?' active':i<currentBuildStep?' done':''));
+  document.getElementById('btnBuildPrev').disabled=currentBuildStep===0;
+  document.getElementById('btnBuildNext').textContent=currentBuildStep===domain.phases.length-1?'Start over ↺':'Next phase →';
+  phase.blocks.forEach((id,idx)=>{
+    const el=document.getElementById(`ib-${id}`); if(!el)return;
+    if(!el.classList.contains('active')){ setTimeout(()=>{ el.classList.add('active','snap'); setTimeout(()=>el.classList.remove('snap'),360); },idx*90); }
+    const c=getCluster(id); if(!c)return;
+    setTimeout(()=>{ const p=document.getElementById(`i-${c.id}`); if(p)p.classList.add('lit'); },idx*90+60);
+  });
+}
+function nextBuildStep(){ const d=domains.find(d=>d.id===selectedDomain); if(!d)return; if(currentBuildStep<d.phases.length-1){currentBuildStep++;updateBuildStep(d);}else{currentBuildStep=0;resetTheatre();buildProgress(d);updateBuildStep(d);} }
+function prevBuildStep(){ const d=domains.find(d=>d.id===selectedDomain); if(!d||currentBuildStep===0)return; currentBuildStep--; resetTheatre(); d.phases.slice(0,currentBuildStep+1).forEach(p=>p.blocks.forEach(id=>{ const el=document.getElementById(`ib-${id}`); if(el)el.classList.add('active'); const c=getCluster(id); if(c){const pl=document.getElementById(`i-${c.id}`);if(pl)pl.classList.add('lit');} })); updateBuildStep(d); }
+function goToBuildStep(i){ const d=domains.find(d=>d.id===selectedDomain); if(!d)return; currentBuildStep=i; resetTheatre(); d.phases.slice(0,i+1).forEach(p=>p.blocks.forEach(id=>{ const el=document.getElementById(`ib-${id}`); if(el)el.classList.add('active'); const c=getCluster(id); if(c){const pl=document.getElementById(`i-${c.id}`);if(pl)pl.classList.add('lit');} })); updateBuildStep(d); }
+
+// ── RENDER SERVICE ROWS ──
+function renderServiceRows() {
+  const container=document.getElementById('serviceRows');
+  serviceLinks.forEach(row=>{ const el=document.createElement('div'); el.className='svc-row';
+    const links=row.links.map(l=>`<a href="${l.url}" target="_blank" class="svc-link">${l.name}</a>`).join('');
+    el.innerHTML=`<div class="svc-label">${row.label}</div><div class="svc-links">${links}</div>`;
+    container.appendChild(el); });
+}
+
+
+// ── SMOOTH SCROLL ──
+function easeInOutCubic(t) {
+  return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
+}
+function smoothScrollTo(targetY, duration) {
+  const startY = window.scrollY;
+  const diff = targetY - startY;
+  let start = null;
+  function step(timestamp) {
+    if (!start) start = timestamp;
+    const elapsed = timestamp - start;
+    const progress = Math.min(elapsed / duration, 1);
+    window.scrollTo(0, startY + diff * easeInOutCubic(progress));
+    if (progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+document.addEventListener('click', function(e) {
+  const link = e.target.closest('a[href^="#"]');
+  if (!link) return;
+  const id = link.getAttribute('href').slice(1);
+  const target = document.getElementById(id);
+  if (!target) return;
+  e.preventDefault();
+  closeMobileNav && closeMobileNav();
+  const offset = 96; // banner + nav + small buffer
+  const targetY = target.getBoundingClientRect().top + window.scrollY - offset;
+  smoothScrollTo(targetY, 520);
+});
+
+
+// ── OFFERINGS FRAMEWORK ──────────────────────────────────────────────────
+const OFFERINGS = [{"num": "01", "icon": "🧭", "name": "Strategy & Advisory", "desc": "Embedded advisory teams work alongside state departments and central ministries, helping governments develop a DPI strategy, build a shared vision across stakeholders, and navigate the institutional complexity of large-scale digital transformation. This mode often precedes and shapes all others.", "tags": ["DPI acceleration units", "State Data Specialist", "Transformation Architect", "Stakeholder alignment"], "caseTitle": "Andhra Pradesh — Full-stack urban governance strategy", "caseBody": "From 2015, eGov embedded advisory teams within AP's urban local bodies to architect a comprehensive municipal digital transformation covering property tax, trade licences, water and sanitation, grievance redressal, and state-level dashboards — with integrations across 18 existing government systems.", "caseStats": [{"num": "125", "lbl": "Urban Local Bodies digitally transformed"}, {"num": "18", "lbl": "Integrated government systems"}, {"num": "33Mn", "lbl": "Citizens with access to digital services"}]}, {"num": "02", "icon": "⚙️", "name": "Open Platforms & Products", "desc": "DIGIT, the open-source platform underlying this guide, is eGov's core technical contribution. It is well-documented, has clear APIs and a certification pathway, and is deployable by certified system integrators without eGov's direct involvement. This mode scales eGov's impact far beyond what any single team could implement.", "tags": ["DIGIT platform", "Ready-to-deploy products", "Certified SI network", "NUDM / UPYOG"], "caseTitle": "UPYOG — National urban platform built on DIGIT", "caseBody": "In 2021, MoHUA and MEITY launched NUDM anchored at NIUA, with DIGIT as the technical foundation for UPYOG. eGov contributed platform architecture, programme design, and over 20,000 hours of training. UPYOG is now fully owned and operated by MoHUA/NIUA, certified as a Digital Public Good.", "caseStats": [{"num": "4,400+", "lbl": "Urban local bodies on UPYOG"}, {"num": "16", "lbl": "Urban service modules"}, {"num": "70", "lbl": "Empanelled technical partners"}]}, {"num": "03", "icon": "🔧", "name": "Implementation Support", "desc": "For governments beginning deployment, eGov provides embedded implementation support, working inside state departments to configure, roll out, and stabilise digital services. The goal is a functioning system and a capable government team — not an ongoing dependency. Every engagement is time-bound by design.", "tags": ["Programme Advisory Lead", "Solutioning", "Time-bound by design", "Change management"], "caseTitle": "Punjab — Property tax and water services rollout", "caseBody": "eGov directly led the implementation of property tax collection and water infrastructure maintenance systems across Punjab's urban local bodies. The engagement covered system configuration, officer training, and stabilisation — transferring full operational ownership to state government at programme close.", "caseStats": [{"num": "Live", "lbl": "Property tax + water services"}, {"num": "State-wide", "lbl": "Geographic coverage"}, {"num": "Govt-owned", "lbl": "Post-engagement ownership model"}]}, {"num": "04", "icon": "🎓", "name": "Local Capacity & Self-Sufficiency", "desc": "eGov invests in building the public sector's own capacity to manage, adapt, and extend digital infrastructure — through the eGov Academy, Centres for Public Service Excellence, open playbooks, and fellowship programmes that build communities of practice within government.", "tags": ["eGov Academy", "CPSEs", "Outcome Playbooks", "Fellowship programme"], "caseTitle": "Centres for Public Service Excellence — building state capacity", "caseBody": "eGov's CPSEs embed within state governments to develop internal champions for digital governance. Combined with the eGov Academy's training programmes and open Outcome Playbooks, this mode ensures that each government partner develops the internal expertise to extend and maintain its digital systems independently.", "caseStats": [{"num": "20,000+", "lbl": "Training hours delivered across UPYOG"}, {"num": "Open", "lbl": "All playbooks and frameworks public"}, {"num": "Self-sufficient", "lbl": "Designed outcome: no ongoing dependency"}]}, {"num": "05", "icon": "🌐", "name": "Ecosystem Development", "desc": "Beyond individual government deployments, eGov works to build the broader ecosystem — certifying implementation partners, supporting RFP design so governments can procure independently, and convening actors across government, civil society, and the market to sustain DPIs beyond any single organisation.", "tags": ["Partner programme", "RFP advisory", "Certified partner network", "Community of practice"], "caseTitle": "The DIGIT partner ecosystem — 19+ organisations, 70 programmes", "caseBody": "eGov's ecosystem development work has catalysed a network of commercial SIs (Deloitte, PwC, Accenture), development sector organisations (Piramal Foundation, Arghyam, MSC), and government bodies (NIC, IKM Kerala). 27 of the 70 active programmes are net-new products built entirely by partners.", "caseStats": [{"num": "19+", "lbl": "Partner organisations building on DIGIT"}, {"num": "27", "lbl": "Net-new products built by partners"}, {"num": "70", "lbl": "Active programmes across the ecosystem"}]}];
+
+let activeOffw = -1;
+
+function renderOfferings() {
+  const grid = document.getElementById('offwGrid');
+  if (!grid) return;
+  grid.innerHTML = OFFERINGS.map((o,i) => `
+    <div class="offw-card${activeOffw===i?' active':''}" onclick="selectOffering(${i})">
+      <div class="offw-num">${o.num}</div>
+      <span class="offw-icon">${o.icon}</span>
+      <div class="offw-name">${o.name}</div>
+      <div class="offw-arrow"></div>
+    </div>
+  `).join('');
+}
+
+function selectOffering(i) {
+  const panel = document.getElementById('offwPanel');
+  if (activeOffw === i) {
+    activeOffw = -1;
+    panel.classList.remove('visible');
+    renderOfferings();
+    return;
+  }
+  activeOffw = i;
+  const o = OFFERINGS[i];
+  document.getElementById('offwModeLabel').textContent = 'Mode ' + o.num;
+  document.getElementById('offwPanelTitle').textContent = o.name;
+  document.getElementById('offwPanelDesc').textContent = o.desc;
+  document.getElementById('offwTags').innerHTML = o.tags.map(t=>`<span class="offw-tag">${t}</span>`).join('');
+  document.getElementById('offwCaseTitle').textContent = o.caseTitle;
+  document.getElementById('offwCaseBody').textContent = o.caseBody;
+  document.getElementById('offwCaseStats').innerHTML = o.caseStats.map(s=>
+    `<div class="offw-cs-stat"><div class="offw-cs-num">${s.num}</div><div class="offw-cs-lbl">${s.lbl}</div></div>`
+  ).join('');
+  panel.classList.add('visible');
+  renderOfferings();
+  // smooth scroll to panel
+  setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
+}
+
+
+
+
+const ECO_PROGRAMS = [{"geo": "All Cantonments", "sector": "Local Governance", "use": "Local Governance (eChhawani)", "by": "Bharat Electronics Ltd.", "role": "govt_body", "stage": "Live", "new": true, "pop": 2516586, "year": "2020", "details": "Digital citizen services for 62 cantonment boards across India, built on DIGIT under Ministry of Defence."}, {"geo": "Andhra Pradesh", "sector": "Local Governance", "use": "Local Governance", "by": "eGov", "role": "egov_direct", "stage": "Live", "new": false, "pop": 33213851, "year": "2015", "details": "Property tax, trade licences, water & sanitation, grievance redressal, state dashboards. Integrations with 18 existing systems."}, {"geo": "Assam", "sector": "Local Governance", "use": "Finance & Accounting (Municipal)", "by": "Sumato", "role": "commercial_partner", "stage": "Live", "new": false, "pop": null, "year": "2023", "details": "Finance and accounting rolled out in 2 ULBs — Dhubri and Barpeta."}, {"geo": "Assam", "sector": "Health", "use": "PGR for Health (DIGIT+)", "by": "Piramal Foundation", "role": "development_sector", "stage": "Live", "new": true, "pop": null, "year": "2023", "details": "Complaint management system for state health ministry to manage all health centres."}, {"geo": "Assam", "sector": "Water & Sanitation", "use": "NalJalseva", "by": "NIC", "role": "govt_body", "stage": "Live", "new": false, "pop": 32866165, "year": "2024", "details": "Jal Jeevan Mission O&M platform across 2,202 gram panchayats in Assam."}, {"geo": "Assam", "sector": "Works Management", "use": "Public Works Management", "by": "Deloitte", "role": "commercial_partner", "stage": "Live", "new": true, "pop": 36728963, "year": "2023", "details": "Centralised works management with procurement and project management capabilities."}, {"geo": "Bihar", "sector": "Water & Sanitation", "use": "Water Infrastructure Maintenance (PeyJal)", "by": "Arghyam", "role": "development_sector", "stage": "Live", "new": true, "pop": null, "year": "2023", "details": "mGramSeva-based platform for rural water infrastructure O&M across 8,471 gram panchayats."}, {"geo": "Bihar", "sector": "Health", "use": "PGR for Health (DIGIT+)", "by": "Piramal Foundation", "role": "development_sector", "stage": "Live", "new": true, "pop": null, "year": "2023", "details": "Complaint management system across ~9,000 health centres in Bihar."}, {"geo": "Bihar", "sector": "Livelihoods & Benefits", "use": "Digital Farmer Services Platform", "by": "MSC", "role": "development_sector", "stage": "Live", "new": true, "pop": 330000, "year": "2023", "details": "Unified digital services for small-scale farmers — schemes, advisory, credit, insurance, market linkages."}, {"geo": "Bihar", "sector": "Livelihoods & Benefits", "use": "Proactive Benefits Delivery (DIGIT+)", "by": "Piramal Foundation", "role": "development_sector", "stage": "Design", "new": true, "pop": null, "year": "2024", "details": "Scholarship delivery via DIGIT; pilot in Rajasthan, rollout likely in Bihar."}, {"geo": "Bihar", "sector": "Local Governance", "use": "Local Governance", "by": "Pipeline / TBD", "role": "pipeline", "stage": "Design", "new": false, "pop": null, "year": null, "details": "State-level local governance deployment in design stage."}, {"geo": "Central Govt.", "sector": "Emergency Response", "use": "Emergency Response", "by": "Deloitte", "role": "commercial_partner", "stage": "Live", "new": false, "pop": null, "year": "2020", "details": "National emergency response system built on DIGIT."}, {"geo": "Central Govt.", "sector": "Local Governance", "use": "Grievance Redressal", "by": "Accenture", "role": "commercial_partner", "stage": "Live", "new": false, "pop": null, "year": "2020", "details": "National grievance redressal platform built on DIGIT."}, {"geo": "Chandigarh", "sector": "Local Governance", "use": "Local Governance", "by": "PwC", "role": "commercial_partner", "stage": "Live", "new": false, "pop": null, "year": "2016", "details": "Full municipal services stack deployed across Chandigarh ULBs."}, {"geo": "Chhattisgarh", "sector": "Local Governance", "use": "Building Permits", "by": "Entit Technologies", "role": "commercial_partner", "stage": "Live", "new": false, "pop": null, "year": "2019", "details": "Building permit management system for Chhattisgarh."}, {"geo": "Central Govt.", "sector": "Industrials", "use": "Pass Management System (COVID)", "by": "eGov", "role": "egov_direct", "stage": "Live", "new": false, "pop": null, "year": "2020", "details": "COVID-era pass management system deployed nationally."}, {"geo": "Central Govt.", "sector": "Health", "use": "Vaccine Certification (DIVOC)", "by": "eGov", "role": "egov_direct", "stage": "Live", "new": false, "pop": null, "year": "2021", "details": "DIVOC open-source vaccine certification platform; basis for CoWIN, 2Bn+ certificates issued."}, {"geo": "Goa", "sector": "Industrials", "use": "Industrial Estate Management", "by": "Deloitte", "role": "commercial_partner", "stage": "Live", "new": false, "pop": null, "year": "2020", "details": "Industrial estate management system for Goa."}, {"geo": "Goa", "sector": "Local Governance", "use": "Finance & Accounting (Municipal)", "by": "Pipeline / TBD", "role": "pipeline", "stage": "Design", "new": false, "pop": null, "year": null, "details": "Municipal F&A in design stage for Goa."}, {"geo": "Gujarat", "sector": "Local Governance", "use": "Local Governance", "by": "Pipeline / TBD", "role": "pipeline", "stage": "Design", "new": false, "pop": null, "year": null, "details": "State-level local governance deployment in design stage."}, {"geo": "Haryana", "sector": "Local Governance", "use": "Finance & Accounting (Municipal)", "by": "Pipeline / TBD", "role": "pipeline", "stage": "Design", "new": false, "pop": null, "year": null, "details": "Municipal F&A in design stage for Haryana."}, {"geo": "Himachal Pradesh", "sector": "Local Governance", "use": "Local Governance", "by": "Deloitte", "role": "commercial_partner", "stage": "Live", "new": false, "pop": null, "year": "2020", "details": "Full municipal services stack for Himachal Pradesh ULBs."}, {"geo": "Himachal Pradesh", "sector": "Local Governance", "use": "Finance & Accounting (Municipal)", "by": "Deloitte", "role": "commercial_partner", "stage": "Design", "new": false, "pop": null, "year": "2023", "details": "Municipal F&A rollout in design/expansion phase."}, {"geo": "Jammu & Kashmir", "sector": "Local Governance", "use": "Finance & Accounting (Municipal)", "by": "Pipeline / TBD", "role": "pipeline", "stage": "Design", "new": false, "pop": null, "year": null, "details": "Municipal F&A in design stage for J&K."}, {"geo": "Jharkhand", "sector": "Education", "use": "DIGIT in Education Sector", "by": "Deloitte", "role": "commercial_partner", "stage": "Live", "new": false, "pop": 11259840, "year": "2021", "details": "Education sector deployment of DIGIT for Jharkhand."}, {"geo": "Karnataka", "sector": "Clean Energy", "use": "Energy for Health (DIGIT+)", "by": "SELCO Foundation", "role": "development_sector", "stage": "Live", "new": true, "pop": null, "year": "2021", "details": "Solar energy management for health facilities; DIGIT+ extension built by SELCO."}, {"geo": "Karnataka", "sector": "Local Governance", "use": "Local Governance", "by": "eGov", "role": "egov_direct", "stage": "Live", "new": false, "pop": null, "year": "2016", "details": "Legacy eGov municipal services deployment across Karnataka."}, {"geo": "Karnataka", "sector": "Water & Sanitation", "use": "Solid Waste Management", "by": "CSG, GoK", "role": "govt_body", "stage": "Design", "new": false, "pop": null, "year": "2023", "details": "Solid waste management system in design stage with Government of Karnataka."}, {"geo": "Karnataka", "sector": "Industrials", "use": "Transport Management", "by": "Pipeline / TBD", "role": "pipeline", "stage": "Design", "new": false, "pop": null, "year": null, "details": "Transport management use case in design stage."}, {"geo": "Kerala", "sector": "Local Governance", "use": "Local Governance", "by": "IKM Kerala", "role": "govt_body", "stage": "Live", "new": false, "pop": null, "year": "2016", "details": "Full municipal stack operated by IKM, Kerala government's own tech body."}, {"geo": "Kerala", "sector": "Local Governance", "use": "Building Permits", "by": "eGov", "role": "egov_direct", "stage": "Live", "new": false, "pop": null, "year": "2017", "details": "Building permit management for Kerala ULBs."}, {"geo": "Kerala", "sector": "Legal", "use": "Court Case Management (DIGIT+)", "by": "PUCAR", "role": "development_sector", "stage": "Live", "new": true, "pop": null, "year": "2022", "details": "Court case management system built as DIGIT+ extension by PUCAR."}, {"geo": "Ladakh", "sector": "Local Governance", "use": "Local Governance", "by": "Pipeline / TBD", "role": "pipeline", "stage": "Design", "new": false, "pop": null, "year": null, "details": "Local governance deployment in design stage for Ladakh."}, {"geo": "Madhya Pradesh", "sector": "Local Governance", "use": "Local Governance", "by": "Pipeline / TBD", "role": "pipeline", "stage": "Design", "new": false, "pop": null, "year": null, "details": "State-level local governance deployment in design stage."}, {"geo": "Maharashtra", "sector": "Local Governance", "use": "Local Governance (UPYOG/BMC)", "by": "Pipeline / TBD", "role": "pipeline", "stage": "Design", "new": false, "pop": null, "year": null, "details": "UPYOG implementation initiated; state-specific modules for BMC in development."}, {"geo": "Manipur", "sector": "Local Governance", "use": "Local Governance", "by": "Deloitte", "role": "commercial_partner", "stage": "Live", "new": false, "pop": null, "year": "2021", "details": "Municipal services stack deployed for Manipur ULBs."}, {"geo": "New Delhi", "sector": "Local Governance", "use": "Local Governance", "by": "eGov", "role": "egov_direct", "stage": "Live", "new": false, "pop": null, "year": "2016", "details": "Legacy eGov municipal services deployment for Delhi."}, {"geo": "National (NUDM)", "sector": "Local Governance", "use": "Urban Governance (UPYOG)", "by": "eGov", "role": "egov_direct", "stage": "Live", "new": false, "pop": null, "year": "2021", "details": "UPYOG — national urban platform. 4,400+ ULBs, 16 modules, 70 partners. Owned by MoHUA/NIUA."}, {"geo": "Odisha", "sector": "Water & Sanitation", "use": "Faecal Sludge & Septage Management", "by": "PwC", "role": "commercial_partner", "stage": "Live", "new": false, "pop": null, "year": "2019", "details": "FSSM platform for Odisha urban local bodies."}, {"geo": "Odisha", "sector": "Livelihoods & Benefits", "use": "Works Management & Benefits Delivery", "by": "PwC", "role": "commercial_partner", "stage": "Live", "new": false, "pop": null, "year": "2019", "details": "Integrated works management and social benefits delivery platform."}, {"geo": "Odisha", "sector": "Local Governance", "use": "Local Governance", "by": "PwC", "role": "commercial_partner", "stage": "Live", "new": false, "pop": null, "year": "2016", "details": "Full municipal services stack for Odisha ULBs."}, {"geo": "Odisha", "sector": "Livelihoods & Benefits", "use": "Direct Benefits Delivery", "by": "Deloitte", "role": "commercial_partner", "stage": "Design", "new": false, "pop": null, "year": "2023", "details": "Direct benefits delivery system in design stage."}, {"geo": "Puducherry", "sector": "Local Governance", "use": "Building Permits", "by": "eGov", "role": "egov_direct", "stage": "Live", "new": false, "pop": null, "year": "2019", "details": "Building permit management for Puducherry ULBs."}, {"geo": "Punjab", "sector": "Local Governance", "use": "Local Governance", "by": "eGov", "role": "egov_direct", "stage": "Live", "new": false, "pop": null, "year": "2017", "details": "Full municipal services stack deployed directly by eGov."}, {"geo": "Punjab", "sector": "Water & Sanitation", "use": "Water Infrastructure Maintenance", "by": "eGov", "role": "egov_direct", "stage": "Live", "new": false, "pop": null, "year": "2020", "details": "Water infrastructure O&M platform for Punjab."}, {"geo": "Punjab", "sector": "Local Governance", "use": "Local Governance", "by": "KPMG", "role": "commercial_partner", "stage": "Design", "new": false, "pop": null, "year": "2023", "details": "KPMG-led local governance expansion in design stage."}, {"geo": "Punjab", "sector": "Livelihoods & Benefits", "use": "Benefits Delivery", "by": "eGov", "role": "egov_direct", "stage": "Design", "new": false, "pop": null, "year": "2024", "details": "Benefits delivery platform in design stage."}, {"geo": "Rajasthan", "sector": "Local Governance", "use": "Finance & Accounting (Municipal)", "by": "Pipeline / TBD", "role": "pipeline", "stage": "Design", "new": false, "pop": null, "year": null, "details": "Municipal F&A in design stage for Rajasthan."}, {"geo": "Tamil Nadu", "sector": "Local Governance", "use": "Building Permits", "by": "Interlace Technologies", "role": "commercial_partner", "stage": "Live", "new": false, "pop": null, "year": "2020", "details": "Building permit management system for Tamil Nadu."}, {"geo": "Tamil Nadu", "sector": "Local Governance", "use": "Finance & Accounting (Municipal)", "by": "Pipeline / TBD", "role": "pipeline", "stage": "Design", "new": false, "pop": null, "year": null, "details": "Municipal F&A in design stage."}, {"geo": "Tamil Nadu", "sector": "Local Governance", "use": "Local Governance", "by": "eGov", "role": "egov_direct", "stage": "Live", "new": false, "pop": null, "year": "2016", "details": "Legacy eGov municipal services deployment for Tamil Nadu."}, {"geo": "Telangana", "sector": "Local Governance", "use": "Building Permits", "by": "Pipeline / TBD", "role": "pipeline", "stage": "Design", "new": false, "pop": null, "year": null, "details": "Building permit system in design stage for Telangana."}, {"geo": "Uttar Pradesh", "sector": "Legal", "use": "Legal Case Management (Education)", "by": "Piramal Foundation", "role": "development_sector", "stage": "Design", "new": true, "pop": null, "year": "2024", "details": "Legal case management for education ministry built on DIGIT."}, {"geo": "Uttar Pradesh", "sector": "Local Governance", "use": "Finance & Accounting (Municipal)", "by": "Pipeline / TBD", "role": "pipeline", "stage": "Design", "new": false, "pop": null, "year": null, "details": "Municipal F&A in design stage for UP."}, {"geo": "Uttar Pradesh", "sector": "Water & Sanitation", "use": "Faecal Sludge & Septage Management", "by": "Pipeline / TBD", "role": "pipeline", "stage": "Design", "new": false, "pop": null, "year": null, "details": "FSSM platform in design stage for UP."}, {"geo": "Uttarakhand", "sector": "Local Governance", "use": "Local Governance", "by": "eGov", "role": "egov_direct", "stage": "Live", "new": false, "pop": null, "year": "2019", "details": "Municipal services stack deployed by eGov for Uttarakhand."}, {"geo": "West Bengal", "sector": "Local Governance", "use": "Local Governance", "by": "PwC", "role": "commercial_partner", "stage": "Live", "new": false, "pop": null, "year": "2016", "details": "Municipal services stack for West Bengal ULBs."}, {"geo": "West Bengal", "sector": "Local Governance", "use": "Local Governance", "by": "TCG Digital", "role": "commercial_partner", "stage": "Design", "new": false, "pop": null, "year": "2023", "details": "TCG Digital-led expansion in design stage."}, {"geo": "West Bengal", "sector": "Industrials", "use": "Inland Water Transport Management", "by": "Deloitte", "role": "commercial_partner", "stage": "Design", "new": false, "pop": null, "year": "2023", "details": "Inland water transport management system in design stage."}, {"geo": "Mozambique (Gaza Province)", "sector": "Health", "use": "Bednet Distribution Campaign", "by": "Global Health Partner", "role": "international", "stage": "Live", "new": false, "pop": 1586866, "year": "2023", "details": "Bednet distribution campaign management using DIGIT HCM."}, {"geo": "Mozambique (Tete Province)", "sector": "Health", "use": "Bednet Distribution Campaign", "by": "Global Health Partner", "role": "international", "stage": "Live", "new": false, "pop": 3117551, "year": "2023", "details": "Bednet distribution campaign management using DIGIT HCM."}, {"geo": "Mozambique (Nampula Province)", "sector": "Health", "use": "Seasonal Malaria Chemoprevention (SMC)", "by": "Global Health Partner", "role": "international", "stage": "Live", "new": false, "pop": 1482649, "year": "2024", "details": "SMC campaign management using DIGIT HCM."}, {"geo": "Mozambique", "sector": "Health", "use": "Indoor Residual Spraying (IRS)", "by": "Global Health Partner", "role": "international", "stage": "Live", "new": false, "pop": 276603, "year": "2024", "details": "IRS malaria campaign management using DIGIT HCM."}, {"geo": "Liberia", "sector": "Health", "use": "Bednet Distribution Campaign", "by": "Global Health Partner", "role": "international", "stage": "Live", "new": false, "pop": 5498281, "year": "2024", "details": "Nationwide bednet distribution campaign management using DIGIT HCM."}, {"geo": "Senegal", "sector": "Health", "use": "Seasonal Malaria Chemoprevention (SMC)", "by": "Global Health Partner", "role": "international", "stage": "Live", "new": false, "pop": 81702, "year": "2024", "details": "SMC campaign management using DIGIT HCM."}, {"geo": "Nigeria (Kano State)", "sector": "Health", "use": "NTD Lymphatic Filariasis Campaign", "by": "Global Health Partner", "role": "international", "stage": "Live", "new": false, "pop": 129002, "year": "2024", "details": "NTD-LF campaign management using DIGIT HCM."}, {"geo": "Nigeria (Kebbi State)", "sector": "Health", "use": "Seasonal Malaria Chemoprevention (SMC)", "by": "Global Health Partner", "role": "international", "stage": "Live", "new": false, "pop": 1255514, "year": "2024", "details": "SMC campaign management using DIGIT HCM."}, {"geo": "Trinidad & Tobago", "sector": "Multi-sectoral", "use": "Land Deed Management", "by": "TBD", "role": "pipeline", "stage": "Design", "new": false, "pop": null, "year": null, "details": "Land deed management system under deployment."}];
+
+// ── PORTFOLIO MAP ─────────────────────────────────────────────────────────
+const ROLE_CLASS = {'eGov direct':'role-egov','Commercial partner':'role-commercial','Development sector':'role-dev','Govt / public body':'role-govt','International':'role-intl','Pipeline':'role-pipeline'};
+
+const GEO_TO_SID = {
+  'Andhra Pradesh':'ap','Assam':'as','Bihar':'br','Chandigarh':'ch','Chhattisgarh':'cg',
+  'Goa':'ga','Gujarat':'gj','Haryana':'hr','Himachal Pradesh':'hp','J&K':'jk',
+  'Jharkhand':'jh','Karnataka':'ka','Kerala':'kl','Ladakh':'la','Madhya Pradesh':'mp',
+  'Maharashtra':'mh','Manipur':'mn','New Delhi':'dl','Odisha':'od','Puducherry':'py',
+  'Punjab':'pb','Rajasthan':'rj','Tamil Nadu':'tn','Telangana':'tg',
+  'Uttar Pradesh':'up','Uttarakhand':'uk','West Bengal':'wb',
+  'All Cantonments':'_nat','Central Govt.':'_nat','National (NUDM)':'_nat',
+  'Mozambique (Gaza)':'_intl','Mozambique (Tete)':'_intl','Mozambique (Nampula)':'_intl',
+  'Mozambique':'_intl','Liberia':'_intl','Senegal':'_intl','Nigeria (Kano)':'_intl','Nigeria (Kebbi)':'_intl'
+};
+
+const STATE_FILLS = {
+  'eGov direct':        {fill:'#d1f0e2',stroke:'#2a6e47'},
+  'Commercial partner': {fill:'#dbeafe',stroke:'#1e40af'},
+  'Development sector': {fill:'#fef3c7',stroke:'#b45309'},
+  'Govt / public body': {fill:'#f3e8ff',stroke:'#6b21a8'},
+  'Pipeline':           {fill:'#ede9e4',stroke:'#c8c4be'},
+  'default':            {fill:'#ede9e4',stroke:'#d6d3d1'}
+};
+
+let portActiveState = null;
+let portActiveFilter = 'all';
+
+const ROLE_COLOURS = {
+  'egov_direct':        '#2a6e47',
+  'commercial_partner': '#1e40af',
+  'development_sector': '#b45309',
+  'govt_body':          '#6b21a8',
+  'international':      '#0f766e',
+  'pipeline':           '#d6d3d1'
+};
+
+let portListActiveFilter = 'all';
+let portExpandedIdx = null;
+
+function renderPortStats() {
+  const el = document.getElementById('portStatsRow');
+  if (!el) return;
+  const india = ECO_PROGRAMS.filter(p => p.role !== 'international');
+  const live  = india.filter(p => p.stage === 'Live').length;
+  const netNew = ECO_PROGRAMS.filter(p => p.new).length;
+  const partners = [...new Set(ECO_PROGRAMS.map(p => p.by).filter(b => b && b !== 'Pipeline / TBD' && b !== 'Global Health Partner'))].length;
+  const sectors  = [...new Set(india.map(p => p.sector))].length;
+  const stats = [
+    [india.length, 'India programmes'],
+    [live,         'Live & in use'],
+    [netNew,       'Net-new products by partners'],
+    [partners + '+', 'Implementing organisations'],
+    [sectors,      'Sectors covered']
+  ];
+  el.innerHTML = stats.map(([n,l]) =>
+    '<div class="port-stat"><div class="port-stat-num">'+n+'</div><div class="port-stat-lbl">'+l+'</div></div>'
+  ).join('');
+}
+
+function renderPortList(filter) {
+  const el = document.getElementById('portList');
+  if (!el) return;
+  portExpandedIdx = null;
+  const data = (filter === 'all')
+    ? ECO_PROGRAMS.filter(p => p.role !== 'international')
+    : (filter === 'International')
+      ? ECO_PROGRAMS.filter(p => p.role === 'international')
+      : (filter === 'Pipeline')
+        ? ECO_PROGRAMS.filter(p => p.role === 'pipeline')
+        : ECO_PROGRAMS.filter(p => {
+            const map = {
+              'eGov direct': 'egov_direct',
+              'Commercial partner': 'commercial_partner',
+              'Development sector': 'development_sector',
+              'Govt / public body': 'govt_body'
+            };
+            return p.role === (map[filter] || filter);
+          });
+
+  if (!data.length) { el.innerHTML = '<div style="padding:1.5rem 1rem;color:#78716c;font-size:.85rem;">No programmes match this filter.</div>'; return; }
+
+  el.innerHTML = data.map((p, i) => {
+    const rc   = 'role-' + (p.role || 'pipeline').replace(/ /g,'_');
+    const sc   = p.stage === 'Live' ? 'live' : 'design';
+    const pop  = p.pop  ? (p.pop/1e6).toFixed(1) + 'M people' : '';
+    const yr   = p.year ? 'Since ' + p.year : '';
+    const badge = p.new ? '<span class="plist-new-badge">Net-new</span>' : '';
+    return (
+      '<div class="plist-row ' + rc + '" onclick="toggleListRow('+i+',this)">' +
+        '<div class="plist-geo">' + p.geo + '</div>' +
+        '<div class="plist-use">' + p.use + '</div>' +
+        '<div class="plist-sec">' + p.sector + '</div>' +
+        '<div class="plist-by">'  + (p.by !== 'Pipeline / TBD' && p.by !== 'Global Health Partner' ? p.by : '—') + '</div>' +
+        '<div class="plist-stage"><span class="plist-stage-pill ' + sc + '">' + p.stage + '</span></div>' +
+        '<div class="plist-detail" id="pld-'+i+'">' +
+          p.details +
+          '<div class="plist-detail-meta">' +
+            (yr   ? '<span class="plist-dm"><strong>Initiated:</strong> ' + yr   + '</span>' : '') +
+            (pop  ? '<span class="plist-dm"><strong>Population:</strong> ' + pop + '</span>' : '') +
+            badge +
+          '</div>' +
+        '</div>' +
+      '</div>'
+    );
+  }).join('');
+}
+
+function toggleListRow(idx, rowEl) {
+  const detail = document.getElementById('pld-' + idx);
+  if (!detail) return;
+  const isOpen = detail.classList.contains('visible');
+  // close any open row
+  document.querySelectorAll('.plist-detail.visible').forEach(d => d.classList.remove('visible'));
+  document.querySelectorAll('.plist-row.expanded').forEach(r => r.classList.remove('expanded'));
+  if (!isOpen) {
+    detail.classList.add('visible');
+    rowEl.classList.add('expanded');
+  }
+}
+
+function portListFilter(filter, btn) {
+  portListActiveFilter = filter;
+  document.querySelectorAll('.port-fbtn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderPortList(filter);
+}
+
+function renderIntlCards() {
+  const el = document.getElementById('intlCards');
+  if (!el) return;
+  const intl = ECO_PROGRAMS.filter(p => p.role === 'international');
+  el.innerHTML = intl.map(p =>
+    '<div class="port-intl-card">' +
+      '<div class="port-intl-geo">' + p.geo + '</div>' +
+      '<div class="port-intl-use">' + p.use + '</div>' +
+      '<div class="port-intl-meta">' + p.sector + (p.pop ? ' &middot; ' + (p.pop/1e6).toFixed(1) + 'M people' : '') + '</div>' +
+    '</div>'
+  ).join('');
+}
+
+function toggleIntl() {
+  const t = document.getElementById('intlToggle');
+  const p = document.getElementById('intlPanel');
+  t.classList.toggle('open');
+  p.classList.toggle('visible');
+  if (p.classList.contains('visible')) renderIntlCards();
+}
+
+function renderPortfolio() {
+  renderPortStats();
+  renderPortList('all');
+}
+
+// INIT — all consts must be declared above this line
+renderFullStack();
+renderFoundation();
+renderIndiaImpact();
+renderClusters();
+renderPrinciples();
+renderTutorial();
+renderDomains();
+renderServiceRows();
+renderOfferings();
+renderPortfolio();
+</script>
+</body>
+</html>
