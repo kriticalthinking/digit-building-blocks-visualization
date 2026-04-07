@@ -41,8 +41,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .state-path{stroke:#b0c4b1;stroke-width:0.6px;cursor:pointer;transition:filter .15s,opacity .2s}
 .state-path:hover{filter:brightness(.88)}
 .state-path.selected{stroke-width:2px!important;filter:brightness(.82)}
-.badge-circle{pointer-events:none}
-.badge-text{font-family:'IBM Plex Mono',monospace;font-size:6.5px;font-weight:700;fill:white;pointer-events:none;user-select:none}
+
+
 .panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.4rem 1.5rem;position:sticky;top:2rem;max-height:calc(100vh - 4rem);overflow-y:auto}
 .panel-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:340px;gap:.75rem;color:var(--muted);text-align:center}
 .panel-empty-icon{font-size:2rem;opacity:.45}
@@ -93,6 +93,18 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 @keyframes spin{to{transform:rotate(360deg)}}
 .load-text{font-size:.83rem}
 @media(max-width:900px){.map-layout{grid-template-columns:1fr}.panel{position:static;max-height:none}}
+
+.all-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.4rem}
+.all-title{font-family:'DM Serif Display',serif;font-size:1.2rem}
+.all-counts{font-size:.75rem;color:var(--muted)}
+.all-hint{font-size:.71rem;color:var(--faint);margin-bottom:.9rem;font-style:italic}
+.all-list{display:flex;flex-direction:column;gap:0}
+.all-state-row{display:flex;align-items:center;gap:.5rem;padding:.5rem .4rem;border-radius:7px;cursor:pointer;transition:background .1s}
+.all-state-row:hover{background:var(--surface2)}
+.all-state-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.all-state-name{flex:1;font-size:.78rem;font-weight:500;color:var(--text)}
+.all-state-pills{display:flex;gap:.3rem;flex-shrink:0}
+.all-nat-label{font-size:.63rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);padding:.6rem .4rem .2rem;margin-top:.4rem}
 </style>
 </head>
 <body>
@@ -106,7 +118,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 </div>
 <script>
 const CSV_URL = 'https://raw.githubusercontent.com/kriticalthinking/digit-building-blocks-visualization/main/programmes.csv';
-const GEO_URL = 'https://raw.githubusercontent.com/geohacker/india/master/state/india_state.geojson';
+const GEO_URL = 'https://raw.githubusercontent.com/datameet/maps/master/States/Admin2.geojson';
+const GEO_URL_FALLBACK = 'https://raw.githubusercontent.com/geohacker/india/master/state/india_state.geojson';
 
 const ROLE_CFG = {
   egov_direct:        {label:'eGov direct',       fill:'#d1f0e2',stroke:'#2a6e47',dot:'#2a6e47'},
@@ -118,18 +131,29 @@ const ROLE_CFG = {
 };
 
 // GeoJSON NAME_1 value -> our CSV geography value
+// Handles both datameet (ST_NM) and geohacker (NAME_1) property naming
 const GEO_NORM = {
+  // datameet ST_NM names
   'Andhra Pradesh':'Andhra Pradesh','Assam':'Assam','Bihar':'Bihar',
-  'Chandigarh':'Chandigarh','Chhattisgarh':'Chhattisgarh','Delhi':'New Delhi',
+  'Chandigarh':'Chandigarh','Chhattisgarh':'Chhattisgarh',
+  'Delhi':'New Delhi','NCT of Delhi':'New Delhi',
   'Goa':'Goa','Gujarat':'Gujarat','Haryana':'Haryana',
   'Himachal Pradesh':'Himachal Pradesh',
-  'Jammu and Kashmir':'Jammu & Kashmir','Jammu & Kashmir':'Jammu & Kashmir',
+  'Jammu & Kashmir':'Jammu & Kashmir','Jammu and Kashmir':'Jammu & Kashmir',
+  'Ladakh':'Ladakh',
   'Jharkhand':'Jharkhand','Karnataka':'Karnataka','Kerala':'Kerala',
-  'Ladakh':'Ladakh','Madhya Pradesh':'Madhya Pradesh','Maharashtra':'Maharashtra',
-  'Manipur':'Manipur','Odisha':'Odisha','Puducherry':'Puducherry',
-  'Punjab':'Punjab','Rajasthan':'Rajasthan','Tamil Nadu':'Tamil Nadu',
-  'Telangana':'Telangana','Uttar Pradesh':'Uttar Pradesh',
-  'Uttarakhand':'Uttarakhand','West Bengal':'West Bengal',
+  'Madhya Pradesh':'Madhya Pradesh','Maharashtra':'Maharashtra',
+  'Manipur':'Manipur','Meghalaya':null,'Mizoram':null,'Nagaland':null,
+  'Odisha':'Odisha','Orissa':'Odisha',
+  'Puducherry':'Puducherry','Pondicherry':'Puducherry',
+  'Punjab':'Punjab','Rajasthan':'Rajasthan','Sikkim':null,
+  'Tamil Nadu':'Tamil Nadu','Telangana':'Telangana','Tripura':null,
+  'Uttar Pradesh':'Uttar Pradesh','Uttarakhand':'Uttarakhand',
+  'Uttaranchal':'Uttarakhand','West Bengal':'West Bengal',
+  // extra territories with no programmes — keep for rendering
+  'Andaman & Nicobar Island':null,'Lakshadweep':null,
+  'Dadra and Nagar Haveli':null,'Daman and Diu':null,
+  'Arunachal Pradesh':null,
 };
 
 const NATIONAL_GEOS = new Set(['All Cantonments','Central Govt.','National (NUDM)']);
@@ -173,7 +197,7 @@ function dominantRole(progs){
   return Object.entries(c).sort((a,b)=>b[1]-a[1])[0]?.[0]||'pipeline';
 }
 
-function geoName(feat){return feat.properties.NAME_1||feat.properties.ST_NM||feat.properties.name||'';}
+function geoName(feat){return feat.properties.ST_NM||feat.properties.NAME_1||feat.properties.name||feat.properties.NAME||'';}
 function csvName(feat){return GEO_NORM[geoName(feat)]||null;}
 
 function fillFor(feat,filter){
@@ -223,10 +247,7 @@ function renderApp(){
         </div>
       </div>
       <div id="sidePanel" class="panel">
-        <div class="panel-empty">
-          <div class="panel-empty-icon">🗺️</div>
-          <div class="panel-empty-text">Select a state on the map to explore its programmes.</div>
-        </div>
+        <!-- filled by renderAllPanel() on init -->
       </div>
     </div>
     <div class="intl-wrap">
@@ -244,6 +265,7 @@ function renderApp(){
     </div>`;
   renderStats();
   buildMap();
+  renderAllPanel();
 }
 
 function renderStats(){
@@ -291,21 +313,59 @@ function buildMap(){
     })
     .append('title').text(d=>geoName(d));
 
-  // Count badges
-  Object.entries(stateMap).forEach(([geo,progs])=>{
-    if(NATIONAL_GEOS.has(geo)||progs.length<2)return;
-    const gn=Object.entries(GEO_NORM).find(([k,v])=>v===geo)?.[0];
-    if(!gn)return;
-    const feat=GEOJSON.features.find(f=>geoName(f)===gn);
-    if(!feat)return;
-    const c=pathGen.centroid(feat);
-    if(!c||isNaN(c[0]))return;
-    const bg=g.append('g').attr('id',`badge-${geo.replace(/[\s&]/g,'_')}`);
-    bg.append('circle').attr('class','badge-circle').attr('cx',c[0]).attr('cy',c[1]).attr('r',8)
-      .attr('fill','#1c1917').attr('fill-opacity',.65);
-    bg.append('text').attr('class','badge-text').attr('x',c[0]).attr('y',c[1]+2.5)
-      .attr('text-anchor','middle').text(progs.length);
+
+}
+
+
+function renderAllPanel(){
+  const india = PROGRAMS.filter(p=>p.role!=='international');
+  const filtered = activeFilter==='all' ? india : india.filter(p=>p.role===activeFilter);
+  // Group by state
+  const byState = {};
+  filtered.forEach(p=>{
+    if(NATIONAL_GEOS.has(p.geo)) return; // national handled separately
+    if(!byState[p.geo]) byState[p.geo]=[];
+    byState[p.geo].push(p);
   });
+  const national = filtered.filter(p=>NATIONAL_GEOS.has(p.geo));
+  const stateEntries = Object.entries(byState).sort((a,b)=>a[0].localeCompare(b[0]));
+  const live = filtered.filter(p=>p.stage==='Live').length;
+  const panel = document.getElementById('sidePanel');
+  const stateRows = stateEntries.map(([geo, progs])=>{
+    const lv = progs.filter(p=>p.stage==='Live').length;
+    const ds = progs.filter(p=>p.stage==='Design').length;
+    const role = dominantRole(progs);
+    const dot = (ROLE_CFG[role]||ROLE_CFG.pipeline).dot;
+    const safeGeo = geo.replace(/"/g,'&quot;');
+    return `<div class="all-state-row" data-geo="${safeGeo}" onclick="clickStateByName(this.dataset.geo)">
+      <span class="all-state-dot" style="background:${dot}"></span>
+      <span class="all-state-name">${geo}</span>
+      <span class="all-state-pills">
+        ${lv?`<span class="ppill ppill-live">${lv}</span>`:''}
+        ${ds?`<span class="ppill ppill-design">${ds}</span>`:''}
+      </span>
+    </div>`;
+  }).join('');
+  const natRows = national.length ? `<div class="all-nat-label">National / Central</div>` +
+    national.map(p=>`<div class="all-state-row" style="cursor:default;padding-left:1.2rem">
+      <span class="all-state-name" style="font-size:.75rem;color:#57534e">${p.use}</span>
+      <span class="all-state-pills">${p.stage==='Live'?'<span class="ppill ppill-live">Live</span>':'<span class="ppill ppill-design">Design</span>'}</span>
+    </div>`).join('') : '';
+  panel.innerHTML = `
+    <div class="all-header">
+      <div class="all-title">All programmes</div>
+      <div class="all-counts"><strong>${filtered.length}</strong> total &nbsp;·&nbsp; <strong>${live}</strong> live</div>
+    </div>
+    <div class="all-hint">Click a state row or the map to explore programmes.</div>
+    <div class="all-list">${stateRows}${natRows}</div>`;
+}
+
+function clickStateByName(csvName){
+  // Find the matching geo feature
+  if(!GEOJSON) return;
+  const feat = GEOJSON.features.find(f => GEO_NORM[geoName(f)] === csvName);
+  if(feat) clickState(csvName, geoName(feat));
+  else clickState(csvName, csvName);
 }
 
 function repaintMap(){
@@ -319,22 +379,13 @@ function repaintMap(){
       return(stateMap[cn]||[]).filter(p=>p.role===activeFilter).length?1:0.18;
     })
     .classed('selected',d=>csvName(d)===activeState);
-  // Update badge counts for current filter
-  Object.entries(stateMap).forEach(([geo,allProgs])=>{
-    const id='badge-'+geo.replace(/[\s&]/g,'_');
-    const badge=document.getElementById(id);
-    if(!badge)return;
-    const progs=activeFilter==='all'?allProgs:allProgs.filter(p=>p.role===activeFilter);
-    badge.style.display=progs.length>1?'':'none';
-    const txt=badge.querySelector('.badge-text');
-    if(txt)txt.textContent=progs.length>1?progs.length:'';
-  });
+
 }
 
 function clickState(cn,dn){
   if(activeState===cn){
     activeState=null;repaintMap();
-    document.getElementById('sidePanel').innerHTML=`<div class="panel-empty"><div class="panel-empty-icon">🗺️</div><div class="panel-empty-text">Select a state on the map to explore its programmes.</div></div>`;
+    renderAllPanel();
     return;
   }
   activeState=cn;repaintMap();renderPanel(cn,dn);
@@ -387,6 +438,8 @@ function applyFilter(role,btn){
   if(activeState){
     const gn=Object.entries(GEO_NORM).find(([k,v])=>v===activeState)?.[0]||activeState;
     renderPanel(activeState,gn);
+  } else {
+    renderAllPanel();
   }
 }
 
@@ -400,9 +453,13 @@ function toggleIntl(){
   }
 }
 
+const fetchGeo = () => fetch(GEO_URL)
+  .then(r=>{ if(!r.ok) throw new Error('primary GeoJSON failed'); return r.json(); })
+  .catch(() => fetch(GEO_URL_FALLBACK).then(r=>{ if(!r.ok) throw new Error('GeoJSON HTTP '+r.status); return r.json(); }));
+
 Promise.all([
   fetch(CSV_URL).then(r=>{if(!r.ok)throw new Error('CSV HTTP '+r.status);return r.text();}),
-  fetch(GEO_URL).then(r=>{if(!r.ok)throw new Error('GeoJSON HTTP '+r.status);return r.json();})
+  fetchGeo()
 ]).then(([csv,geo])=>init(parseCSV(csv),geo))
   .catch(err=>{
     document.getElementById('appRoot').innerHTML=`
@@ -418,5 +475,8 @@ Promise.all([
       </div>`;
   });
 </script>
+  <div style="max-width:1200px;margin:.8rem auto 0;font-size:.65rem;color:var(--faint);line-height:1.5;font-style:italic;padding:0 .2rem">
+    Map follows Government of India official boundaries. External boundaries as per Survey of India. Responsibility for the correctness of internal details rests with the publisher.
+  </div>
 </body>
 </html>
