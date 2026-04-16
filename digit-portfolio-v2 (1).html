@@ -121,7 +121,7 @@
 
   .summary-grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 14px;
     margin-top: 28px;
   }
@@ -741,6 +741,16 @@
     line-height: 1.6;
   }
 
+  .program-impact-note {
+    margin-top: 6px;
+    font-size: 11px;
+    color: var(--teal);
+    line-height: 1.55;
+    padding: 5px 8px;
+    border-radius: 8px;
+    background: var(--teal-2);
+  }
+
   .badge-row {
     display: flex;
     flex-wrap: wrap;
@@ -827,7 +837,7 @@
           </div>
           <div class="control-block">
             <label>eGov role</label>
-            <div class="pill-row" id="roleFilters"></div>
+            <select id="roleSelect"></select>
           </div>
           <div class="control-block">
             <label>Sector focus</label>
@@ -873,8 +883,116 @@
 
 <script src="india-svg-features.js"></script>
 <script>
-const PROGRAMS = [{"id": "IN-01", "scope": "india_national", "geography": "All Cantonments", "country": "India", "region": "National", "sector": "Local Governance", "useCase": "Local Governance (eChhawani)", "partner": "Bharat Electronics Ltd.", "role": "govt_body", "stage": "Live", "newProduct": true, "populationImpact": 2516586.0, "year": 2020, "details": "The eChhawani platform, built on DIGIT, enables citizens in cantonment boards to access services provided by the cantonment. Built for the Director General of Defence Estates under the Ministry of Defence."}, {"id": "IN-02", "scope": "india_state", "geography": "Andhra Pradesh", "country": "India", "region": "South", "sector": "Local Governance", "useCase": "Local Governance", "partner": "eGov", "role": "egov_direct", "stage": "Live", "newProduct": false, "populationImpact": 33213851.0, "year": 2015, "details": "Property Tax, Trade Licences, Water and Sanitation, Public Grievance Redressal, state-level dashboards, ULB portals, Finance & HR Management systems for municipal employees. Integrations with 18 other existing applications."}, {"id": "IN-03", "scope": "india_state", "geography": "Assam", "country": "India", "region": "North East", "sector": "Local Governance", "useCase": "Finance & Accounting (Municipal)", "partner": "Sumato", "role": "commercial_partner", "stage": "Live", "newProduct": false, "populationImpact": null, "year": 2023, "details": "Finance & Accounting rolled out in 2 ULBs — Dhubri and Barpeta."}, {"id": "IN-04", "scope": "india_state", "geography": "Assam", "country": "India", "region": "North East", "sector": "Health", "useCase": "PGR for Health (DIGIT+)", "partner": "Piramal Foundation", "role": "development_sector", "stage": "Live", "newProduct": true, "populationImpact": null, "year": 2023, "details": "Complaint management system built on DIGIT for the state-level health ministries to manage all health centres."}, {"id": "IN-05", "scope": "india_state", "geography": "Assam", "country": "India", "region": "North East", "sector": "Water & Sanitation", "useCase": "NalJalseva", "partner": "NIC", "role": "govt_body", "stage": "Live", "newProduct": false, "populationImpact": 32866165.0, "year": 2024, "details": "The NalJalseva platform, built to support the Jal Jeevan Mission, ensures long-term sustainability of water supply systems through O&M and community engagement."}, {"id": "IN-06", "scope": "india_state", "geography": "Assam", "country": "India", "region": "North East", "sector": "Works Management", "useCase": "Public Works Management", "partner": "Deloitte", "role": "commercial_partner", "stage": "Live", "newProduct": true, "populationImpact": 36728963.0, "year": 2023, "details": "The centralised, automated works management system developed on DIGIT brings better visibility and monitoring across schemes, enabling better planning and execution through procurement and project management."}, {"id": "IN-07", "scope": "india_state", "geography": "Bihar", "country": "India", "region": "East", "sector": "Water & Sanitation", "useCase": "Water Infrastructure Maintenance (PeyJal)", "partner": "Arghyam", "role": "development_sector", "stage": "Live", "newProduct": true, "populationImpact": null, "year": 2023, "details": "Arghyam has implemented a version of mGramSeva, called PeyJal, in Bihar, facilitating O&M of water infrastructure to help rural local bodies sustainably manage water systems."}, {"id": "IN-08", "scope": "india_state", "geography": "Bihar", "country": "India", "region": "East", "sector": "Health", "useCase": "PGR for Health (DIGIT+)", "partner": "Piramal Foundation", "role": "development_sector", "stage": "Live", "newProduct": true, "populationImpact": null, "year": 2023, "details": "Complaint management system built on DIGIT for state-level health ministries to manage all health centres across ~9,000 health facilities."}, {"id": "IN-09", "scope": "india_state", "geography": "Bihar", "country": "India", "region": "East", "sector": "Livelihoods & Benefits", "useCase": "Digital Farmer Services Platform", "partner": "MSC", "role": "development_sector", "stage": "Live", "newProduct": true, "populationImpact": 330000.0, "year": 2023, "details": "MicroSave Consulting (with BMGF support) is building a Digital Farmer Services platform using DIGIT as the foundational DPG, providing small-scale farmers unified access to government schemes, agriculture advisory, credit, insurance, and market linkages."}, {"id": "IN-10", "scope": "india_state", "geography": "Bihar", "country": "India", "region": "East", "sector": "Livelihoods & Benefits", "useCase": "Proactive Benefits Delivery (DIGIT+)", "partner": "Piramal Foundation", "role": "development_sector", "stage": "Design", "newProduct": true, "populationImpact": null, "year": 2024, "details": "Scholarship delivery via DIGIT. April 2025 status: Tekdi leading technical development. Pilot done in Rajasthan; first full deployment most likely in Bihar."}, {"id": "IN-11", "scope": "india_state", "geography": "Bihar", "country": "India", "region": "East", "sector": "Local Governance", "useCase": "Local Governance", "partner": "", "role": "pipeline", "stage": "Design", "newProduct": false, "populationImpact": null, "year": 2024, "details": "UPYOG RfP stage — modules include OBPAS, Trade Licences, Property Tax, Water & Sanitation, Finance & Accounting, Public Grievance Redressal, and Miscellaneous Collections."}, {"id": "IN-12", "scope": "india_national", "geography": "Central Govt.", "country": "India", "region": "National", "sector": "Emergency Response", "useCase": "Emergency Response", "partner": "Deloitte", "role": "commercial_partner", "stage": "Live", "newProduct": true, "populationImpact": null, "year": 2024, "details": "Deloitte developed a solution built on DIGIT to enable the Ministry of External Affairs to evacuate Indian citizens from different countries in times of emergency."}, {"id": "IN-13", "scope": "india_national", "geography": "Central Govt.", "country": "India", "region": "National", "sector": "Local Governance", "useCase": "Grievance Redressal", "partner": "Accenture", "role": "commercial_partner", "stage": "Live", "newProduct": false, "populationImpact": null, "year": 2025, "details": "National grievance redressal platform built on DIGIT, implemented by Accenture for Central Government."}, {"id": "IN-14", "scope": "india_state", "geography": "Chandigarh", "country": "India", "region": "North", "sector": "Local Governance", "useCase": "Local Governance", "partner": "PwC", "role": "commercial_partner", "stage": "Live", "newProduct": true, "populationImpact": 1429790.0, "year": 2019, "details": "PwC runs an urban governance system built on DIGIT for Chandigarh — property tax, trade licences, and ~10 custom applications including monitoring of urban services, horticulture requests, and a pension management solution for former municipal employees."}, {"id": "IN-15", "scope": "india_state", "geography": "Chhattisgarh", "country": "India", "region": "Central", "sector": "Local Governance", "useCase": "Building Permits", "partner": "Entit Technologies", "role": "commercial_partner", "stage": "Live", "newProduct": false, "populationImpact": 109177.0, "year": 2023, "details": "OBPAS (Online Building Plan Approval Software) implemented in 3 urban local bodies in Chhattisgarh."}, {"id": "IN-16", "scope": "india_national", "geography": "Covid e-pass", "country": "India", "region": "National", "sector": "Industrials", "useCase": "Pass Management System (COVID)", "partner": "eGov", "role": "egov_direct", "stage": "Live", "newProduct": true, "populationImpact": 900000.0, "year": 2020, "details": "To ensure essential services could operate during the COVID-19 lockdown, DIGIT was leveraged to build an easy-to-use pass management system in just 3 days."}, {"id": "IN-17", "scope": "india_national", "geography": "DIVOC (India Only)", "country": "India", "region": "National", "sector": "Health", "useCase": "Vaccine Certification (DIVOC)", "partner": "eGov", "role": "egov_direct", "stage": "Live", "newProduct": true, "populationImpact": null, "year": 2021, "details": "eGov built DIVOC — an open-source, interoperable Digital Public Good — to help countries digitally orchestrate large-scale vaccination programmes and issue trusted vaccination certificates."}, {"id": "IN-18", "scope": "india_state", "geography": "Goa", "country": "India", "region": "West", "sector": "Industrials", "useCase": "Industrial Estate Management", "partner": "Deloitte", "role": "commercial_partner", "stage": "Live", "newProduct": true, "populationImpact": 1500000.0, "year": 2023, "details": "8 custom modules built on DIGIT to improve ease-of-doing-business for the Goa Industrial Development Corporation (GIDC), also made available for other IDCs to adopt."}, {"id": "IN-19", "scope": "india_state", "geography": "Goa", "country": "India", "region": "West", "sector": "Local Governance", "useCase": "Finance & Accounting (Municipal)", "partner": "", "role": "pipeline", "stage": "Design", "newProduct": false, "populationImpact": null, "year": 2024, "details": "UPYOG implementation initiated — Finance & Accounting module."}, {"id": "IN-20", "scope": "india_state", "geography": "Gujarat", "country": "India", "region": "West", "sector": "Local Governance", "useCase": "Local Governance", "partner": "", "role": "pipeline", "stage": "Design", "newProduct": false, "populationImpact": null, "year": 2024, "details": "UPYOG implementation initiated — all urban suite modules."}, {"id": "IN-21", "scope": "india_state", "geography": "Haryana", "country": "India", "region": "North", "sector": "Local Governance", "useCase": "Finance & Accounting (Municipal)", "partner": "", "role": "pipeline", "stage": "Design", "newProduct": false, "populationImpact": null, "year": 2024, "details": "UPYOG implementation initiated — Finance & Accounting. RfP and evaluation stage."}, {"id": "IN-22", "scope": "india_state", "geography": "Himachal Pradesh", "country": "India", "region": "North", "sector": "Local Governance", "useCase": "Local Governance (OBPAS)", "partner": "Deloitte", "role": "commercial_partner", "stage": "Live", "newProduct": false, "populationImpact": null, "year": 2025, "details": "OBPAS module live on UPYOG."}, {"id": "IN-23", "scope": "india_state", "geography": "Himachal Pradesh", "country": "India", "region": "North", "sector": "Local Governance", "useCase": "Finance & Accounting (Municipal)", "partner": "Deloitte", "role": "commercial_partner", "stage": "Design", "newProduct": false, "populationImpact": null, "year": 2023, "details": "Deloitte won an RFP to deploy UPYOG for Finance & Accounting solutions built on DIGIT, to be extended to other modules."}, {"id": "IN-24", "scope": "india_state", "geography": "Jammu & Kashmir", "country": "India", "region": "Other", "sector": "Local Governance", "useCase": "Finance & Accounting (Municipal)", "partner": "", "role": "pipeline", "stage": "Design", "newProduct": false, "populationImpact": null, "year": 2024, "details": "UPYOG RfP stage — Finance & Accounting and OBPAS modules."}, {"id": "IN-25", "scope": "india_state", "geography": "Jharkhand", "country": "India", "region": "East", "sector": "Education", "useCase": "DIGIT in Education Sector", "partner": "Deloitte", "role": "commercial_partner", "stage": "Live", "newProduct": false, "populationImpact": 11259840.0, "year": 2024, "details": "Education portal of 9 custom applications for the Ministry of Education, Jharkhand: mid-day meal monitoring, leave management, library management, teacher and student activity tracking."}, {"id": "IN-26", "scope": "india_state", "geography": "Karnataka", "country": "India", "region": "South", "sector": "Clean Energy", "useCase": "Energy for Health (DIGIT+)", "partner": "SELCO Foundation", "role": "development_sector", "stage": "Live", "newProduct": true, "populationImpact": null, "year": 2023, "details": "eGov is scaling SELCO Foundation's Energy for Health programme through Saur-e-mitra — a DIGIT platform to improve O&M of solar equipment in health centres. Currently live in over 250 PHCs in Raichur."}, {"id": "IN-27", "scope": "india_state", "geography": "Karnataka", "country": "India", "region": "South", "sector": "Local Governance", "useCase": "Local Governance", "partner": "eGov", "role": "egov_direct", "stage": "Live", "newProduct": false, "populationImpact": 27807757.0, "year": 2004, "details": "Finance and Property Tax modules. May 2025 update: Existing services are being migrated to UPYOG."}, {"id": "IN-28", "scope": "india_state", "geography": "Karnataka", "country": "India", "region": "South", "sector": "Water & Sanitation", "useCase": "Solid Waste Management (DIGIT+)", "partner": "CSG, GoK", "role": "govt_body", "stage": "Design", "newProduct": true, "populationImpact": null, "year": 2024, "details": "Solid Waste Management system built on DIGIT for rural local bodies. Centre for Smart Governance (Karnataka's state IT agency) to implement for the Rural and Panchayati Raj Dept., Government of Karnataka."}, {"id": "IN-29", "scope": "india_state", "geography": "Karnataka", "country": "India", "region": "South", "sector": "Industrials", "useCase": "Transport", "partner": "", "role": "pipeline", "stage": "Design", "newProduct": false, "populationImpact": null, "year": null, "details": "KSRTC transport use case under exploration. Status to be confirmed."}, {"id": "IN-30", "scope": "india_state", "geography": "Kerala", "country": "India", "region": "South", "sector": "Local Governance", "useCase": "Local Governance", "partner": "IKM Kerala", "role": "commercial_partner", "stage": "Live", "newProduct": true, "populationImpact": 18755408.0, "year": 2023, "details": "Property Tax, Civil Registration (Marriage, Birth & Death), Trade Licences, Building Permits, Grievance Redressal, and for municipal employees — Finance, File Management, HR Management — implemented in all 94 ULBs and villages in Kerala."}, {"id": "IN-31", "scope": "india_state", "geography": "Kerala", "country": "India", "region": "South", "sector": "Local Governance", "useCase": "Building Permits", "partner": "eGov", "role": "egov_direct", "stage": "Live", "newProduct": false, "populationImpact": 1060990.0, "year": 2017, "details": "Online building permits system built on DIGIT, live in 2 urban local bodies in Kozhikode."}, {"id": "IN-32", "scope": "india_state", "geography": "Kerala", "country": "India", "region": "South", "sector": "Legal", "useCase": "Court Case Management (DIGIT+)", "partner": "PUCAR", "role": "development_sector", "stage": "Live", "newProduct": true, "populationImpact": 2181940.0, "year": 2024, "details": "PUCAR developed DRISTI — a court case management platform built on DIGIT. Piloted in 1 court in Kollam district, with plans to scale to other courts in Kerala."}, {"id": "IN-33", "scope": "india_state", "geography": "Ladakh", "country": "India", "region": "North", "sector": "Local Governance", "useCase": "Local Governance", "partner": "", "role": "pipeline", "stage": "Design", "newProduct": false, "populationImpact": null, "year": 2024, "details": "UPYOG RfP stage — all services excluding Birth & Death module."}, {"id": "IN-34", "scope": "india_state", "geography": "Madhya Pradesh", "country": "India", "region": "Central", "sector": "Local Governance", "useCase": "Local Governance", "partner": "", "role": "pipeline", "stage": "Design", "newProduct": false, "populationImpact": null, "year": 2024, "details": "UPYOG implementation initiated — all modules being migrated to open-source software."}, {"id": "IN-35", "scope": "india_state", "geography": "Maharashtra", "country": "India", "region": "West", "sector": "Local Governance", "useCase": "Local Governance", "partner": "", "role": "pipeline", "stage": "Design", "newProduct": false, "populationImpact": null, "year": 2024, "details": "UPYOG implementation initiated — state-specific modules being developed, initially for BrihanMumbai Municipal Corporation (BMC)."}, {"id": "IN-36", "scope": "india_state", "geography": "Manipur", "country": "India", "region": "North East", "sector": "Local Governance", "useCase": "Local Governance", "partner": "Deloitte", "role": "commercial_partner", "stage": "Live", "newProduct": false, "populationImpact": 3361270.0, "year": 2024, "details": "DIGIT's property tax solution to be rolled out in 26 ULBs and extended to all ULBs. Finance & Accounting and Water & Sewerage solutions also being implemented."}, {"id": "IN-37", "scope": "india_national", "geography": "New Delhi", "country": "India", "region": "National", "sector": "Local Governance", "useCase": "Local Governance", "partner": "eGov", "role": "egov_direct", "stage": "Live", "newProduct": false, "populationImpact": 12956222.0, "year": 2009, "details": "RfP stage for UPYOG migration — Finance and Property Tax modules in NDMC and Municipal Corporation of Delhi (MCD)."}, {"id": "IN-38", "scope": "india_national", "geography": "NUDM", "country": "India", "region": "National", "sector": "Local Governance", "useCase": "Urban Governance (UPYOG)", "partner": "eGov", "role": "egov_direct", "stage": "Live", "newProduct": false, "populationImpact": null, "year": 2021, "details": "National Urban Digital Mission (NUDM) launched by MoHUA and MEITY in 2021, with DIGIT as the technical foundation for UPYOG. eGov contributed platform architecture, programme design, and 20,000+ hours of training. UPYOG is now fully owned and operated by MoHUA/NIUA and certified as a Digital Public Good."}, {"id": "IN-39", "scope": "india_state", "geography": "Odisha", "country": "India", "region": "East", "sector": "Water & Sanitation", "useCase": "Faecal Sludge & Septage Management", "partner": "PwC", "role": "commercial_partner", "stage": "Live", "newProduct": true, "populationImpact": 7901187.0, "year": 2021, "details": "SUJOG-FSSM: Faecal Sludge and Sanitation Management Platform built on DIGIT, handed over to PwC for implementation."}, {"id": "IN-40", "scope": "india_state", "geography": "Odisha", "country": "India", "region": "East", "sector": "Livelihoods & Benefits", "useCase": "Works Management & Benefits Delivery", "partner": "PwC", "role": "commercial_partner", "stage": "Live", "newProduct": true, "populationImpact": 2500.0, "year": 2023, "details": "MUKTAsoft — a works management and direct benefit transfer platform for Odisha's MUKTA urban employment scheme. Note: As of 2025, the MUKTA scheme has been halted by the current Odisha government."}, {"id": "IN-41", "scope": "india_state", "geography": "Odisha", "country": "India", "region": "East", "sector": "Local Governance", "useCase": "Local Governance", "partner": "PwC", "role": "commercial_partner", "stage": "Live", "newProduct": true, "populationImpact": 7250619.0, "year": 2021, "details": "SUJOG (Sustainable Services in a Jiffy by Odisha Govt) is an urban service delivery platform leveraging DIGIT's urban governance suite across 114 ULBs."}, {"id": "IN-42", "scope": "india_state", "geography": "Odisha", "country": "India", "region": "East", "sector": "Livelihoods & Benefits", "useCase": "Direct Benefits Delivery", "partner": "Deloitte", "role": "commercial_partner", "stage": "Design", "newProduct": true, "populationImpact": null, "year": 2024, "details": "Supporting the implementation of Mission Shakti, which seeks to strengthen interventions for women's safety and empowerment through direct benefits delivery built on DIGIT."}, {"id": "IN-43", "scope": "india_state", "geography": "Puducherry", "country": "India", "region": "South", "sector": "Local Governance", "useCase": "Building Permits", "partner": "eGov", "role": "egov_direct", "stage": "Live", "newProduct": true, "populationImpact": 1003690.0, "year": 2022, "details": "OBPAS automates the plan approval process and auto-scrutinises building plans against Development Control Regulations. eDCR functionality integrated with the existing building plan approval software in Puducherry."}, {"id": "IN-44", "scope": "india_state", "geography": "Punjab", "country": "India", "region": "North", "sector": "Local Governance", "useCase": "Local Governance", "partner": "eGov", "role": "egov_direct", "stage": "Live", "newProduct": true, "populationImpact": 12239795.0, "year": 2018, "details": "Property Tax, Trade Licences, Water and Sewerage, Public Grievance Redressal, Fire NOC, Miscellaneous Collections — with state-level dashboards and ULB portals."}, {"id": "IN-45", "scope": "india_state", "geography": "Punjab", "country": "India", "region": "North", "sector": "Water & Sanitation", "useCase": "Water Infrastructure Maintenance", "partner": "eGov", "role": "egov_direct", "stage": "Live", "newProduct": true, "populationImpact": 550000.0, "year": 2021, "details": "mGramSeva implemented in Punjab to help rural local bodies self-sufficiently manage water infrastructure. Live in 3,780 villages with 5.5 lakh consumers onboarded."}, {"id": "IN-46", "scope": "india_state", "geography": "Punjab", "country": "India", "region": "North", "sector": "Local Governance", "useCase": "Local Governance (OBPAS)", "partner": "KPMG", "role": "commercial_partner", "stage": "Design", "newProduct": true, "populationImpact": null, "year": 2024, "details": "OBPAS module with Self-Certification feature under development."}, {"id": "IN-47", "scope": "india_state", "geography": "Punjab", "country": "India", "region": "North", "sector": "Livelihoods & Benefits", "useCase": "Benefits Delivery", "partner": "eGov", "role": "egov_direct", "stage": "Design", "newProduct": false, "populationImpact": null, "year": 2024, "details": "SDIP (State Data Integration Platform) will enable real-time data exchange between federated registries to improve service delivery — covering benefits distribution, revenue data triangulation, and real-time expenditure monitoring. Led by eGov, Punjab Development Commission, and Dept. of Governance Reforms under the World Bank's Building Fiscal and Institutional Resilience programme."}, {"id": "IN-48", "scope": "india_state", "geography": "Rajasthan", "country": "India", "region": "North", "sector": "Local Governance", "useCase": "Finance & Accounting (Municipal)", "partner": "", "role": "pipeline", "stage": "Design", "newProduct": false, "populationImpact": null, "year": null, "details": "UPYOG RfP stage — Finance & Accounting and Water & Sewerage modules."}, {"id": "IN-49", "scope": "india_state", "geography": "Tamil Nadu", "country": "India", "region": "South", "sector": "Local Governance", "useCase": "Building Permits", "partner": "Interlace Technologies", "role": "commercial_partner", "stage": "Live", "newProduct": true, "populationImpact": 80653574.0, "year": 2022, "details": "Scrutiny-based building plan approval with eDCR integration for all 14,000+ local bodies in Tamil Nadu."}, {"id": "IN-50", "scope": "india_state", "geography": "Tamil Nadu", "country": "India", "region": "South", "sector": "Local Governance", "useCase": "Finance & Accounting (Municipal)", "partner": "", "role": "pipeline", "stage": "Design", "newProduct": false, "populationImpact": null, "year": null, "details": "RfP stage for migration to UPYOG — Finance & Accounting module."}, {"id": "IN-51", "scope": "india_state", "geography": "Tamil Nadu", "country": "India", "region": "South", "sector": "Local Governance", "useCase": "Local Governance", "partner": "eGov", "role": "egov_direct", "stage": "Live", "newProduct": false, "populationImpact": 5469204.0, "year": 2009, "details": "Property Tax, Trade Licences, Water and Sanitation, Public Grievance Redressal, state-level dashboards — implemented for Greater Chennai Municipal Corporation."}, {"id": "IN-52", "scope": "india_state", "geography": "Telangana", "country": "India", "region": "South", "sector": "Local Governance", "useCase": "Building Permits", "partner": "", "role": "pipeline", "stage": "Design", "newProduct": false, "populationImpact": null, "year": null, "details": "UPYOG implementation initiated — OBPAS module."}, {"id": "IN-53", "scope": "india_state", "geography": "Uttar Pradesh", "country": "India", "region": "North", "sector": "Legal", "useCase": "Legal Case Management (Education)", "partner": "Piramal Foundation", "role": "development_sector", "stage": "Design", "newProduct": true, "populationImpact": null, "year": 2024, "details": "Legal case management system built on DIGIT by Piramal Foundation for state-level education ministries. Likely to be implemented in Uttar Pradesh."}, {"id": "IN-54", "scope": "india_state", "geography": "Uttar Pradesh", "country": "India", "region": "North", "sector": "Local Governance", "useCase": "Finance & Accounting (Municipal)", "partner": "", "role": "pipeline", "stage": "Design", "newProduct": false, "populationImpact": null, "year": null, "details": "UPYOG implementation initiated — Finance & Accounting module."}, {"id": "IN-55", "scope": "india_state", "geography": "Uttar Pradesh", "country": "India", "region": "North", "sector": "Water & Sanitation", "useCase": "Faecal Sludge & Septage Management", "partner": "", "role": "pipeline", "stage": "Design", "newProduct": false, "populationImpact": null, "year": 2025, "details": "UPYOG implementation initiated — Faecal Sludge Management (FSM) module."}, {"id": "IN-56", "scope": "india_state", "geography": "Uttarakhand", "country": "India", "region": "North", "sector": "Local Governance", "useCase": "Local Governance", "partner": "eGov", "role": "egov_direct", "stage": "Live", "newProduct": false, "populationImpact": 3589071.0, "year": 2020, "details": "Property Tax, Trade Licences, Miscellaneous Collections — with state-level dashboards across Uttarakhand."}, {"id": "IN-57", "scope": "india_state", "geography": "West Bengal", "country": "India", "region": "East", "sector": "Local Governance", "useCase": "Local Governance", "partner": "PwC", "role": "commercial_partner", "stage": "Live", "newProduct": false, "populationImpact": 5292609.0, "year": 2022, "details": "DIGIT's urban service delivery solutions implemented by PwC for the Kolkata Municipal Corporation — 13 modules in active use."}, {"id": "IN-58", "scope": "india_state", "geography": "West Bengal", "country": "India", "region": "East", "sector": "Local Governance", "useCase": "Local Governance", "partner": "TCG Digital", "role": "commercial_partner", "stage": "Design", "newProduct": false, "populationImpact": null, "year": 2024, "details": "DIGIT's urban governance solutions to be implemented starting with Public Grievance Redressal, statewide except Kolkata. April 2025: project is stalled with no current movement."}, {"id": "IN-59", "scope": "india_state", "geography": "West Bengal", "country": "India", "region": "East", "sector": "Industrials", "useCase": "Inland Water Transport Management", "partner": "Deloitte", "role": "commercial_partner", "stage": "Design", "newProduct": true, "populationImpact": null, "year": 2024, "details": "Inland water transport management system under development: vessel asset management, contract management, insurance management, and integration with the existing billing system."}, {"id": "GL-01", "scope": "global_country", "geography": "Mozambique (Gaza Province)", "country": "Mozambique", "region": "Africa", "sector": "Health", "useCase": "Bednet Distribution Campaign", "partner": "Global Health Partner", "role": "international", "stage": "Live", "newProduct": false, "populationImpact": 1586866.0, "year": 2023, "details": "Bednet distribution campaign management using DIGIT HCM across Gaza Province, Mozambique."}, {"id": "GL-02", "scope": "global_country", "geography": "Mozambique (Tete Province)", "country": "Mozambique", "region": "Africa", "sector": "Health", "useCase": "Bednet Distribution Campaign", "partner": "Global Health Partner", "role": "international", "stage": "Live", "newProduct": false, "populationImpact": 3117551.0, "year": 2023, "details": "Bednet distribution campaign management using DIGIT HCM across Tete Province, Mozambique."}, {"id": "GL-03", "scope": "global_country", "geography": "Mozambique (Nampula Province)", "country": "Mozambique", "region": "Africa", "sector": "Health", "useCase": "Seasonal Malaria Chemoprevention (SMC)", "partner": "Global Health Partner", "role": "international", "stage": "Live", "newProduct": false, "populationImpact": 1482649.0, "year": 2024, "details": "Seasonal Malaria Chemoprevention (SMC) campaign management using DIGIT HCM in Nampula Province, Mozambique."}, {"id": "GL-04", "scope": "global_country", "geography": "Mozambique", "country": "Mozambique", "region": "Africa", "sector": "Health", "useCase": "Indoor Residual Spraying (IRS)", "partner": "Global Health Partner", "role": "international", "stage": "Live", "newProduct": false, "populationImpact": 276603.0, "year": 2024, "details": "Indoor Residual Spraying (IRS) malaria campaign management using DIGIT HCM."}, {"id": "GL-05", "scope": "global_country", "geography": "Liberia", "country": "Liberia", "region": "Africa", "sector": "Health", "useCase": "Bednet Distribution Campaign", "partner": "Global Health Partner", "role": "international", "stage": "Live", "newProduct": false, "populationImpact": 5498281.0, "year": 2024, "details": "Nationwide bednet distribution campaign management using DIGIT HCM, Liberia."}, {"id": "GL-06", "scope": "global_country", "geography": "Senegal", "country": "Senegal", "region": "Africa", "sector": "Health", "useCase": "Seasonal Malaria Chemoprevention (SMC)", "partner": "Global Health Partner", "role": "international", "stage": "Live", "newProduct": false, "populationImpact": 81702.0, "year": 2024, "details": "Seasonal Malaria Chemoprevention (SMC) campaign management using DIGIT HCM, Senegal."}, {"id": "GL-07", "scope": "global_country", "geography": "Nigeria (Kano State)", "country": "Nigeria", "region": "Africa", "sector": "Health", "useCase": "NTD Lymphatic Filariasis Campaign", "partner": "Global Health Partner", "role": "international", "stage": "Live", "newProduct": false, "populationImpact": 129002.0, "year": 2024, "details": "NTD Lymphatic Filariasis campaign management using DIGIT HCM in Kano State, Nigeria."}, {"id": "GL-08", "scope": "global_country", "geography": "Nigeria (Kebbi State)", "country": "Nigeria", "region": "Africa", "sector": "Health", "useCase": "Seasonal Malaria Chemoprevention (SMC)", "partner": "Global Health Partner", "role": "international", "stage": "Live", "newProduct": false, "populationImpact": 1255514.0, "year": 2024, "details": "Seasonal Malaria Chemoprevention (SMC) campaign management using DIGIT HCM in Kebbi State, Nigeria."}, {"id": "GL-09", "scope": "global_country", "geography": "Burundi", "country": "Burundi", "region": "Africa", "sector": "Health", "useCase": "Bednet Distribution Campaign", "partner": "Global Health Partner", "role": "international", "stage": "Live", "newProduct": false, "populationImpact": null, "year": 2024, "details": "Bednet distribution campaign management using DIGIT HCM, Burundi."}, {"id": "GL-10", "scope": "global_country", "geography": "Trinidad & Tobago", "country": "Trinidad & Tobago", "region": "Caribbean", "sector": "Multi-sectoral", "useCase": "Land Deed Management", "partner": "TBD", "role": "pipeline", "stage": "Design", "newProduct": false, "populationImpact": null, "year": null, "details": "Land deed management system under development — DIGIT deployment in Trinidad & Tobago."}, {"id": "GL-11", "scope": "global_country", "geography": "Djibouti", "country": "Djibouti", "region": "East Africa & Middle East", "sector": "Multi-sectoral", "useCase": "Construction Permits", "partner": "TBD", "role": "pipeline", "stage": "Design", "newProduct": false, "populationImpact": null, "year": null, "details": "Construction permits system under deployment — DIGIT implementation in Djibouti."}, {"id": "GL-12", "scope": "global_country", "geography": "Ethiopia", "country": "Ethiopia", "region": "East Africa & Middle East", "sector": "Health", "useCase": "Health Resource Tracking", "partner": "TBD", "role": "pipeline", "stage": "Design", "newProduct": false, "populationImpact": 14576765.0, "year": null, "details": "Health resource tracking system under deployment in Ethiopia."}, {"id": "GL-13", "scope": "global_country", "geography": "Ethiopia", "country": "Ethiopia", "region": "East Africa & Middle East", "sector": "Multi-sectoral", "useCase": "Public Grievance Redressal", "partner": "TBD", "role": "pipeline", "stage": "Design", "newProduct": false, "populationImpact": null, "year": null, "details": "Public Grievance Redressal system under deployment in Ethiopia."}, {"id": "GL-14", "scope": "global_country", "geography": "São Tomé and Príncipe", "country": "São Tomé and Príncipe", "region": "Africa", "sector": "Multi-sectoral", "useCase": "Trade Licences", "partner": "TBD", "role": "pipeline", "stage": "Design", "newProduct": false, "populationImpact": null, "year": null, "details": "Trade licences system — DIGIT deployment signed up in São Tomé and Príncipe."}];
+let PROGRAMS = [];
 
+// ── Scope + country derivation ────────────────────────────────────────────
+const NATIONAL_GEOS = new Set([
+  'All Cantonments','Central Govt.','NUDM','DIVOC (India Only)','Covid e-pass','New Delhi'
+]);
+const GLOBAL_PREFIXES = [
+  'Mozambique','Liberia','Senegal','Nigeria','Burundi',
+  'Trinidad','Djibouti','Ethiopia','São Tomé'
+];
+function deriveScope(geo) {
+  if (NATIONAL_GEOS.has(geo)) return 'india_national';
+  if (GLOBAL_PREFIXES.some(p => geo.startsWith(p))) return 'global_country';
+  return 'india_state';
+}
+function deriveCountry(geo, scope) {
+  if (scope !== 'global_country') return 'India';
+  if (geo.includes('Mozambique')) return 'Mozambique';
+  if (geo.includes('Nigeria')) return 'Nigeria';
+  return geo.split(' (')[0].trim();
+}
+// Population corrections: id -> value (actual or best projected from source Excel)
+const POP_CORRECTIONS = {
+  'IN-03': 153773, 'IN-04': 36728963, 'IN-07': 95717712,
+  'IN-08': 149615055, 'IN-16': 900000, 'IN-17': 1357196280,
+  'IN-25': 11259840, 'IN-26': 22289814, 'IN-28': 44563381,
+  'IN-39': 7901187
+};
+// Global region mapping
+const GLOBAL_REGIONS = {
+  'Mozambique (Gaza Province)': 'West & Central Africa',
+  'Mozambique (Tete Province)': 'West & Central Africa',
+  'Mozambique (Nampula Province)': 'West & Central Africa',
+  'Mozambique': 'West & Central Africa',
+  'Liberia': 'West & Central Africa',
+  'Senegal': 'West & Central Africa',
+  'Nigeria (Kano State)': 'West & Central Africa',
+  'Nigeria (Kebbi State)': 'West & Central Africa',
+  'Burundi': 'West & Central Africa',
+  'São Tomé and Príncipe': 'West & Central Africa',
+  'Trinidad & Tobago': 'Caribbean',
+  'Djibouti': 'East Africa',
+  'Ethiopia': 'East Africa',
+};
+
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  const headers = lines[0].split(',').map(h => h.replace(/^"|"$/g, '').trim());
+  return lines.slice(1).map(line => {
+    // Handle quoted fields with commas inside
+    const fields = [];
+    let cur = '', inQ = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (ch === '"') { inQ = !inQ; }
+      else if (ch === ',' && !inQ) { fields.push(cur); cur = ''; }
+      else { cur += ch; }
+    }
+    fields.push(cur);
+    const obj = {};
+    headers.forEach((h, i) => obj[h] = (fields[i] || '').trim());
+    return obj;
+  });
+}
+
+function transformRow(r) {
+  const geo = r.geography.trim();
+  const scope = deriveScope(geo);
+  const country = deriveCountry(geo, scope);
+  const region = scope === 'global_country'
+    ? (GLOBAL_REGIONS[geo] || 'International')
+    : r.region;
+  const rawPop = parseFloat(r.population_impact);
+  const pop = POP_CORRECTIONS[r.id] != null
+    ? POP_CORRECTIONS[r.id]
+    : (isNaN(rawPop) ? null : rawPop);
+  const year = parseInt(r.year_initiated) || null;
+  return {
+    id: r.id,
+    scope,
+    geography: geo,
+    country,
+    region,
+    sector: r.sector,
+    useCase: r.use_case,
+    partner: r.implementing_partner.trim(),
+    role: r.role,
+    stage: r.stage,
+    newProduct: r.new_product === 'Yes',
+    populationImpact: pop,
+    year,
+    details: r.details,
+  };
+}
+
+async function loadPrograms() {
+  try {
+    const res = await fetch('programmes.csv');
+    if (!res.ok) throw new Error('CSV fetch failed: ' + res.status);
+    const text = await res.text();
+    PROGRAMS = parseCSV(text).map(transformRow);
+    init();
+  } catch (err) {
+    document.body.innerHTML = `<div style="padding:40px;font-family:sans-serif;color:#b00">
+      <strong>Could not load programmes.csv</strong><br>${err.message}<br>
+      Make sure programmes.csv is in the same folder as this file.
+    </div>`;
+    console.error(err);
+  }
+}
 
 const ROLE_META = {
   all: { label: "All roles", color: "#201c17" },
@@ -888,7 +1006,7 @@ const ROLE_META = {
 
 const GLOBAL_REGION_COPY = {
   Africa: "Most international deployments sit in African public health campaigns, where DIGIT HCM has been adapted for recurring large-scale operational delivery — bednets, malaria chemoprevention, and NTD campaigns.",
-  "East Africa & Middle East": "Deployments in this region are at early or design stage, covering health resource tracking, public grievance redressal, and construction permits.",
+  "East Africa": "Deployments in this region are at early or design stage, covering health resource tracking, public grievance redressal, and construction permits.",
   Caribbean: "The portfolio is extending into non-health use cases, with a land deed management system under development in Trinidad & Tobago."
 };
 
@@ -1035,15 +1153,20 @@ function getUnmappedIndiaGeographies(filtered) {
   return groupForView(filtered.filter(p => p.scope === "india_state" && !mapped.has(p.geography)));
 }
 
-function renderSummary(filtered) {
-  const counts = getCounts(filtered);
-  const india = PROGRAMS.filter(p => p.scope.startsWith("india"));
-  const global = PROGRAMS.filter(p => p.scope === "global_country");
+function renderSummary() {
+  const all = PROGRAMS;
+  const india = all.filter(p => p.scope.startsWith("india"));
+  const global = all.filter(p => p.scope === "global_country");
+  const newProducts = all.filter(p => p.newProduct);
+  const sectors = new Set(all.map(p => p.sector)).size;
+  const ecosystem = all.filter(p => p.role !== "egov_direct");
   document.getElementById("summaryGrid").innerHTML = [
-    { num: formatNumber(counts.total), label: "Programmes in view", sub: "Across the current filter selection" },
-    { num: formatNumber(india.length), label: "India programmes", sub: "State and national footprint combined" },
-    { num: formatNumber(global.length), label: "Global programmes", sub: "International deployments and pipeline" },
-    { num: formatNumber(counts.newProduct), label: "New products", sub: "Adaptations built beyond the core platform" }
+    { num: formatNumber(all.length), label: "Programmes total", sub: "India and international combined" },
+    { num: formatNumber(india.length), label: "India programmes", sub: "Across " + new Set(india.filter(p=>p.scope==="india_state").map(p=>p.geography)).size + " states and union territories" },
+    { num: formatNumber(global.length), label: "International programmes", sub: "Across " + new Set(global.map(p=>p.country)).size + " countries" },
+    { num: formatNumber(newProducts.length), label: "New products built", sub: "Adaptations built beyond the core DIGIT platform" },
+    { num: formatNumber(sectors), label: "Sectors covered", sub: "From local governance to health, water, and livelihoods" },
+    { num: formatNumber(ecosystem.length), label: "Built by the ecosystem", sub: "Programmes led by partners, not eGov directly" }
   ].map(card => `
     <div class="summary-card">
       <strong>${card.num}</strong>
@@ -1060,10 +1183,8 @@ function renderFilters() {
   `).join("");
 
   const roleValues = ["all", ...Object.keys(ROLE_META).filter(key => key !== "all")];
-  document.getElementById("roleFilters").innerHTML = roleValues.map(role => `
-    <button class="pill-btn role ${state.role === role ? "active" : ""}" data-role="${role}" style="${state.role === role ? `background:${ROLE_META[role].color};` : ""}">
-      ${ROLE_META[role].label}
-    </button>
+  document.getElementById("roleSelect").innerHTML = roleValues.map(role => `
+    <option value="${role}" ${role === state.role ? "selected" : ""}>${ROLE_META[role].label}</option>
   `).join("");
 
   const sectors = ["all", ...uniq(PROGRAMS.map(p => p.sector))];
@@ -1219,7 +1340,7 @@ function renderGlobalView(filtered) {
                   </div>
                   <div class="country-mini">
                     ${summary.sectors.slice(0, 3).map(sector => `<span class="mini-pill">${sector}</span>`).join("")}
-                    ${summary.impact ? `<span class="mini-pill">${compactNumber(summary.impact)} people in rows with quantified impact</span>` : ""}
+                    ${summary.impact ? `<span class="mini-pill">${compactNumber(summary.impact)} people reached</span>` : ""}
                   </div>
                 </button>
               `;
@@ -1293,6 +1414,7 @@ function renderDetail(filtered) {
               <div class="badge" style="background:${item.stage === "Live" ? "var(--green-2); color: var(--green);" : "var(--amber-2); color: var(--amber);"}">${item.stage}</div>
             </div>
             <div class="program-copy">${item.details}</div>
+            ${item.populationImpact && item.impactNote ? `<div class="program-impact-note">ⓘ ${item.impactNote}</div>` : ""}
             <div class="badge-row">
               <span class="badge">${item.sector}</span>
               <span class="badge">${item.geography}</span>
@@ -1346,13 +1468,7 @@ function bindEvents() {
       return;
     }
 
-    const role = event.target.closest("[data-role]");
-    if (role) {
-      state.role = role.dataset.role;
-      state.selected = null;
-      update();
-      return;
-    }
+    // role is now handled by select change event below
 
     const selection = event.target.closest("[data-select]");
     if (selection) {
@@ -1367,6 +1483,12 @@ function bindEvents() {
     update();
   });
 
+  document.getElementById("roleSelect").addEventListener("change", event => {
+    state.role = event.target.value;
+    state.selected = null;
+    update();
+  });
+
   document.getElementById("searchInput").addEventListener("input", event => {
     state.search = event.target.value.trim();
     state.selected = null;
@@ -1376,14 +1498,18 @@ function bindEvents() {
 
 function update() {
   const filtered = getFilteredPrograms();
-  renderSummary(filtered);
+  renderSummary();
   renderFilters();
   document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.view === state.view));
   renderViz(filtered);
 }
 
-bindEvents();
-update();
+function init() {
+  bindEvents();
+  update();
+}
+
+loadPrograms();
 </script>
 </body>
 </html>
