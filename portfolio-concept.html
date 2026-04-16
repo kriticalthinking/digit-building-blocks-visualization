@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DIGIT Portfolio Concept</title>
+<title>DIGIT Programme Portfolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -340,7 +340,6 @@
   }
 
   .national-chip:hover,
-  .tile:hover,
   .country-card:hover,
   .program-card:hover {
     transform: translateY(-2px);
@@ -348,7 +347,6 @@
   }
 
   .national-chip.active,
-  .tile.active,
   .country-card.active {
     border-color: rgba(32,28,23,0.2);
     box-shadow: 0 10px 28px rgba(43,35,28,0.12);
@@ -370,105 +368,224 @@
 
   .india-map {
     position: relative;
-    min-height: 540px;
+    min-height: 660px;
     padding: 18px;
     border-radius: 24px;
     overflow: hidden;
     background:
-      radial-gradient(circle at 22% 18%, rgba(14,118,110,0.12), transparent 18%),
-      radial-gradient(circle at 85% 82%, rgba(29,79,145,0.10), transparent 24%),
-      linear-gradient(180deg, #ebf5f2 0%, #f8f4ee 100%);
+      radial-gradient(circle at 18% 16%, rgba(14,118,110,0.12), transparent 18%),
+      radial-gradient(circle at 82% 84%, rgba(29,79,145,0.10), transparent 24%),
+      linear-gradient(180deg, #eaf4f1 0%, #f8f4ee 100%);
     border: 1px solid rgba(32,28,23,0.08);
   }
 
+  .india-map-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    align-items: start;
+    margin-bottom: 18px;
+  }
+
+  .india-map-title {
+    margin: 0 0 6px;
+    font-family: 'Fraunces', serif;
+    font-size: 24px;
+    line-height: 1.08;
+    font-weight: 600;
+  }
+
+  .india-map-copy {
+    max-width: 620px;
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--muted);
+  }
+
   .map-note {
-    position: absolute;
-    top: 16px;
-    right: 18px;
     padding: 8px 12px;
     border-radius: 999px;
     background: rgba(255,255,255,0.7);
     border: 1px solid rgba(32,28,23,0.08);
     font-size: 11px;
     color: var(--muted);
+    white-space: nowrap;
   }
 
-  .tile-grid {
+  .india-canvas {
     position: relative;
-    display: grid;
-    grid-template-columns: repeat(8, minmax(80px, 1fr));
-    grid-template-rows: repeat(8, 72px);
-    gap: 10px;
-    margin-top: 18px;
+    min-height: 560px;
+    border-radius: 22px;
+    background:
+      radial-gradient(circle at 30% 35%, rgba(255,255,255,0.65), transparent 22%),
+      linear-gradient(180deg, rgba(255,255,255,0.38), rgba(255,255,255,0.12));
+    border: 1px solid rgba(32,28,23,0.06);
+    overflow: hidden;
   }
 
-  .tile {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 10px;
-    border-radius: 18px;
-    border: 1px solid rgba(32,28,23,0.08);
-    background: rgba(255,255,255,0.86);
+  .india-ghost {
+    position: absolute;
+    inset: 18px;
+    width: calc(100% - 36px);
+    height: calc(100% - 36px);
+  }
+
+  .india-ghost path {
+    fill: rgba(33, 110, 75, 0.08);
+    stroke: rgba(33, 110, 75, 0.12);
+    stroke-width: 2;
+  }
+
+  .india-region-label {
+    position: absolute;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(32,28,23,0.38);
+  }
+
+  .state-layer {
+    position: absolute;
+    inset: 0;
+  }
+
+  .state-node {
+    position: absolute;
+    width: 132px;
+    transform: translate(-50%, -50%);
+    border: 0;
+    background: none;
+    padding: 0;
     cursor: pointer;
-    transition: 160ms ease;
+    text-align: left;
+    transition: transform 160ms ease;
   }
 
-  .tile.empty {
-    visibility: hidden;
-    pointer-events: none;
+  .state-node:hover {
+    transform: translate(-50%, calc(-50% - 2px));
   }
 
-  .tile-name {
-    max-width: 92%;
-    font-size: 11px;
-    line-height: 1.2;
-    color: var(--muted);
+  .state-node.active .state-bubble {
+    box-shadow: 0 0 0 8px rgba(29,107,75,0.12), 0 16px 30px rgba(36,30,24,0.18);
   }
 
-  .tile-count {
-    display: flex;
-    align-items: end;
-    gap: 8px;
+  .state-bubble {
+    position: relative;
+    width: var(--size, 68px);
+    height: var(--size, 68px);
+    margin: 0 auto 8px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    box-shadow: 0 12px 24px rgba(36,30,24,0.16);
+    transition: box-shadow 160ms ease, transform 160ms ease;
   }
 
-  .tile-count strong {
+  .state-bubble::after {
+    content: "";
+    position: absolute;
+    inset: -7px;
+    border-radius: inherit;
+    border: 1px dashed rgba(32,28,23,0.14);
+    opacity: 0.7;
+  }
+
+  .state-node:hover .state-bubble {
+    transform: scale(1.02);
+  }
+
+  .state-bubble strong {
     font-family: 'Fraunces', serif;
-    font-size: 28px;
+    font-size: 30px;
     line-height: 1;
     font-weight: 600;
   }
 
-  .tile-count span {
-    font-size: 11px;
-    color: var(--muted);
-    padding-bottom: 4px;
-  }
-
-  .split-bar {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+  .bubble-bars {
+    position: absolute;
+    left: 50%;
+    bottom: -10px;
+    transform: translateX(-50%);
+    display: inline-flex;
     gap: 4px;
+    padding: 4px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.86);
+    border: 1px solid rgba(32,28,23,0.08);
   }
 
-  .split-bar i {
+  .bubble-bars i {
     display: block;
-    height: 6px;
+    width: 26px;
+    height: 5px;
     border-radius: 999px;
     background: rgba(32,28,23,0.08);
     overflow: hidden;
   }
 
-  .split-bar b {
+  .bubble-bars b {
     display: block;
     height: 100%;
     border-radius: inherit;
   }
 
+  .state-name {
+    font-size: 11px;
+    line-height: 1.25;
+    font-weight: 800;
+    text-align: center;
+    color: var(--ink);
+  }
+
+  .state-meta {
+    margin-top: 3px;
+    font-size: 10px;
+    line-height: 1.2;
+    text-align: center;
+    color: var(--muted);
+  }
+
   .global-grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .global-lane {
+    padding: 16px;
+    border-radius: 22px;
+    border: 1px solid rgba(32,28,23,0.08);
+    background: linear-gradient(180deg, rgba(255,255,255,0.84), rgba(247,243,236,0.74));
+  }
+
+  .global-lane-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: end;
+    margin-bottom: 12px;
+  }
+
+  .global-lane-title {
+    margin: 0;
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    line-height: 1.08;
+    font-weight: 600;
+  }
+
+  .global-lane-copy {
+    margin: 4px 0 0;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .global-lane-track {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 12px;
   }
 
@@ -689,24 +806,19 @@
     .layout { grid-template-columns: 1fr; }
     .detail { position: static; }
     .control-row { grid-template-columns: 1fr 1fr; }
-    .global-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
 
   @media (max-width: 900px) {
     .summary-grid,
     .detail-stats,
     .index-grid,
-    .global-grid,
     .control-row { grid-template-columns: 1fr; }
-    .tile-grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      grid-template-rows: none;
-    }
-    .tile {
-      min-height: 96px;
-      grid-column: auto !important;
-      grid-row: auto !important;
-    }
+    .india-map-head,
+    .global-lane-head { flex-direction: column; align-items: start; }
+    .india-canvas { min-height: 700px; }
+    .state-node { width: 110px; }
+    .state-bubble { --size: 58px !important; }
+    .state-bubble strong { font-size: 24px; }
     .page { width: min(100vw - 18px, 1380px); margin-top: 10px; }
     .hero, .panel { border-radius: 22px; }
   }
@@ -715,9 +827,9 @@
 <body>
 <div class="page">
   <section class="hero">
-    <div class="kicker">Portfolio concept • portfolio page only</div>
-    <h1>A portfolio page that reads like a footprint, not just a filterable spreadsheet.</h1>
-    <p>This concept keeps the warm editorial tone of the microsite, but makes the portfolio itself legible at a glance: where DIGIT is live, where design work is building, which programmes are national versus state-level, and how the India and global footprints differ.</p>
+    <div class="kicker">Portfolio of programmes built on DIGIT</div>
+    <h1>Where DIGIT has been deployed, adapted, and taken forward.</h1>
+    <p>This portfolio brings together direct eGov-led programmes, government-owned implementations, commercial partner deployments, and development-sector adaptations. It is designed to show the breadth of the ecosystem: where work is live today, where new programmes are being prepared, and how the same digital foundations are being reused across geographies and sectors.</p>
     <div class="summary-grid" id="summaryGrid"></div>
   </section>
 
@@ -768,7 +880,7 @@
         <div class="index-head">
           <div>
             <h3>Programme index</h3>
-            <div class="viz-title" style="font-size: 26px;">Everything visible under the current filters</div>
+            <div class="viz-title" style="font-size: 26px;">Programmes in view</div>
           </div>
           <div class="detail-label" id="indexCountLabel"></div>
         </div>
@@ -793,33 +905,38 @@ const ROLE_META = {
   pipeline: { label: "Pipeline / TBD", color: "#7b746d" }
 };
 
-const INDIA_LAYOUT = {
-  "Jammu & Kashmir": [2, 1],
-  "Ladakh": [3, 1],
-  "Himachal Pradesh": [2, 2],
-  "Punjab": [1, 3],
-  "Chandigarh": [2, 3],
-  "Uttarakhand": [3, 3],
-  "Haryana": [2, 4],
-  "Uttar Pradesh": [3, 4],
-  "Bihar": [4, 4],
-  "Assam": [6, 4],
-  "Rajasthan": [1, 4],
-  "Gujarat": [1, 5],
-  "Madhya Pradesh": [2, 5],
-  "Jharkhand": [4, 5],
-  "West Bengal": [5, 5],
-  "Manipur": [7, 5],
-  "Chhattisgarh": [3, 6],
-  "Odisha": [4, 6],
-  "Goa": [1, 7],
-  "Maharashtra": [2, 7],
-  "Telangana": [3, 7],
-  "Andhra Pradesh": [4, 7],
-  "Karnataka": [2, 8],
-  "Kerala": [2, 9],
-  "Tamil Nadu": [3, 9],
-  "Puducherry": [4, 9]
+const INDIA_POINTS = {
+  "Jammu & Kashmir": { x: 29, y: 11 },
+  "Ladakh": { x: 40, y: 10 },
+  "Himachal Pradesh": { x: 34, y: 19 },
+  "Punjab": { x: 25, y: 24 },
+  "Chandigarh": { x: 31, y: 26 },
+  "Uttarakhand": { x: 41, y: 23 },
+  "Haryana": { x: 33, y: 31 },
+  "Rajasthan": { x: 20, y: 35 },
+  "Uttar Pradesh": { x: 46, y: 33 },
+  "Bihar": { x: 58, y: 36 },
+  "Assam": { x: 79, y: 34 },
+  "Gujarat": { x: 16, y: 49 },
+  "Madhya Pradesh": { x: 35, y: 46 },
+  "Jharkhand": { x: 56, y: 46 },
+  "West Bengal": { x: 66, y: 47 },
+  "Manipur": { x: 83, y: 45 },
+  "Chhattisgarh": { x: 45, y: 56 },
+  "Odisha": { x: 57, y: 58 },
+  "Goa": { x: 22, y: 68 },
+  "Maharashtra": { x: 30, y: 66 },
+  "Telangana": { x: 43, y: 66 },
+  "Andhra Pradesh": { x: 52, y: 74 },
+  "Karnataka": { x: 33, y: 78 },
+  "Kerala": { x: 32, y: 91 },
+  "Tamil Nadu": { x: 46, y: 88 },
+  "Puducherry": { x: 55, y: 87 }
+};
+
+const GLOBAL_REGION_COPY = {
+  Africa: "Most international deployments currently sit in African public health campaigns, where the platform has been adapted for recurring operational delivery.",
+  Caribbean: "The global portfolio is beginning to extend into non-health use cases beyond Africa."
 };
 
 const state = {
@@ -909,10 +1026,22 @@ function groupForView(filtered) {
 
 function toneForDensity(count) {
   if (count >= 5) return "linear-gradient(180deg, #1d6b4b 0%, #2b8760 100%)";
-  if (count >= 4) return "linear-gradient(180deg, #3f8e6d 0%, #5ca082 100%)";
-  if (count >= 3) return "linear-gradient(180deg, #78b197 0%, #91bea8 100%)";
-  if (count >= 2) return "linear-gradient(180deg, #bedccd 0%, #d5e9de 100%)";
-  return "linear-gradient(180deg, #eef6f1 0%, #f7fbf8 100%)";
+  if (count >= 4) return "linear-gradient(180deg, #2f7d59 0%, #4f9a78 100%)";
+  if (count >= 3) return "linear-gradient(180deg, #4c916f 0%, #78b197 100%)";
+  if (count >= 2) return "linear-gradient(180deg, #79aa92 0%, #9ac4af 100%)";
+  return "linear-gradient(180deg, #8bb8a2 0%, #abd0bd 100%)";
+}
+
+function bubbleSize(count) {
+  if (count >= 5) return 82;
+  if (count >= 4) return 76;
+  if (count >= 3) return 70;
+  if (count >= 2) return 64;
+  return 58;
+}
+
+function bubbleTextColor(count) {
+  return count >= 3 ? "#ffffff" : "#1d3528";
 }
 
 function renderSummary(filtered) {
@@ -920,10 +1049,10 @@ function renderSummary(filtered) {
   const india = PROGRAMS.filter(p => p.scope.startsWith("india"));
   const global = PROGRAMS.filter(p => p.scope === "global_country");
   document.getElementById("summaryGrid").innerHTML = [
-    { num: formatNumber(counts.total), label: "Programmes visible", sub: "After current filters" },
-    { num: formatNumber(india.length), label: "India programmes", sub: "State and national footprint" },
+    { num: formatNumber(counts.total), label: "Programmes in view", sub: "Across the current filter selection" },
+    { num: formatNumber(india.length), label: "India programmes", sub: "State and national footprint combined" },
     { num: formatNumber(global.length), label: "Global programmes", sub: "International deployments and pipeline" },
-    { num: formatNumber(counts.newProduct), label: "New products in view", sub: "Partner-built or adapted solutions" }
+    { num: formatNumber(counts.newProduct), label: "New products", sub: "Adaptations built beyond the core platform" }
   ].map(card => `
     <div class="summary-card">
       <strong>${card.num}</strong>
@@ -956,8 +1085,8 @@ function renderFilters() {
 
 function renderViz(filtered) {
   if (!filtered.some(program => (state.view === "india" ? program.scope.startsWith("india") : program.scope === "global_country"))) {
-    document.getElementById("vizBody").innerHTML = `<div class="empty-state">No programmes match the current filter combination.</div>`;
-    document.getElementById("detailPanel").innerHTML = `<div class="empty-state">Try widening the filters to inspect a geography in more detail.</div>`;
+    document.getElementById("vizBody").innerHTML = `<div class="empty-state">No programmes match this filter combination.</div>`;
+    document.getElementById("detailPanel").innerHTML = `<div class="empty-state">Adjust the filters to explore a state, national platform, or country in more detail.</div>`;
     return;
   }
 
@@ -966,12 +1095,12 @@ function renderViz(filtered) {
   }
 
   if (state.view === "india") {
-    document.getElementById("vizTitle").textContent = "India as a programme footprint";
-    document.getElementById("vizSub").textContent = "National work is separated from the state footprint, so the map answers a clearer question: where are state-level programmes clustered, and what kind of work is actually visible there?";
+    document.getElementById("vizTitle").textContent = "The DIGIT footprint across India";
+    document.getElementById("vizSub").textContent = "State-level programmes are shown separately from national platforms so the geography remains readable. Select any state to see the mix of sectors, partners, and delivery stages represented there.";
     renderIndiaView(filtered);
   } else {
-    document.getElementById("vizTitle").textContent = "Global deployment footprint";
-    document.getElementById("vizSub").textContent = "The international view groups programmes by country first, then lets the detail panel carry provincial nuance. That keeps the footprint readable even when the underlying records vary in granularity.";
+    document.getElementById("vizTitle").textContent = "International deployments and emerging global work";
+    document.getElementById("vizSub").textContent = "Outside India, the portfolio is still concentrated in a small number of geographies. The view below groups programmes by country first, then carries province-level detail in the programme list.";
     renderGlobalView(filtered);
   }
 
@@ -984,26 +1113,27 @@ function renderIndiaView(filtered) {
   const states = filtered.filter(p => p.scope === "india_state");
   const groupedStates = groupForView(states);
   const byState = Object.fromEntries(groupedStates.map(group => [group.key, group.items]));
-  const tiles = Object.entries(INDIA_LAYOUT).map(([name, [col, row]]) => {
+  const nodes = Object.entries(INDIA_POINTS).map(([name, point]) => {
     const items = byState[name] || [];
     const live = items.filter(p => p.stage === "Live").length;
     const design = items.filter(p => p.stage === "Design").length;
     const count = items.length;
     const selectedClass = state.selected === name ? "active" : "";
     if (!count) {
-      return `<button class="tile empty" style="grid-column:${col};grid-row:${row};"></button>`;
+      return "";
     }
+    const size = bubbleSize(count);
     return `
-      <button class="tile ${selectedClass}" data-select="${name}" style="grid-column:${col};grid-row:${row};background:${toneForDensity(count)};">
-        <div class="tile-name">${name}</div>
-        <div class="tile-count">
+      <button class="state-node ${selectedClass}" data-select="${name}" style="left:${point.x}%; top:${point.y}%;">
+        <div class="state-bubble" style="--size:${size}px; background:${toneForDensity(count)}; color:${bubbleTextColor(count)};">
           <strong>${count}</strong>
-          <span>${count === 1 ? "programme" : "programmes"}</span>
+          <div class="bubble-bars">
+            <i><b style="width:${count ? live / count * 100 : 0}%; background: var(--green);"></b></i>
+            <i><b style="width:${count ? design / count * 100 : 0}%; background: var(--amber);"></b></i>
+          </div>
         </div>
-        <div class="split-bar">
-          <i><b style="width:${count ? live / count * 100 : 0}%; background: var(--green);"></b></i>
-          <i><b style="width:${count ? design / count * 100 : 0}%; background: var(--amber);"></b></i>
-        </div>
+        <div class="state-name">${name}</div>
+        <div class="state-meta">${live} live · ${design} in design</div>
       </button>
     `;
   }).join("");
@@ -1018,6 +1148,8 @@ function renderIndiaView(filtered) {
     `;
   }).join("") : `<div class="empty-state">No national programmes match the current filters.</div>`;
 
+  const stateLayerHtml = nodes || `<div class="empty-state" style="position:absolute; inset:120px 120px auto; z-index:2;">No state-level programmes match the current filter selection. The visible results are national or cross-state.</div>`;
+
   document.getElementById("vizBody").innerHTML = `
     <div class="footprint">
       <div class="national-strip">
@@ -1025,38 +1157,74 @@ function renderIndiaView(filtered) {
         <div class="national-list">${nationalHtml}</div>
       </div>
       <div class="india-map">
-        <div class="map-note">Tile cartogram concept for clarity and comparison</div>
-        <div class="tile-grid">${tiles}</div>
+        <div class="india-map-head">
+          <div>
+            <h3 class="india-map-title">State-level footprint</h3>
+            <p class="india-map-copy">Bubble size reflects the number of programmes visible in each state under the current filters. The two bars underneath each bubble show the split between live work and programmes in design.</p>
+          </div>
+          <div class="map-note">26 states and territories represented in the current portfolio</div>
+        </div>
+        <div class="india-canvas">
+          <svg class="india-ghost" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M335 64l86 24 56 62 78 22 87 116-11 80 62 97-47 87-70 63-8 93-70 119-74-44-43-128-113-56-36-111-82-44-62-135 66-116 28-113z"></path>
+          </svg>
+          <div class="india-region-label" style="left:14%; top:19%;">North</div>
+          <div class="india-region-label" style="left:10%; top:47%;">West</div>
+          <div class="india-region-label" style="left:49%; top:28%;">North East</div>
+          <div class="india-region-label" style="left:50%; top:60%;">East</div>
+          <div class="india-region-label" style="left:27%; top:84%;">South</div>
+          <div class="india-region-label" style="left:25%; top:58%;">Central</div>
+          <div class="state-layer">${stateLayerHtml}</div>
+        </div>
       </div>
     </div>
   `;
 }
 
 function renderGlobalView(filtered) {
-  const countries = groupForView(filtered).map(group => {
-    const summary = summarizeSelection(group.items);
-    const regions = uniq(group.items.map(item => item.region));
-    const selectedClass = state.selected === group.key ? "active" : "";
-    return `
-      <button class="country-card ${selectedClass}" data-select="${group.key}">
-        <div class="country-top">
-          <div>
-            <strong>${group.key}</strong>
-            <span>${summary.counts.total} programmes · ${summary.counts.live} live · ${summary.counts.design} design</span>
-          </div>
-          <div class="country-badge">${regions.join(", ")}</div>
-        </div>
-        <div class="country-mini">
-          ${summary.sectors.slice(0, 3).map(sector => `<span class="mini-pill">${sector}</span>`).join("")}
-          ${summary.impact ? `<span class="mini-pill">${compactNumber(summary.impact)} people in rows with quantified impact</span>` : ""}
-        </div>
-      </button>
-    `;
-  }).join("");
+  const byRegion = new Map();
+  groupForView(filtered).forEach(group => {
+    const region = group.items[0]?.region || "Other";
+    if (!byRegion.has(region)) byRegion.set(region, []);
+    byRegion.get(region).push(group);
+  });
+
+  const regions = [...byRegion.entries()].sort((a, b) => a[0].localeCompare(b[0]));
 
   document.getElementById("vizBody").innerHTML = `
     <div class="global-grid">
-      ${countries}
+      ${regions.map(([region, groups]) => `
+        <section class="global-lane">
+          <div class="global-lane-head">
+            <div>
+              <h3 class="global-lane-title">${region}</h3>
+              <p class="global-lane-copy">${GLOBAL_REGION_COPY[region] || "Programmes are grouped here by country so that the geographic spread remains readable even when individual records refer to provinces or campaigns."}</p>
+            </div>
+            <div class="map-note">${groups.reduce((sum, group) => sum + group.items.length, 0)} programme${groups.reduce((sum, group) => sum + group.items.length, 0) === 1 ? "" : "s"}</div>
+          </div>
+          <div class="global-lane-track">
+            ${groups.map(group => {
+              const summary = summarizeSelection(group.items);
+              const selectedClass = state.selected === group.key ? "active" : "";
+              return `
+                <button class="country-card ${selectedClass}" data-select="${group.key}">
+                  <div class="country-top">
+                    <div>
+                      <strong>${group.key}</strong>
+                      <span>${summary.counts.total} programmes · ${summary.counts.live} live · ${summary.counts.design} design</span>
+                    </div>
+                    <div class="country-badge">${region}</div>
+                  </div>
+                  <div class="country-mini">
+                    ${summary.sectors.slice(0, 3).map(sector => `<span class="mini-pill">${sector}</span>`).join("")}
+                    ${summary.impact ? `<span class="mini-pill">${compactNumber(summary.impact)} people in rows with quantified impact</span>` : ""}
+                  </div>
+                </button>
+              `;
+            }).join("")}
+          </div>
+        </section>
+      `).join("")}
     </div>
   `;
 }
@@ -1065,7 +1233,7 @@ function renderDetail(filtered) {
   const groups = new Map(groupForView(filtered).map(group => [group.key, group.items]));
   const items = groups.get(state.selected) || [];
   if (!items.length) {
-    document.getElementById("detailPanel").innerHTML = `<div class="empty-state">Select a state, national cluster, or country to inspect its programme mix.</div>`;
+    document.getElementById("detailPanel").innerHTML = `<div class="empty-state">Select a geography to inspect its programme mix.</div>`;
     return;
   }
 
@@ -1076,12 +1244,12 @@ function renderDetail(filtered) {
     .sort((a, b) => b - a)[0];
 
   const intros = {
-    india: `${state.selected} currently shows a mix of ${summary.sectors.length} sector${summary.sectors.length === 1 ? "" : "s"} and ${summary.roles.length} delivery mode${summary.roles.length === 1 ? "" : "s"}. The panel below is meant to feel editorial, so a policymaker can interpret the footprint before reading the full list.`,
-    global: `${state.selected} is shown at country level first, with the record-level programme list below carrying province or campaign detail. This makes the international footprint legible without pretending every row belongs on a geographic pin.`
+    india: `${state.selected} currently shows ${summary.counts.total} programme${summary.counts.total === 1 ? "" : "s"} across ${summary.sectors.length} sector${summary.sectors.length === 1 ? "" : "s"}. Taken together, they show how DIGIT has been reused in this geography through different implementing organisations and at different stages of maturity.`,
+    global: `${state.selected} is represented here as a country-level footprint, with province or campaign-specific detail carried in the programme list below. This keeps the global view legible while preserving the differences between deployments.`
   };
 
   document.getElementById("detailPanel").innerHTML = `
-    <div class="detail-label">${state.view === "india" ? "Selected footprint" : "Selected country"}</div>
+    <div class="detail-label">${state.view === "india" ? "Selected geography" : "Selected country"}</div>
     <h2>${state.selected}</h2>
     <p>${intros[state.view]}</p>
 
@@ -1092,16 +1260,16 @@ function renderDetail(filtered) {
       </div>
       <div class="detail-stat">
         <strong>${summary.counts.live}</strong>
-        <span>Live today</span>
+        <span>Live programmes</span>
       </div>
       <div class="detail-stat">
         <strong>${summary.counts.design}</strong>
-        <span>In design or pipeline</span>
+        <span>Design-stage work</span>
       </div>
     </div>
 
     <div class="detail-section">
-      <h3>What stands out</h3>
+      <h3>Profile</h3>
       <div class="tags">
         ${summary.sectors.slice(0, 6).map(sector => `<span class="tag">${sector}</span>`).join("")}
         ${summary.roles.slice(0, 4).map(role => `<span class="tag">${role}</span>`).join("")}
@@ -1111,7 +1279,7 @@ function renderDetail(filtered) {
     </div>
 
     <div class="detail-section">
-      <h3>Programmes in this footprint</h3>
+      <h3>Programmes in this geography</h3>
       <div class="program-list">
         ${items.map(item => `
           <div class="program-card">
@@ -1137,7 +1305,7 @@ function renderDetail(filtered) {
 }
 
 function renderIndex(filtered) {
-  document.getElementById("indexCountLabel").textContent = `${filtered.length} results`;
+  document.getElementById("indexCountLabel").textContent = `${filtered.length} programme${filtered.length === 1 ? "" : "s"}`;
   document.getElementById("indexGrid").innerHTML = filtered.length ? filtered.map(item => `
     <article class="program-card">
       <div class="program-top">
