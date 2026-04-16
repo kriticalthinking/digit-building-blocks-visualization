@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DIGIT Portfolio Concept</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f3efe7;
+    --paper: #fbf9f4;
+    --panel: rgba(255,255,255,0.8);
+    --panel-solid: #ffffff;
+    --ink: #201c17;
+    --muted: #6f655a;
+    --line: rgba(32,28,23,0.12);
+    --green: #1d6b4b;
+    --green-2: #dfeee6;
+    --blue: #1d4f91;
+    --blue-2: #e3eefc;
+    --amber: #b86d18;
+    --amber-2: #f8ead7;
+    --plum: #6d4db1;
+    --plum-2: #ece5f8;
+    --teal: #0f766e;
+    --teal-2: #d9f3ee;
+    --slate: #7b746d;
+    --slate-2: #efebe6;
+    --shadow: 0 18px 45px rgba(53, 44, 35, 0.08);
+    --radius-lg: 24px;
+    --radius-md: 18px;
+    --radius-sm: 12px;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: 'Manrope', sans-serif;
+    color: var(--ink);
+    background:
+      radial-gradient(circle at top left, rgba(29,107,75,0.08), transparent 30%),
+      radial-gradient(circle at top right, rgba(29,79,145,0.08), transparent 28%),
+      linear-gradient(180deg, #f6f2ea 0%, #f0ebe2 100%);
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.25) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.25) 1px, transparent 1px);
+    background-size: 32px 32px;
+    mask-image: linear-gradient(180deg, rgba(0,0,0,0.18), transparent 70%);
+  }
+
+  .page {
+    width: min(1380px, calc(100vw - 32px));
+    margin: 24px auto 40px;
+  }
+
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding: 34px;
+    border: 1px solid rgba(32,28,23,0.08);
+    border-radius: 32px;
+    background:
+      linear-gradient(135deg, rgba(255,255,255,0.78), rgba(255,255,255,0.56)),
+      linear-gradient(160deg, #edf5f0 0%, #f9f5ee 55%, #e8f0fa 100%);
+    box-shadow: var(--shadow);
+  }
+
+  .hero::after {
+    content: "";
+    position: absolute;
+    width: 420px;
+    height: 420px;
+    right: -140px;
+    top: -190px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(29,107,75,0.14), transparent 65%);
+  }
+
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.72);
+    border: 1px solid rgba(32,28,23,0.08);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .hero h1 {
+    max-width: 780px;
+    margin: 18px 0 12px;
+    font-family: 'Fraunces', serif;
+    font-size: clamp(36px, 5vw, 62px);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    font-weight: 600;
+  }
+
+  .hero p {
+    max-width: 760px;
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.75;
+    color: var(--muted);
+  }
+
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 28px;
+  }
+
+  .summary-card {
+    padding: 18px 18px 16px;
+    border-radius: var(--radius-md);
+    background: rgba(255,255,255,0.74);
+    border: 1px solid rgba(32,28,23,0.08);
+    backdrop-filter: blur(8px);
+  }
+
+  .summary-card strong {
+    display: block;
+    font-family: 'Fraunces', serif;
+    font-size: 34px;
+    line-height: 1;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+
+  .summary-card span {
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--muted);
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(340px, 0.9fr);
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .stack {
+    display: grid;
+    gap: 20px;
+  }
+
+  .panel {
+    border: 1px solid rgba(32,28,23,0.08);
+    border-radius: 28px;
+    background: var(--panel);
+    backdrop-filter: blur(12px);
+    box-shadow: var(--shadow);
+  }
+
+  .controls {
+    padding: 20px;
+  }
+
+  .tabs {
+    display: inline-flex;
+    gap: 8px;
+    padding: 6px;
+    border-radius: 999px;
+    background: rgba(32,28,23,0.05);
+    margin-bottom: 18px;
+  }
+
+  .tab-btn,
+  .pill-btn {
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    font: inherit;
+    transition: 160ms ease;
+  }
+
+  .tab-btn {
+    padding: 11px 16px;
+    font-weight: 700;
+  }
+
+  .tab-btn.active {
+    color: #fff;
+    background: var(--ink);
+    box-shadow: 0 6px 16px rgba(32,28,23,0.18);
+  }
+
+  .control-row {
+    display: grid;
+    grid-template-columns: 1.1fr 0.95fr 1.1fr 1.2fr;
+    gap: 12px;
+  }
+
+  .control-block label {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .pill-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .pill-btn {
+    padding: 10px 13px;
+    background: rgba(255,255,255,0.78);
+    border: 1px solid rgba(32,28,23,0.08);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .pill-btn.active {
+    color: #fff;
+    border-color: transparent;
+  }
+
+  .pill-btn.stage.active { background: var(--green); }
+  .pill-btn.role.active { background: var(--blue); }
+
+  select,
+  input[type="search"] {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid rgba(32,28,23,0.12);
+    border-radius: 14px;
+    background: rgba(255,255,255,0.82);
+    font: inherit;
+    color: var(--ink);
+  }
+
+  .viz-panel {
+    padding: 22px;
+  }
+
+  .viz-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: end;
+    margin-bottom: 18px;
+  }
+
+  .viz-title {
+    margin: 0;
+    font-family: 'Fraunces', serif;
+    font-size: 30px;
+    line-height: 1.05;
+    font-weight: 600;
+  }
+
+  .viz-sub {
+    margin: 8px 0 0;
+    max-width: 720px;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--muted);
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .swatch {
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+  }
+
+  .footprint {
+    display: grid;
+    gap: 18px;
+  }
+
+  .national-strip {
+    display: grid;
+    gap: 10px;
+    padding: 14px;
+    border-radius: 18px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.88), rgba(245,241,234,0.88));
+    border: 1px solid rgba(32,28,23,0.08);
+  }
+
+  .strip-label {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .national-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .national-chip {
+    min-width: 170px;
+    padding: 12px 13px;
+    border-radius: 16px;
+    border: 1px solid rgba(32,28,23,0.08);
+    background: rgba(255,255,255,0.84);
+    cursor: pointer;
+    transition: 160ms ease;
+  }
+
+  .national-chip:hover,
+  .tile:hover,
+  .country-card:hover,
+  .program-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(43,35,28,0.08);
+  }
+
+  .national-chip.active,
+  .tile.active,
+  .country-card.active {
+    border-color: rgba(32,28,23,0.2);
+    box-shadow: 0 10px 28px rgba(43,35,28,0.12);
+  }
+
+  .national-chip strong,
+  .country-card strong {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 2px;
+  }
+
+  .national-chip span,
+  .country-card span {
+    display: block;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .india-map {
+    position: relative;
+    min-height: 540px;
+    padding: 18px;
+    border-radius: 24px;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 22% 18%, rgba(14,118,110,0.12), transparent 18%),
+      radial-gradient(circle at 85% 82%, rgba(29,79,145,0.10), transparent 24%),
+      linear-gradient(180deg, #ebf5f2 0%, #f8f4ee 100%);
+    border: 1px solid rgba(32,28,23,0.08);
+  }
+
+  .map-note {
+    position: absolute;
+    top: 16px;
+    right: 18px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.7);
+    border: 1px solid rgba(32,28,23,0.08);
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .tile-grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(8, minmax(80px, 1fr));
+    grid-template-rows: repeat(8, 72px);
+    gap: 10px;
+    margin-top: 18px;
+  }
+
+  .tile {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px;
+    border-radius: 18px;
+    border: 1px solid rgba(32,28,23,0.08);
+    background: rgba(255,255,255,0.86);
+    cursor: pointer;
+    transition: 160ms ease;
+  }
+
+  .tile.empty {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .tile-name {
+    max-width: 92%;
+    font-size: 11px;
+    line-height: 1.2;
+    color: var(--muted);
+  }
+
+  .tile-count {
+    display: flex;
+    align-items: end;
+    gap: 8px;
+  }
+
+  .tile-count strong {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    line-height: 1;
+    font-weight: 600;
+  }
+
+  .tile-count span {
+    font-size: 11px;
+    color: var(--muted);
+    padding-bottom: 4px;
+  }
+
+  .split-bar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+  }
+
+  .split-bar i {
+    display: block;
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(32,28,23,0.08);
+    overflow: hidden;
+  }
+
+  .split-bar b {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+  }
+
+  .global-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .country-card {
+    padding: 16px;
+    border-radius: 20px;
+    border: 1px solid rgba(32,28,23,0.08);
+    background: rgba(255,255,255,0.82);
+    cursor: pointer;
+    transition: 160ms ease;
+  }
+
+  .country-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: start;
+  }
+
+  .country-badge {
+    padding: 5px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    background: var(--teal-2);
+    color: var(--teal);
+  }
+
+  .country-mini {
+    margin-top: 14px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .mini-pill {
+    padding: 6px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    background: rgba(32,28,23,0.06);
+    color: var(--muted);
+  }
+
+  .detail {
+    position: sticky;
+    top: 20px;
+    padding: 22px;
+  }
+
+  .detail-label {
+    display: inline-flex;
+    padding: 7px 11px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: rgba(32,28,23,0.06);
+    color: var(--muted);
+  }
+
+  .detail h2 {
+    margin: 14px 0 8px;
+    font-family: 'Fraunces', serif;
+    font-size: 34px;
+    line-height: 1.02;
+    font-weight: 600;
+  }
+
+  .detail p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  .detail-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin: 18px 0;
+  }
+
+  .detail-stat {
+    padding: 14px 12px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.7);
+    border: 1px solid rgba(32,28,23,0.07);
+  }
+
+  .detail-stat strong {
+    display: block;
+    font-family: 'Fraunces', serif;
+    font-size: 26px;
+    line-height: 1;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+
+  .detail-stat span {
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+
+  .detail-section {
+    margin-top: 18px;
+  }
+
+  .detail-section h3,
+  .index-head h3 {
+    margin: 0 0 10px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tag {
+    padding: 7px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    background: rgba(32,28,23,0.06);
+    color: var(--ink);
+  }
+
+  .program-list {
+    display: grid;
+    gap: 10px;
+    margin-top: 12px;
+    max-height: 340px;
+    overflow: auto;
+    padding-right: 4px;
+  }
+
+  .program-card {
+    padding: 14px;
+    border-radius: 18px;
+    border: 1px solid rgba(32,28,23,0.08);
+    background: rgba(255,255,255,0.82);
+    transition: 160ms ease;
+  }
+
+  .program-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: start;
+  }
+
+  .program-title {
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1.35;
+    margin: 0 0 3px;
+  }
+
+  .program-meta,
+  .program-copy {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .badge-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+  }
+
+  .badge {
+    padding: 5px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    background: rgba(32,28,23,0.06);
+  }
+
+  .index-panel {
+    padding: 22px;
+  }
+
+  .index-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: end;
+  }
+
+  .index-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .empty-state {
+    padding: 26px;
+    border-radius: 22px;
+    text-align: center;
+    color: var(--muted);
+    background: rgba(255,255,255,0.74);
+    border: 1px dashed rgba(32,28,23,0.14);
+  }
+
+  @media (max-width: 1180px) {
+    .layout { grid-template-columns: 1fr; }
+    .detail { position: static; }
+    .control-row { grid-template-columns: 1fr 1fr; }
+    .global-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 900px) {
+    .summary-grid,
+    .detail-stats,
+    .index-grid,
+    .global-grid,
+    .control-row { grid-template-columns: 1fr; }
+    .tile-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-rows: none;
+    }
+    .tile {
+      min-height: 96px;
+      grid-column: auto !important;
+      grid-row: auto !important;
+    }
+    .page { width: min(100vw - 18px, 1380px); margin-top: 10px; }
+    .hero, .panel { border-radius: 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <section class="hero">
+    <div class="kicker">Portfolio concept • portfolio page only</div>
+    <h1>A portfolio page that reads like a footprint, not just a filterable spreadsheet.</h1>
+    <p>This concept keeps the warm editorial tone of the microsite, but makes the portfolio itself legible at a glance: where DIGIT is live, where design work is building, which programmes are national versus state-level, and how the India and global footprints differ.</p>
+    <div class="summary-grid" id="summaryGrid"></div>
+  </section>
+
+  <div class="layout">
+    <div class="stack">
+      <section class="panel controls">
+        <div class="tabs">
+          <button class="tab-btn active" data-view="india">India footprint</button>
+          <button class="tab-btn" data-view="global">Global footprint</button>
+        </div>
+
+        <div class="control-row">
+          <div class="control-block">
+            <label>Programme stage</label>
+            <div class="pill-row" id="stageFilters"></div>
+          </div>
+          <div class="control-block">
+            <label>eGov role</label>
+            <div class="pill-row" id="roleFilters"></div>
+          </div>
+          <div class="control-block">
+            <label>Sector focus</label>
+            <select id="sectorSelect"></select>
+          </div>
+          <div class="control-block">
+            <label>Search</label>
+            <input id="searchInput" type="search" placeholder="Search geography, use case, partner">
+          </div>
+        </div>
+      </section>
+
+      <section class="panel viz-panel">
+        <div class="viz-head">
+          <div>
+            <h2 class="viz-title" id="vizTitle"></h2>
+            <p class="viz-sub" id="vizSub"></p>
+          </div>
+          <div class="legend">
+            <span class="legend-item"><i class="swatch" style="background: var(--green);"></i>Live programmes</span>
+            <span class="legend-item"><i class="swatch" style="background: var(--amber);"></i>Design stage</span>
+            <span class="legend-item"><i class="swatch" style="background: var(--plum);"></i>New products</span>
+          </div>
+        </div>
+        <div id="vizBody"></div>
+      </section>
+
+      <section class="panel index-panel">
+        <div class="index-head">
+          <div>
+            <h3>Programme index</h3>
+            <div class="viz-title" style="font-size: 26px;">Everything visible under the current filters</div>
+          </div>
+          <div class="detail-label" id="indexCountLabel"></div>
+        </div>
+        <div class="index-grid" id="indexGrid"></div>
+      </section>
+    </div>
+
+    <aside class="panel detail" id="detailPanel"></aside>
+  </div>
+</div>
+
+<script>
+const PROGRAMS = [{"id":"IN-01","scope":"india_national","geography":"All Cantonments","country":"India","region":"National","sector":"Local Governance","useCase":"Local Governance (eChhawani)","partner":"Bharat Electronics Ltd.","role":"govt_body","stage":"Live","newProduct":true,"populationImpact":2516586,"year":2020,"details":"The eChhawani platform, built on DIGIT, enables citizens in cantonment boards to access services provided by the cantonment. Built for the Director General of Defence Estates under the Ministry of Defence."},{"id":"IN-02","scope":"india_state","geography":"Andhra Pradesh","country":"India","region":"South","sector":"Local Governance","useCase":"Local Governance","partner":"eGov","role":"egov_direct","stage":"Live","newProduct":false,"populationImpact":33213851,"year":2015,"details":"Property Tax, Trade Licenses, Water and Sanitation, Public Grievance Redressal, state-level dashboards, ULB portals, Finance & HR Management systems for municipal employees. Integrations with 18 other existing applications."},{"id":"IN-03","scope":"india_state","geography":"Assam","country":"India","region":"North East","sector":"Local Governance","useCase":"Finance & Accounting (Municipal)","partner":"Sumato","role":"commercial_partner","stage":"Live","newProduct":false,"populationImpact":null,"year":2023,"details":"Finance & Accounting rolled out in 2 ULBs — Dhubri and Barpeta."},{"id":"IN-04","scope":"india_state","geography":"Assam","country":"India","region":"North East","sector":"Health","useCase":"PGR for Health (DIGIT+)","partner":"Piramal Foundation","role":"development_sector","stage":"Live","newProduct":true,"populationImpact":null,"year":2023,"details":"Complaint management system built on DIGIT for the state-level health ministries to manage all health centres."},{"id":"IN-05","scope":"india_state","geography":"Assam","country":"India","region":"North East","sector":"Water & Sanitation","useCase":"NalJalseva","partner":"NIC","role":"govt_body","stage":"Live","newProduct":false,"populationImpact":32866165,"year":2024,"details":"The NalJalseva platform, built to support the Jal Jeevan Mission, ensures long-term sustainability of water supply systems through operations & maintenance (O&M) and community engagement."},{"id":"IN-06","scope":"india_state","geography":"Assam","country":"India","region":"North East","sector":"Works Management","useCase":"Public Works Management","partner":"Deloitte","role":"commercial_partner","stage":"Live","newProduct":true,"populationImpact":36728963,"year":2023,"details":"The centralised, automated works management system developed on DIGIT brings better visibility and monitoring across various schemes, enabling better planning and execution through procurement management and project management capabilities."},{"id":"IN-07","scope":"india_state","geography":"Bihar","country":"India","region":"East","sector":"Water & Sanitation","useCase":"Water Infrastructure Maintenance (PeyJal)","partner":"Arghyam","role":"development_sector","stage":"Live","newProduct":true,"populationImpact":null,"year":2023,"details":"Arghyam has implemented a version of mGramSeva, called PeyJal, in Bihar. This facilitates operation and maintenance of water infrastructure to help rural local bodies self-sufficiently manage water infrastructure in a sustainable manner."},{"id":"IN-08","scope":"india_state","geography":"Bihar","country":"India","region":"East","sector":"Health","useCase":"PGR for Health (DIGIT+)","partner":"Piramal Foundation","role":"development_sector","stage":"Live","newProduct":true,"populationImpact":null,"year":2023,"details":"Complaint management system built on DIGIT for the state-level health ministries to manage all health centres across ~9,000 health facilities."},{"id":"IN-09","scope":"india_state","geography":"Bihar","country":"India","region":"East","sector":"Livelihoods & Benefits","useCase":"Digital Farmer Services Platform","partner":"MSC","role":"development_sector","stage":"Live","newProduct":true,"populationImpact":330000,"year":2023,"details":"MicroSave Consulting (with support from BMGF) is building a Digital Farmer Services platform using DIGIT as the foundational DPG. The platform provides small-scale farmers with unified access to government schemes, agriculture advisory, weather advisory, credit, insurance, and market linkages. It leverages existing systems (BIHAAN, DLMS), datasets (DBT, PM-Kisan, Soil Health Card), and GoB channels (IVR/call centre, SMS, outbound calling) and information repositories for schemes, benefits, and subsidies."},{"id":"IN-10","scope":"india_state","geography":"Bihar","country":"India","region":"East","sector":"Livelihoods & Benefits","useCase":"Proactive Benefits Delivery (DIGIT+)","partner":"Piramal Foundation","role":"development_sector","stage":"Design","newProduct":true,"populationImpact":null,"year":2024,"details":"Scholarship delivery via DIGIT — feasibility studies completed. As of April 2025: Tekdi is leading the technical development; pilot done in Rajasthan, first full deployment most likely in Bihar."},{"id":"IN-11","scope":"india_state","geography":"Bihar","country":"India","region":"East","sector":"Local Governance","useCase":"Local Governance","partner":"Pipeline / TBD","role":"pipeline","stage":"Design","newProduct":false,"populationImpact":null,"year":null,"details":"UPYOG RfP stage — modules include OBPAS, Trade Licences, Property Tax, Water & Sanitation, Finance & Accounting, Public Grievance Redressal, and Miscellaneous Collections."},{"id":"IN-12","scope":"india_national","geography":"Central Govt.","country":"India","region":"National","sector":"Emergency Response","useCase":"Emergency Response","partner":"Deloitte","role":"commercial_partner","stage":"Live","newProduct":false,"populationImpact":null,"year":2020,"details":"Deloitte developed a solution built on DIGIT to enable the Ministry of External Affairs to evacuate Indian citizens from different countries in times of emergency."},{"id":"IN-13","scope":"india_national","geography":"Central Govt.","country":"India","region":"National","sector":"Local Governance","useCase":"Grievance Redressal","partner":"Accenture","role":"commercial_partner","stage":"Live","newProduct":false,"populationImpact":null,"year":2020,"details":"National grievance redressal platform built on DIGIT, implemented by Accenture for Central Government."},{"id":"IN-14","scope":"india_state","geography":"Chandigarh","country":"India","region":"North","sector":"Local Governance","useCase":"Local Governance","partner":"PwC","role":"commercial_partner","stage":"Live","newProduct":false,"populationImpact":null,"year":2016,"details":"PwC runs an urban governance system built on DIGIT for Chandigarh. Besides standard modules (property tax, trade licences), approximately 10 custom applications were built for various urban use-cases, including: monitoring of urban services such as street lights, waste collection, and water supply; a module for citizens to raise horticulture-related requests such as tree pruning or felling; and a pension management solution for former municipal employees."},{"id":"IN-15","scope":"india_state","geography":"Chhattisgarh","country":"India","region":"Central","sector":"Local Governance","useCase":"Building Permits","partner":"Entit Technologies","role":"commercial_partner","stage":"Live","newProduct":false,"populationImpact":null,"year":2019,"details":"OBPAS (Online Building Plan Approval Software) implemented in 3 urban local bodies in Chhattisgarh."},{"id":"IN-16","scope":"india_national","geography":"Central Govt.","country":"India","region":"National","sector":"Industrials","useCase":"Pass Management System (COVID)","partner":"eGov","role":"egov_direct","stage":"Live","newProduct":false,"populationImpact":null,"year":2020,"details":"To ensure that essential services could operate during the COVID-19 lockdown, DIGIT was leveraged to build an easy-to-use pass management system in just 3 days."},{"id":"IN-17","scope":"india_national","geography":"Central Govt.","country":"India","region":"National","sector":"Health","useCase":"Vaccine Certification (DIVOC)","partner":"eGov","role":"egov_direct","stage":"Live","newProduct":false,"populationImpact":null,"year":2021,"details":"eGov built DIVOC — an open-source, interoperable, and extensible Digital Public Good — to help countries digitally orchestrate large-scale vaccination programmes. DIVOC enables countries to provide trusted vaccination certificates that can be verified by citizens in both physical and digital forms to access jobs, travel, and other opportunities."},{"id":"IN-18","scope":"india_state","geography":"Goa","country":"India","region":"West","sector":"Industrials","useCase":"Industrial Estate Management","partner":"Deloitte","role":"commercial_partner","stage":"Live","newProduct":false,"populationImpact":null,"year":2020,"details":"8 custom modules built on DIGIT to improve ease-of-doing-business for the Goa Industrial Development Corporation (GIDC). These will also be made available for other IDCs to adopt."},{"id":"IN-19","scope":"india_state","geography":"Goa","country":"India","region":"West","sector":"Local Governance","useCase":"Finance & Accounting (Municipal)","partner":"Pipeline / TBD","role":"pipeline","stage":"Design","newProduct":false,"populationImpact":null,"year":null,"details":"UPYOG implementation initiated — Finance & Accounting module."},{"id":"IN-20","scope":"india_state","geography":"Gujarat","country":"India","region":"West","sector":"Local Governance","useCase":"Local Governance","partner":"Pipeline / TBD","role":"pipeline","stage":"Design","newProduct":false,"populationImpact":null,"year":null,"details":"UPYOG implementation initiated — all urban suite modules."},{"id":"IN-21","scope":"india_state","geography":"Haryana","country":"India","region":"North","sector":"Local Governance","useCase":"Finance & Accounting (Municipal)","partner":"Pipeline / TBD","role":"pipeline","stage":"Design","newProduct":false,"populationImpact":null,"year":null,"details":"OBPAS (Online Building Permits) module live on UPYOG."},{"id":"IN-22","scope":"india_state","geography":"Himachal Pradesh","country":"India","region":"North","sector":"Local Governance","useCase":"Local Governance","partner":"Deloitte","role":"commercial_partner","stage":"Live","newProduct":false,"populationImpact":null,"year":2020,"details":"Deloitte won an RFP to deploy UPYOG for Finance & Accounting solutions built on DIGIT, with plans to extend to other modules."},{"id":"IN-23","scope":"india_state","geography":"Himachal Pradesh","country":"India","region":"North","sector":"Local Governance","useCase":"Finance & Accounting (Municipal)","partner":"Deloitte","role":"commercial_partner","stage":"Design","newProduct":false,"populationImpact":null,"year":2023,"details":"UPYOG RfP stage — Finance & Accounting and OBPAS modules."},{"id":"IN-24","scope":"india_state","geography":"Jammu & Kashmir","country":"India","region":"North","sector":"Local Governance","useCase":"Finance & Accounting (Municipal)","partner":"Pipeline / TBD","role":"pipeline","stage":"Design","newProduct":false,"populationImpact":null,"year":null,"details":"Deloitte won an RFP to deploy UPYOG for Finance & Accounting solutions built on DIGIT for Jammu & Kashmir."},{"id":"IN-25","scope":"india_state","geography":"Jharkhand","country":"India","region":"East","sector":"Education","useCase":"DIGIT in Education Sector","partner":"Deloitte","role":"commercial_partner","stage":"Live","newProduct":false,"populationImpact":11259840,"year":2021,"details":"Education portal comprising 9 custom applications built on DIGIT for the Ministry of Education, Jharkhand: mid-day meal monitoring, leave management, library management, teacher and student activity tracking, and more."},{"id":"IN-26","scope":"india_state","geography":"Karnataka","country":"India","region":"South","sector":"Clean Energy","useCase":"Energy for Health (DIGIT+)","partner":"SELCO Foundation","role":"development_sector","stage":"Live","newProduct":true,"populationImpact":null,"year":2021,"details":"eGov is scaling SELCO Foundation's Energy for Health programme through Saur-e-mitra — a platform built on DIGIT to improve operations and maintenance of solar equipment deployed in health centres."},{"id":"IN-27","scope":"india_state","geography":"Karnataka","country":"India","region":"South","sector":"Local Governance","useCase":"Local Governance","partner":"eGov","role":"egov_direct","stage":"Live","newProduct":false,"populationImpact":null,"year":2016,"details":"Finance and Property Tax modules live. May 2025 update: Existing services are being migrated to UPYOG."},{"id":"IN-28","scope":"india_state","geography":"Karnataka","country":"India","region":"South","sector":"Water & Sanitation","useCase":"Solid Waste Management","partner":"CSG, GoK","role":"govt_body","stage":"Design","newProduct":false,"populationImpact":null,"year":2023,"details":"Solid Waste Management system built on DIGIT for rural local bodies. Centre for Smart Governance (Karnataka's state IT agency) is implementing for the Rural and Panchayati Raj Department, Government of Karnataka."},{"id":"IN-29","scope":"india_state","geography":"Karnataka","country":"India","region":"South","sector":"Industrials","useCase":"Transport Management","partner":"Pipeline / TBD","role":"pipeline","stage":"Design","newProduct":false,"populationImpact":null,"year":null,"details":"Transport management use case under exploration with KSRTC (Karnataka State Road Transport Corporation). Status to be confirmed."},{"id":"IN-30","scope":"india_state","geography":"Kerala","country":"India","region":"South","sector":"Local Governance","useCase":"Local Governance","partner":"IKM Kerala","role":"govt_body","stage":"Live","newProduct":false,"populationImpact":null,"year":2016,"details":"Property Tax, Civil Registration (Marriage, Birth & Death), Trade Licences, Building Permits, and Grievance Redressal — and for municipal employees, Finance, File Management, and HR Management systems — implemented across all 94 ULBs and villages in Kerala."},{"id":"IN-31","scope":"india_state","geography":"Kerala","country":"India","region":"South","sector":"Local Governance","useCase":"Building Permits","partner":"eGov","role":"egov_direct","stage":"Live","newProduct":false,"populationImpact":null,"year":2017,"details":"Online Building Permits system built on DIGIT, live across Kerala."},{"id":"IN-32","scope":"india_state","geography":"Kerala","country":"India","region":"South","sector":"Legal","useCase":"Court Case Management (DIGIT+)","partner":"PUCAR","role":"development_sector","stage":"Live","newProduct":true,"populationImpact":null,"year":2022,"details":"PUCAR is a collective of organisations working to transform the dispute resolution experience of citizens. eGov supported the collective in developing DRISTI — a court case management platform and product built on DIGIT."},{"id":"IN-33","scope":"india_state","geography":"Ladakh","country":"India","region":"North","sector":"Local Governance","useCase":"Local Governance","partner":"Pipeline / TBD","role":"pipeline","stage":"Design","newProduct":false,"populationImpact":null,"year":null,"details":"UPYOG RfP stage — all services excluding Birth & Death module."},{"id":"IN-34","scope":"india_state","geography":"Madhya Pradesh","country":"India","region":"Central","sector":"Local Governance","useCase":"Local Governance","partner":"Pipeline / TBD","role":"pipeline","stage":"Design","newProduct":false,"populationImpact":null,"year":null,"details":"UPYOG implementation initiated — all modules being migrated to open-source software."},{"id":"IN-35","scope":"india_state","geography":"Maharashtra","country":"India","region":"West","sector":"Local Governance","useCase":"Local Governance (UPYOG/BMC)","partner":"Pipeline / TBD","role":"pipeline","stage":"Design","newProduct":false,"populationImpact":null,"year":null,"details":"UPYOG implementation initiated — state-specific modules being developed, initially for BrihanMumbai Municipal Corporation (BMC)."},{"id":"IN-36","scope":"india_state","geography":"Manipur","country":"India","region":"North East","sector":"Local Governance","useCase":"Local Governance","partner":"Deloitte","role":"commercial_partner","stage":"Live","newProduct":false,"populationImpact":null,"year":2021,"details":"Property Tax solution being rolled out in 26 ULBs (UAT stage), with plans to extend to all ULBs. Finance & Accounting and Water & Sewerage solutions also in implementation."},{"id":"IN-37","scope":"india_national","geography":"New Delhi","country":"India","region":"National","sector":"Local Governance","useCase":"Local Governance","partner":"eGov","role":"egov_direct","stage":"Live","newProduct":false,"populationImpact":null,"year":2016,"details":"RfP stage for UPYOG migration — Finance and Property Tax modules in NDMC and Municipal Corporation of Delhi (MCD)."},{"id":"IN-38","scope":"india_national","geography":"National (NUDM)","country":"India","region":"National","sector":"Local Governance","useCase":"Urban Governance (UPYOG)","partner":"eGov","role":"egov_direct","stage":"Live","newProduct":false,"populationImpact":null,"year":2021,"details":"UPYOG national platform — In 2021, MoHUA and MEITY jointly launched the National Urban Digital Mission (NUDM) anchored at NIUA, with DIGIT as the technical foundation. eGov contributed programme design, architecture, and over 20,000 hours of training. UPYOG is now fully owned and operated by MoHUA/NIUA, certified as a Digital Public Good."},{"id":"IN-39","scope":"india_state","geography":"Odisha","country":"India","region":"East","sector":"Water & Sanitation","useCase":"Faecal Sludge & Septage Management","partner":"PwC","role":"commercial_partner","stage":"Live","newProduct":false,"populationImpact":null,"year":2019,"details":"SUJOG-FSSM: Faecal Sludge and Sanitation Management Platform built on DIGIT, handed over to PwC for ongoing implementation."},{"id":"IN-40","scope":"india_state","geography":"Odisha","country":"India","region":"East","sector":"Livelihoods & Benefits","useCase":"Works Management & Benefits Delivery","partner":"PwC","role":"commercial_partner","stage":"Live","newProduct":false,"populationImpact":null,"year":2019,"details":"MUKTAsoft is a works management platform designed to improve overall efficiency of MUKTA (Odisha's Urban Employment Guarantee Scheme) and to implement direct benefit transfers (DBTs) to wage seekers and community workers via the iFIX platform. Handed over to PwC. Note: As of 2025, the MUKTA scheme has been halted by the current Odisha government."},{"id":"IN-41","scope":"india_state","geography":"Odisha","country":"India","region":"East","sector":"Local Governance","useCase":"Local Governance","partner":"PwC","role":"commercial_partner","stage":"Live","newProduct":false,"populationImpact":null,"year":2016,"details":"SUJOG (Sustainable Services in a Jiffy by Odisha Govt) is an urban service delivery platform leveraging DIGIT's urban governance suite. PwC is exploring SUJOG 2.0 with new capabilities."},{"id":"IN-42","scope":"india_state","geography":"Odisha","country":"India","region":"East","sector":"Livelihoods & Benefits","useCase":"Direct Benefits Delivery","partner":"Deloitte","role":"commercial_partner","stage":"Design","newProduct":false,"populationImpact":null,"year":2023,"details":"Supporting the implementation of Mission Shakti, which seeks to strengthen interventions for women's safety and empowerment through direct benefits delivery built on DIGIT."},{"id":"IN-43","scope":"india_state","geography":"Puducherry","country":"India","region":"South","sector":"Local Governance","useCase":"Building Permits","partner":"eGov","role":"egov_direct","stage":"Live","newProduct":false,"populationImpact":null,"year":2019,"details":"OBPAS (Online Building Plan Approval Software) automates the plan approval process and auto-scrutinises building plans against Development Control Regulations. The eDCR (eGov-DCR) functionality has been integrated with the existing building plan approval software in Puducherry."},{"id":"IN-44","scope":"india_state","geography":"Punjab","country":"India","region":"North","sector":"Local Governance","useCase":"Local Governance","partner":"eGov","role":"egov_direct","stage":"Live","newProduct":false,"populationImpact":null,"year":2017,"details":"Property Tax, Trade Licences, Water and Sewerage, Public Grievance Redressal, Fire NOC, Miscellaneous Collections — with state-level dashboards and ULB portals."},{"id":"IN-45","scope":"india_state","geography":"Punjab","country":"India","region":"North","sector":"Water & Sanitation","useCase":"Water Infrastructure Maintenance","partner":"eGov","role":"egov_direct","stage":"Live","newProduct":false,"populationImpact":null,"year":2020,"details":"mGramSeva implemented in Punjab to help rural local bodies self-sufficiently manage water infrastructure. Live in 3,780 villages with 5.5 lakh consumers onboarded."},{"id":"IN-46","scope":"india_state","geography":"Punjab","country":"India","region":"North","sector":"Local Governance","useCase":"Local Governance","partner":"KPMG","role":"commercial_partner","stage":"Design","newProduct":false,"populationImpact":null,"year":2023,"details":"OBPAS module with Self-Certification feature under development."},{"id":"IN-47","scope":"india_state","geography":"Punjab","country":"India","region":"North","sector":"Livelihoods & Benefits","useCase":"Benefits Delivery","partner":"eGov","role":"egov_direct","stage":"Design","newProduct":false,"populationImpact":null,"year":2024,"details":"SDIP (State Data Integration Platform) will enable real-time data exchange between federated registries to improve service delivery — covering benefits distribution, revenue data triangulation, and real-time expenditure monitoring. Led by eGov, Punjab Development Commission, and Dept. of Governance Reforms under the World Bank's Building Fiscal and Institutional Resilience programme. As of April 2025: PoC in progress, first Steering Committee meeting being prepared."},{"id":"IN-48","scope":"india_state","geography":"Rajasthan","country":"India","region":"North","sector":"Local Governance","useCase":"Finance & Accounting (Municipal)","partner":"Pipeline / TBD","role":"pipeline","stage":"Design","newProduct":false,"populationImpact":null,"year":null,"details":"UPYOG RfP stage — Finance & Accounting and Water & Sewerage modules."},{"id":"IN-49","scope":"india_state","geography":"Tamil Nadu","country":"India","region":"South","sector":"Local Governance","useCase":"Building Permits","partner":"Interlace Technologies","role":"commercial_partner","stage":"Live","newProduct":false,"populationImpact":null,"year":2020,"details":"Scrutiny-based building plan approval with eDCR integration built on the existing system for all 14,000+ local bodies in Tamil Nadu."},{"id":"IN-50","scope":"india_state","geography":"Tamil Nadu","country":"India","region":"South","sector":"Local Governance","useCase":"Finance & Accounting (Municipal)","partner":"Pipeline / TBD","role":"pipeline","stage":"Design","newProduct":false,"populationImpact":null,"year":null,"details":"RfP stage for migration to UPYOG — Finance & Accounting module."},{"id":"IN-51","scope":"india_state","geography":"Tamil Nadu","country":"India","region":"South","sector":"Local Governance","useCase":"Local Governance","partner":"eGov","role":"egov_direct","stage":"Live","newProduct":false,"populationImpact":null,"year":2016,"details":"Property Tax, Trade Licences, Water and Sanitation, Public Grievance Redressal, state-level dashboards, ULB portals, Finance & HR Management systems for municipal employees. Integrations with 18 other existing applications."},{"id":"IN-52","scope":"india_state","geography":"Telangana","country":"India","region":"South","sector":"Local Governance","useCase":"Building Permits","partner":"Pipeline / TBD","role":"pipeline","stage":"Design","newProduct":false,"populationImpact":null,"year":null,"details":"UPYOG implementation initiated — OBPAS module."},{"id":"IN-53","scope":"india_state","geography":"Uttar Pradesh","country":"India","region":"North","sector":"Legal","useCase":"Legal Case Management (Education)","partner":"Piramal Foundation","role":"development_sector","stage":"Design","newProduct":true,"populationImpact":null,"year":2024,"details":"Legal case management system built on DIGIT by Piramal Foundation for state-level education ministries. Likely to be implemented in Uttar Pradesh."},{"id":"IN-54","scope":"india_state","geography":"Uttar Pradesh","country":"India","region":"North","sector":"Local Governance","useCase":"Finance & Accounting (Municipal)","partner":"Pipeline / TBD","role":"pipeline","stage":"Design","newProduct":false,"populationImpact":null,"year":null,"details":"UPYOG implementation initiated — Finance & Accounting module."},{"id":"IN-55","scope":"india_state","geography":"Uttar Pradesh","country":"India","region":"North","sector":"Water & Sanitation","useCase":"Faecal Sludge & Septage Management","partner":"Pipeline / TBD","role":"pipeline","stage":"Design","newProduct":false,"populationImpact":null,"year":null,"details":"UPYOG implementation initiated — Faecal Sludge Management (FSM) module."},{"id":"IN-56","scope":"india_state","geography":"Uttarakhand","country":"India","region":"North","sector":"Local Governance","useCase":"Local Governance","partner":"eGov","role":"egov_direct","stage":"Live","newProduct":false,"populationImpact":null,"year":2019,"details":"Property Tax, Trade Licences, Miscellaneous Collections — with state-level dashboards across Uttarakhand."},{"id":"IN-57","scope":"india_state","geography":"West Bengal","country":"India","region":"East","sector":"Local Governance","useCase":"Local Governance","partner":"PwC","role":"commercial_partner","stage":"Live","newProduct":false,"populationImpact":null,"year":2016,"details":"DIGIT's urban service delivery solutions implemented by PwC for the Kolkata Municipal Corporation — 13 modules in active use."},{"id":"IN-58","scope":"india_state","geography":"West Bengal","country":"India","region":"East","sector":"Local Governance","useCase":"Local Governance","partner":"TCG Digital","role":"commercial_partner","stage":"Design","newProduct":false,"populationImpact":null,"year":2023,"details":"DIGIT's urban governance solutions to be implemented starting with the Public Grievance Redressal module, statewide except Kolkata. As of April 2025: project is stalled with no current movement."},{"id":"IN-59","scope":"india_state","geography":"West Bengal","country":"India","region":"East","sector":"Industrials","useCase":"Inland Water Transport Management","partner":"Deloitte","role":"commercial_partner","stage":"Design","newProduct":false,"populationImpact":null,"year":2023,"details":"Inland water transport management system under development for the Inland Water Association: vessel asset management, contract management, insurance management, and integration with the existing billing system."},{"id":"GL-01","scope":"global_country","geography":"Mozambique (Gaza Province)","country":"Mozambique","region":"Africa","sector":"Health","useCase":"Bednet Distribution Campaign","partner":"Global Health Partner","role":"international","stage":"Live","newProduct":false,"populationImpact":1586866,"year":2023,"details":"Bednet distribution campaign management using DIGIT Health Campaign Management (HCM) across Gaza Province, Mozambique."},{"id":"GL-02","scope":"global_country","geography":"Mozambique (Tete Province)","country":"Mozambique","region":"Africa","sector":"Health","useCase":"Bednet Distribution Campaign","partner":"Global Health Partner","role":"international","stage":"Live","newProduct":false,"populationImpact":3117551,"year":2023,"details":"Bednet distribution campaign management using DIGIT HCM across Tete Province, Mozambique."},{"id":"GL-03","scope":"global_country","geography":"Mozambique (Nampula Province)","country":"Mozambique","region":"Africa","sector":"Health","useCase":"Seasonal Malaria Chemoprevention (SMC)","partner":"Global Health Partner","role":"international","stage":"Live","newProduct":false,"populationImpact":1482649,"year":2024,"details":"Seasonal Malaria Chemoprevention (SMC) campaign management using DIGIT HCM in Nampula Province, Mozambique."},{"id":"GL-04","scope":"global_country","geography":"Mozambique","country":"Mozambique","region":"Africa","sector":"Health","useCase":"Indoor Residual Spraying (IRS)","partner":"Global Health Partner","role":"international","stage":"Live","newProduct":false,"populationImpact":276603,"year":2024,"details":"Indoor Residual Spraying (IRS) malaria campaign management using DIGIT HCM."},{"id":"GL-05","scope":"global_country","geography":"Liberia","country":"Liberia","region":"Africa","sector":"Health","useCase":"Bednet Distribution Campaign","partner":"Global Health Partner","role":"international","stage":"Live","newProduct":false,"populationImpact":5498281,"year":2024,"details":"Nationwide bednet distribution campaign management using DIGIT HCM, Liberia."},{"id":"GL-06","scope":"global_country","geography":"Senegal","country":"Senegal","region":"Africa","sector":"Health","useCase":"Seasonal Malaria Chemoprevention (SMC)","partner":"Global Health Partner","role":"international","stage":"Live","newProduct":false,"populationImpact":81702,"year":2024,"details":"Seasonal Malaria Chemoprevention (SMC) campaign management using DIGIT HCM, Senegal."},{"id":"GL-07","scope":"global_country","geography":"Nigeria (Kano State)","country":"Nigeria","region":"Africa","sector":"Health","useCase":"NTD Lymphatic Filariasis Campaign","partner":"Global Health Partner","role":"international","stage":"Live","newProduct":false,"populationImpact":129002,"year":2024,"details":"NTD Lymphatic Filariasis campaign management using DIGIT HCM in Kano State, Nigeria."},{"id":"GL-08","scope":"global_country","geography":"Nigeria (Kebbi State)","country":"Nigeria","region":"Africa","sector":"Health","useCase":"Seasonal Malaria Chemoprevention (SMC)","partner":"Global Health Partner","role":"international","stage":"Live","newProduct":false,"populationImpact":1255514,"year":2024,"details":"Seasonal Malaria Chemoprevention (SMC) campaign management using DIGIT HCM in Kebbi State, Nigeria."},{"id":"GL-09","scope":"global_country","geography":"Trinidad & Tobago","country":"Trinidad & Tobago","region":"Caribbean","sector":"Multi-sectoral","useCase":"Land Deed Management","partner":"TBD","role":"pipeline","stage":"Design","newProduct":false,"populationImpact":null,"year":null,"details":"Land deed management system under development — DIGIT deployment in Trinidad & Tobago."}];
+
+const ROLE_META = {
+  all: { label: "All roles", color: "#201c17" },
+  egov_direct: { label: "eGov direct", color: "#1d6b4b" },
+  commercial_partner: { label: "Commercial partner", color: "#1d4f91" },
+  development_sector: { label: "Development sector", color: "#b86d18" },
+  govt_body: { label: "Government body", color: "#6d4db1" },
+  international: { label: "International", color: "#0f766e" },
+  pipeline: { label: "Pipeline / TBD", color: "#7b746d" }
+};
+
+const INDIA_LAYOUT = {
+  "Jammu & Kashmir": [2, 1],
+  "Ladakh": [3, 1],
+  "Himachal Pradesh": [2, 2],
+  "Punjab": [1, 3],
+  "Chandigarh": [2, 3],
+  "Uttarakhand": [3, 3],
+  "Haryana": [2, 4],
+  "Uttar Pradesh": [3, 4],
+  "Bihar": [4, 4],
+  "Assam": [6, 4],
+  "Rajasthan": [1, 4],
+  "Gujarat": [1, 5],
+  "Madhya Pradesh": [2, 5],
+  "Jharkhand": [4, 5],
+  "West Bengal": [5, 5],
+  "Manipur": [7, 5],
+  "Chhattisgarh": [3, 6],
+  "Odisha": [4, 6],
+  "Goa": [1, 7],
+  "Maharashtra": [2, 7],
+  "Telangana": [3, 7],
+  "Andhra Pradesh": [4, 7],
+  "Karnataka": [2, 8],
+  "Kerala": [2, 9],
+  "Tamil Nadu": [3, 9],
+  "Puducherry": [4, 9]
+};
+
+const state = {
+  view: "india",
+  stage: "all",
+  role: "all",
+  sector: "all",
+  search: "",
+  selected: null
+};
+
+const stageOptions = [
+  { value: "all", label: "All" },
+  { value: "Live", label: "Live" },
+  { value: "Design", label: "Design" }
+];
+
+function formatNumber(n) {
+  if (!n) return "0";
+  return new Intl.NumberFormat("en-IN").format(n);
+}
+
+function compactNumber(n) {
+  if (!n) return "0";
+  return new Intl.NumberFormat("en-IN", { notation: "compact", maximumFractionDigits: 1 }).format(n);
+}
+
+function uniq(values) {
+  return [...new Set(values)].sort((a, b) => a.localeCompare(b));
+}
+
+function getFilteredPrograms() {
+  return PROGRAMS.filter(program => {
+    if (state.view === "india" && !program.scope.startsWith("india")) return false;
+    if (state.view === "global" && program.scope !== "global_country") return false;
+    if (state.stage !== "all" && program.stage !== state.stage) return false;
+    if (state.role !== "all" && program.role !== state.role) return false;
+    if (state.sector !== "all" && program.sector !== state.sector) return false;
+    if (state.search) {
+      const haystack = [
+        program.geography,
+        program.country,
+        program.useCase,
+        program.partner,
+        program.details,
+        program.sector
+      ].join(" ").toLowerCase();
+      if (!haystack.includes(state.search.toLowerCase())) return false;
+    }
+    return true;
+  });
+}
+
+function getCounts(list) {
+  return {
+    total: list.length,
+    live: list.filter(p => p.stage === "Live").length,
+    design: list.filter(p => p.stage === "Design").length,
+    newProduct: list.filter(p => p.newProduct).length
+  };
+}
+
+function summarizeSelection(programs) {
+  const counts = getCounts(programs);
+  const sectors = uniq(programs.map(p => p.sector));
+  const roles = uniq(programs.map(p => ROLE_META[p.role]?.label || p.role));
+  const impact = programs.reduce((sum, p) => sum + (p.populationImpact || 0), 0);
+  return { counts, sectors, roles, impact };
+}
+
+function bestSelection(filtered) {
+  const grouped = groupForView(filtered);
+  return grouped[0]?.key || null;
+}
+
+function groupForView(filtered) {
+  const groups = new Map();
+  filtered.forEach(program => {
+    const key = state.view === "global" ? program.country : program.geography;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(program);
+  });
+  return [...groups.entries()]
+    .map(([key, items]) => ({ key, items }))
+    .sort((a, b) => b.items.length - a.items.length || a.key.localeCompare(b.key));
+}
+
+function toneForDensity(count) {
+  if (count >= 5) return "linear-gradient(180deg, #1d6b4b 0%, #2b8760 100%)";
+  if (count >= 4) return "linear-gradient(180deg, #3f8e6d 0%, #5ca082 100%)";
+  if (count >= 3) return "linear-gradient(180deg, #78b197 0%, #91bea8 100%)";
+  if (count >= 2) return "linear-gradient(180deg, #bedccd 0%, #d5e9de 100%)";
+  return "linear-gradient(180deg, #eef6f1 0%, #f7fbf8 100%)";
+}
+
+function renderSummary(filtered) {
+  const counts = getCounts(filtered);
+  const india = PROGRAMS.filter(p => p.scope.startsWith("india"));
+  const global = PROGRAMS.filter(p => p.scope === "global_country");
+  document.getElementById("summaryGrid").innerHTML = [
+    { num: formatNumber(counts.total), label: "Programmes visible", sub: "After current filters" },
+    { num: formatNumber(india.length), label: "India programmes", sub: "State and national footprint" },
+    { num: formatNumber(global.length), label: "Global programmes", sub: "International deployments and pipeline" },
+    { num: formatNumber(counts.newProduct), label: "New products in view", sub: "Partner-built or adapted solutions" }
+  ].map(card => `
+    <div class="summary-card">
+      <strong>${card.num}</strong>
+      <span>${card.label}<br>${card.sub}</span>
+    </div>
+  `).join("");
+}
+
+function renderFilters() {
+  document.getElementById("stageFilters").innerHTML = stageOptions.map(option => `
+    <button class="pill-btn stage ${state.stage === option.value ? "active" : ""}" data-stage="${option.value}">
+      ${option.label}
+    </button>
+  `).join("");
+
+  const roleValues = ["all", ...Object.keys(ROLE_META).filter(key => key !== "all")];
+  document.getElementById("roleFilters").innerHTML = roleValues.map(role => `
+    <button class="pill-btn role ${state.role === role ? "active" : ""}" data-role="${role}" style="${state.role === role ? `background:${ROLE_META[role].color};` : ""}">
+      ${ROLE_META[role].label}
+    </button>
+  `).join("");
+
+  const sectors = ["all", ...uniq(PROGRAMS.map(p => p.sector))];
+  document.getElementById("sectorSelect").innerHTML = sectors.map(sector => `
+    <option value="${sector}" ${sector === state.sector ? "selected" : ""}>${sector === "all" ? "All sectors" : sector}</option>
+  `).join("");
+
+  document.getElementById("searchInput").value = state.search;
+}
+
+function renderViz(filtered) {
+  if (!filtered.some(program => (state.view === "india" ? program.scope.startsWith("india") : program.scope === "global_country"))) {
+    document.getElementById("vizBody").innerHTML = `<div class="empty-state">No programmes match the current filter combination.</div>`;
+    document.getElementById("detailPanel").innerHTML = `<div class="empty-state">Try widening the filters to inspect a geography in more detail.</div>`;
+    return;
+  }
+
+  if (!state.selected || !groupForView(filtered).find(group => group.key === state.selected)) {
+    state.selected = bestSelection(filtered);
+  }
+
+  if (state.view === "india") {
+    document.getElementById("vizTitle").textContent = "India as a programme footprint";
+    document.getElementById("vizSub").textContent = "National work is separated from the state footprint, so the map answers a clearer question: where are state-level programmes clustered, and what kind of work is actually visible there?";
+    renderIndiaView(filtered);
+  } else {
+    document.getElementById("vizTitle").textContent = "Global deployment footprint";
+    document.getElementById("vizSub").textContent = "The international view groups programmes by country first, then lets the detail panel carry provincial nuance. That keeps the footprint readable even when the underlying records vary in granularity.";
+    renderGlobalView(filtered);
+  }
+
+  renderDetail(filtered);
+  renderIndex(filtered);
+}
+
+function renderIndiaView(filtered) {
+  const national = filtered.filter(p => p.scope === "india_national");
+  const states = filtered.filter(p => p.scope === "india_state");
+  const groupedStates = groupForView(states);
+  const byState = Object.fromEntries(groupedStates.map(group => [group.key, group.items]));
+  const tiles = Object.entries(INDIA_LAYOUT).map(([name, [col, row]]) => {
+    const items = byState[name] || [];
+    const live = items.filter(p => p.stage === "Live").length;
+    const design = items.filter(p => p.stage === "Design").length;
+    const count = items.length;
+    const selectedClass = state.selected === name ? "active" : "";
+    if (!count) {
+      return `<button class="tile empty" style="grid-column:${col};grid-row:${row};"></button>`;
+    }
+    return `
+      <button class="tile ${selectedClass}" data-select="${name}" style="grid-column:${col};grid-row:${row};background:${toneForDensity(count)};">
+        <div class="tile-name">${name}</div>
+        <div class="tile-count">
+          <strong>${count}</strong>
+          <span>${count === 1 ? "programme" : "programmes"}</span>
+        </div>
+        <div class="split-bar">
+          <i><b style="width:${count ? live / count * 100 : 0}%; background: var(--green);"></b></i>
+          <i><b style="width:${count ? design / count * 100 : 0}%; background: var(--amber);"></b></i>
+        </div>
+      </button>
+    `;
+  }).join("");
+
+  const nationalHtml = national.length ? groupForView(national).map(group => {
+    const info = summarizeSelection(group.items);
+    return `
+      <button class="national-chip ${state.selected === group.key ? "active" : ""}" data-select="${group.key}">
+        <strong>${group.key}</strong>
+        <span>${info.counts.total} programmes · ${info.counts.live} live · ${info.counts.design} design</span>
+      </button>
+    `;
+  }).join("") : `<div class="empty-state">No national programmes match the current filters.</div>`;
+
+  document.getElementById("vizBody").innerHTML = `
+    <div class="footprint">
+      <div class="national-strip">
+        <div class="strip-label">National and cross-state programmes</div>
+        <div class="national-list">${nationalHtml}</div>
+      </div>
+      <div class="india-map">
+        <div class="map-note">Tile cartogram concept for clarity and comparison</div>
+        <div class="tile-grid">${tiles}</div>
+      </div>
+    </div>
+  `;
+}
+
+function renderGlobalView(filtered) {
+  const countries = groupForView(filtered).map(group => {
+    const summary = summarizeSelection(group.items);
+    const regions = uniq(group.items.map(item => item.region));
+    const selectedClass = state.selected === group.key ? "active" : "";
+    return `
+      <button class="country-card ${selectedClass}" data-select="${group.key}">
+        <div class="country-top">
+          <div>
+            <strong>${group.key}</strong>
+            <span>${summary.counts.total} programmes · ${summary.counts.live} live · ${summary.counts.design} design</span>
+          </div>
+          <div class="country-badge">${regions.join(", ")}</div>
+        </div>
+        <div class="country-mini">
+          ${summary.sectors.slice(0, 3).map(sector => `<span class="mini-pill">${sector}</span>`).join("")}
+          ${summary.impact ? `<span class="mini-pill">${compactNumber(summary.impact)} people in rows with quantified impact</span>` : ""}
+        </div>
+      </button>
+    `;
+  }).join("");
+
+  document.getElementById("vizBody").innerHTML = `
+    <div class="global-grid">
+      ${countries}
+    </div>
+  `;
+}
+
+function renderDetail(filtered) {
+  const groups = new Map(groupForView(filtered).map(group => [group.key, group.items]));
+  const items = groups.get(state.selected) || [];
+  if (!items.length) {
+    document.getElementById("detailPanel").innerHTML = `<div class="empty-state">Select a state, national cluster, or country to inspect its programme mix.</div>`;
+    return;
+  }
+
+  const summary = summarizeSelection(items);
+  const latest = items
+    .map(item => item.year)
+    .filter(Boolean)
+    .sort((a, b) => b - a)[0];
+
+  const intros = {
+    india: `${state.selected} currently shows a mix of ${summary.sectors.length} sector${summary.sectors.length === 1 ? "" : "s"} and ${summary.roles.length} delivery mode${summary.roles.length === 1 ? "" : "s"}. The panel below is meant to feel editorial, so a policymaker can interpret the footprint before reading the full list.`,
+    global: `${state.selected} is shown at country level first, with the record-level programme list below carrying province or campaign detail. This makes the international footprint legible without pretending every row belongs on a geographic pin.`
+  };
+
+  document.getElementById("detailPanel").innerHTML = `
+    <div class="detail-label">${state.view === "india" ? "Selected footprint" : "Selected country"}</div>
+    <h2>${state.selected}</h2>
+    <p>${intros[state.view]}</p>
+
+    <div class="detail-stats">
+      <div class="detail-stat">
+        <strong>${summary.counts.total}</strong>
+        <span>Total programmes</span>
+      </div>
+      <div class="detail-stat">
+        <strong>${summary.counts.live}</strong>
+        <span>Live today</span>
+      </div>
+      <div class="detail-stat">
+        <strong>${summary.counts.design}</strong>
+        <span>In design or pipeline</span>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h3>What stands out</h3>
+      <div class="tags">
+        ${summary.sectors.slice(0, 6).map(sector => `<span class="tag">${sector}</span>`).join("")}
+        ${summary.roles.slice(0, 4).map(role => `<span class="tag">${role}</span>`).join("")}
+        ${summary.counts.newProduct ? `<span class="tag">${summary.counts.newProduct} new product${summary.counts.newProduct === 1 ? "" : "s"}</span>` : ""}
+        ${latest ? `<span class="tag">Latest start year ${latest}</span>` : ""}
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h3>Programmes in this footprint</h3>
+      <div class="program-list">
+        ${items.map(item => `
+          <div class="program-card">
+            <div class="program-top">
+              <div>
+                <div class="program-title">${item.useCase}</div>
+                <div class="program-meta">${item.partner} · ${ROLE_META[item.role]?.label || item.role}</div>
+              </div>
+              <div class="badge" style="background:${item.stage === "Live" ? "var(--green-2); color: var(--green);" : "var(--amber-2); color: var(--amber);"}">${item.stage}</div>
+            </div>
+            <div class="program-copy">${item.details}</div>
+            <div class="badge-row">
+              <span class="badge">${item.sector}</span>
+              <span class="badge">${item.geography}</span>
+              ${item.newProduct ? `<span class="badge" style="background: var(--plum-2); color: var(--plum);">New product</span>` : ""}
+              ${item.year ? `<span class="badge">Started ${item.year}</span>` : ""}
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+  `;
+}
+
+function renderIndex(filtered) {
+  document.getElementById("indexCountLabel").textContent = `${filtered.length} results`;
+  document.getElementById("indexGrid").innerHTML = filtered.length ? filtered.map(item => `
+    <article class="program-card">
+      <div class="program-top">
+        <div>
+          <div class="program-title">${item.useCase}</div>
+          <div class="program-meta">${item.geography} · ${item.partner}</div>
+        </div>
+        <div class="badge" style="background:${item.stage === "Live" ? "var(--green-2); color: var(--green);" : "var(--amber-2); color: var(--amber);"}">${item.stage}</div>
+      </div>
+      <div class="program-copy">${item.details}</div>
+      <div class="badge-row">
+        <span class="badge">${item.sector}</span>
+        <span class="badge">${ROLE_META[item.role]?.label || item.role}</span>
+        ${item.newProduct ? `<span class="badge" style="background: var(--plum-2); color: var(--plum);">New product</span>` : ""}
+        ${item.year ? `<span class="badge">Started ${item.year}</span>` : ""}
+      </div>
+    </article>
+  `).join("") : `<div class="empty-state" style="grid-column: 1 / -1;">No programmes match the current filters.</div>`;
+}
+
+function bindEvents() {
+  document.body.addEventListener("click", event => {
+    const tab = event.target.closest("[data-view]");
+    if (tab) {
+      state.view = tab.dataset.view;
+      state.selected = null;
+      update();
+      return;
+    }
+
+    const stage = event.target.closest("[data-stage]");
+    if (stage) {
+      state.stage = stage.dataset.stage;
+      state.selected = null;
+      update();
+      return;
+    }
+
+    const role = event.target.closest("[data-role]");
+    if (role) {
+      state.role = role.dataset.role;
+      state.selected = null;
+      update();
+      return;
+    }
+
+    const selection = event.target.closest("[data-select]");
+    if (selection) {
+      state.selected = selection.dataset.select;
+      renderViz(getFilteredPrograms());
+    }
+  });
+
+  document.getElementById("sectorSelect").addEventListener("change", event => {
+    state.sector = event.target.value;
+    state.selected = null;
+    update();
+  });
+
+  document.getElementById("searchInput").addEventListener("input", event => {
+    state.search = event.target.value.trim();
+    state.selected = null;
+    update();
+  });
+}
+
+function update() {
+  const filtered = getFilteredPrograms();
+  renderSummary(filtered);
+  renderFilters();
+  document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.view === state.view));
+  renderViz(filtered);
+}
+
+bindEvents();
+update();
+</script>
+</body>
+</html>
