@@ -1719,16 +1719,16 @@ footer {
 <!-- PORTFOLIO SUMMARY -->
 <section id="portfolio">
   <div class="section-eyebrow">Solutions built by the eGov community</div>
-  <h2 class="section-title">A portfolio of 70+ programmes across India.</h2>
+  <h2 class="section-title">Where DIGIT has been deployed, adapted, and taken forward - A portfolio of 70+ programmes across India and the world.</h2>
   <p class="section-sub">From direct eGov implementation to commercial partners, development sector organisations, and government technology bodies building independently on DIGIT — this portfolio spans local governance, public health, water, livelihoods, and more across 20+ states. Most of these programmes were not built by eGov. That is precisely the point.</p>
 
   <div class="port-evidence-grid" id="portEvidenceGrid"></div>
 
   <div class="port-explore-row">
-    <a href="portfolio.html" target="_blank" class="port-explore-btn">
+   <a href="digit-portfolio-v2.html" target="_blank" class="port-explore-btn">
       Explore the full portfolio →
     </a>
-    <span class="port-explore-note">Filter by state, sector, eGov role · 70+ programmes · opens in new tab</span>
+    <span class="port-explore-note">Interactive map · filter by state, sector, eGov role · opens in new tab</span>
   </div>
 </section>
 
@@ -2644,12 +2644,13 @@ renderPortEvidence();
 function renderPortEvidence() {
   const el = document.getElementById('portEvidenceGrid');
   if (!el) return;
-  const stats = [
-    { num: '59',   lbl: 'India programmes', sub: 'Live and in design' },
-    { num: '44',   lbl: 'Live & in use',     sub: 'Serving citizens today' },
-    { num: '27',   lbl: 'Net-new products',  sub: 'Built by partners on DIGIT' },
-    { num: '19+',  lbl: 'Implementing orgs', sub: 'Across public & private sector' },
-    { num: '11',   lbl: 'Sectors covered',   sub: 'From local gov to health' },
+ const stats = [
+    { num: '73',  lbl: 'Programmes total',        sub: 'India and international combined' },
+    { num: '59',  lbl: 'India programmes',         sub: 'Across 26 states and union territories' },
+    { num: '14',  lbl: 'International programmes', sub: 'Across 9 countries' },
+    { num: '27',  lbl: 'New products built',       sub: 'Adaptations built beyond the core DIGIT platform' },
+    { num: '11',  lbl: 'Sectors covered',          sub: 'From local governance to health, water, and livelihoods' },
+    { num: '60',  lbl: 'Built by the ecosystem',   sub: 'Programmes led by partners, not eGov directly' },
   ];
   el.innerHTML = stats.map(s =>
     `<div class="pev-card">
