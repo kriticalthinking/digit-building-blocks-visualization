@@ -811,9 +811,150 @@
     .page { width: min(100vw - 18px, 1380px); margin-top: 10px; }
     .hero, .panel { border-radius: 22px; }
   }
+
+  /* ── Mobile (768px and below) ──────────────────────────────────────── */
+  @media (max-width: 768px) {
+    .page { margin-top: 0; width: 100%; padding: 0 10px; box-sizing: border-box; }
+    .hero { padding: 22px 18px; border-radius: 18px; margin-top: 12px; }
+    .hero h1 { font-size: 28px; }
+    .hero p { font-size: 15px; line-height: 1.6; }
+    .summary-grid { grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px; }
+    .summary-card strong { font-size: 26px; }
+    .layout { gap: 12px; margin-top: 12px; }
+
+    /* Controls */
+    .controls { padding: 14px; }
+    .tabs { margin-bottom: 14px; }
+    .tab-btn { padding: 10px 14px; font-size: 13px; }
+    .control-row { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .pill-btn { padding: 11px 12px; font-size: 13px; min-height: 44px; }
+    select, input[type="search"] { min-height: 44px; font-size: 15px; }
+
+    /* Viz panel */
+    .viz-panel { padding: 14px; }
+    .viz-head { flex-direction: column; align-items: start; gap: 10px; margin-bottom: 12px; }
+    .viz-title { font-size: 22px; }
+    .legend { gap: 10px; font-size: 11px; }
+
+    /* Map — scrollable so it never gets crushed */
+    .india-map { min-height: unset; padding: 12px; border-radius: 18px; }
+    .india-map-head { display: none; }
+    .india-canvas {
+      min-height: unset;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      padding: 10px;
+      border-radius: 14px;
+    }
+    .india-svg { width: auto; min-width: 520px; height: 520px; display: block; }
+    .map-swipe-hint {
+      display: block;
+      text-align: center;
+      font-size: 11px;
+      color: var(--muted);
+      padding: 6px 0 2px;
+      letter-spacing: 0.04em;
+    }
+    .state-badge text { font-size: 28px; }
+    .map-note { white-space: normal; font-size: 11px; }
+    .boundary-note { font-size: 10px; }
+
+    /* National strip */
+    .national-chip { min-width: 140px; }
+
+    /* Detail panel — static, full width below everything */
+    .detail { position: static; padding: 16px; border-radius: 18px; }
+    .detail h2 { font-size: 26px; }
+    .detail-stats { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .detail-stat strong { font-size: 20px; }
+
+    /* Programme cards */
+    .program-card { padding: 12px; }
+    .program-title { font-size: 14px; }
+
+    /* Index */
+    .index-panel { padding: 16px; }
+    .index-grid { grid-template-columns: 1fr; gap: 10px; }
+
+    /* Global view */
+    .global-lane { padding: 12px; }
+    .global-lane-track { grid-template-columns: 1fr; }
+    .country-card { padding: 12px; }
+
+    /* Top bar */
+    .top-bar-note { display: none; }
+  }
+
+  /* ── Small phones (480px and below) ────────────────────────────────── */
+  @media (max-width: 480px) {
+    .summary-grid { grid-template-columns: 1fr 1fr; }
+    .summary-card strong { font-size: 22px; }
+    .summary-card span { font-size: 11px; }
+    .control-row { grid-template-columns: 1fr; }
+    .detail-stats { grid-template-columns: 1fr 1fr; }
+    .hero h1 { font-size: 24px; }
+    .india-svg { min-width: 480px; height: 480px; }
+  }
+
+  /* Swipe hint hidden on desktop */
+  .map-swipe-hint { display: none; }
+
+  .status-banner {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 9px 16px;
+    background: #1c1917;
+    color: #fbbf24;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .status-banner-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #fbbf24;
+    flex-shrink: 0;
+  }
+  .top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+  }
+  .back-link {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--green);
+    text-decoration: none;
+  }
+  .back-link:hover { text-decoration: underline; }
+  .top-bar-note {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .boundary-note {
+    margin-top: 10px;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
 </style>
 </head>
 <body>
+<div class="status-banner"><div class="status-banner-dot"></div>Strawman for internal discussion only — please do not circulate<div class="status-banner-dot"></div></div>
+<div class="top-bar"><a href="index.html" class="back-link">← Back to overview</a><span class="top-bar-note">Digital Building Blocks · eGov Foundation</span></div>
 <div class="page">
   <section class="hero">
     <div class="kicker">Portfolio of programmes built on DIGIT</div>
@@ -1285,6 +1426,8 @@ function renderIndiaView(filtered) {
             `).join("")}
           </svg>
         </div>
+        <span class="map-swipe-hint">← swipe to explore the map →</span>
+        <div class="boundary-note">Map indicative. External and internal boundaries as per Government of India official sources / Survey of India where available.</div>
         ${additional.length ? `
           <div class="map-footnote">A small number of programme geographies are shown separately below because this boundary file predates the current state structure used in the portfolio dataset.</div>
           <div class="map-additional">
@@ -1371,6 +1514,14 @@ function renderDetail(filtered) {
     global: `${state.selected} is represented here as a country-level footprint, with province or campaign-specific detail carried in the programme list below. This keeps the global view legible while preserving the differences between deployments.`
   };
 
+  // On mobile, scroll detail panel into view after selection
+  if (window.innerWidth <= 768) {
+    setTimeout(() => {
+      const panel = document.getElementById("detailPanel");
+      if (panel) panel.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 80);
+  }
+
   document.getElementById("detailPanel").innerHTML = `
     <div class="detail-label">${state.view === "india" ? "Selected geography" : "Selected country"}</div>
     <h2>${state.selected}</h2>
@@ -1429,7 +1580,10 @@ function renderDetail(filtered) {
 }
 
 function renderIndex(filtered) {
-  document.getElementById("indexCountLabel").textContent = `${filtered.length} programme${filtered.length === 1 ? "" : "s"}`;
+  const total = PROGRAMS.filter(p => state.view === "india" ? p.scope.startsWith("india") : p.scope === "global_country").length;
+  document.getElementById("indexCountLabel").textContent = filtered.length === total
+    ? `${filtered.length} programme${filtered.length === 1 ? "" : "s"}`
+    : `${filtered.length} of ${total} programmes`;
   document.getElementById("indexGrid").innerHTML = filtered.length ? filtered.map(item => `
     <article class="program-card">
       <div class="program-top">
