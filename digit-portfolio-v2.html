@@ -1224,7 +1224,7 @@ function renderGlobalView(filtered) {
                   </div>
                   <div class="country-mini">
                     ${summary.sectors.slice(0, 3).map(sector => `<span class="mini-pill">${sector}</span>`).join("")}
-                    ${summary.impact ? `<span class="mini-pill">${compactNumber(summary.impact)} people in rows with quantified impact</span>` : ""}
+                    ${summary.impact ? `<span class="mini-pill">${compactNumber(summary.impact)} people reached</span>` : ""}
                   </div>
                 </button>
               `;
