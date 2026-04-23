@@ -245,6 +245,26 @@ section.full-bleed { max-width: none; padding-left: 0; padding-right: 0; }
 .idea-5 .idea-header { border-left: 4px solid #0f766e; }
 .idea-6 .idea-number { background: var(--rose); }
 .idea-6 .idea-header { border-left: 4px solid var(--rose); }
+
+/* collapsible cards */
+.idea-header { cursor: pointer; user-select: none; }
+.idea-header:hover { background: var(--surface2); }
+.idea-summary {
+  font-size: 0.82rem; color: var(--text-mid); line-height: 1.6;
+  margin-top: 0.5rem;
+}
+.idea-chevron {
+  font-size: 0.8rem; color: var(--text-dim); flex-shrink: 0;
+  margin-left: auto; padding-left: 0.75rem; padding-top: 0.15rem;
+  transition: transform 0.25s ease;
+}
+.idea-card.open .idea-chevron { transform: rotate(180deg); }
+.idea-body {
+  padding: 1.5rem 2rem;
+  display: none;
+  border-top: 1px solid var(--border);
+}
+.idea-card.open .idea-body { display: block; }
 .early-tag {
   display:inline-flex;align-items:center;gap:0.35rem;
   background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;
@@ -548,50 +568,13 @@ footer {
 <!-- HERO -->
 <section id="hero">
   <div class="section-eyebrow">Partnership Proposal · Urban India</div>
-  <h1 class="section-title">Reviving and deepening<br><em>the eGov–MoHUA partnership</em></h1>
+  <h1 class="section-title">eGov Foundation &amp; MoHUA —<br><em>a proposal for continued collaboration</em></h1>
 
   <div class="hero-grid">
     <div class="hero-body">
-      <div class="partnership-pill">● Technical support to MoHUA's urban transformation agenda</div>
-      <p>eGov Foundation and MoHUA have a shared history that few partnerships in Indian digital governance can match. Working under MoHUA's leadership, eGov supported the architecture of DIGIT, which became the technical foundation for UPYOG — India's national urban governance platform, now fully owned and operated by MoHUA through NIUA, serving 4,400+ urban local bodies across 30 states.</p>
-      <p>The context for deepening this partnership is significant. The UCF operational guidelines were launched in April 2026, unlocking ₹4 lakh crore in urban investment on a reform-linked, challenge-mode basis. The 16th Finance Commission has committed ₹3.56 lakh crore to ULBs over 2026–31. eGov's PFM team is already engaged under MoHUA's direction on NMAM 2.0 and the XVI FC Digital Grants Management system.</p>
-      <p>The six ideas below are not about resting on past work. They are areas where eGov believes it can contribute technical capacity in support of MoHUA's priorities — on UCF programme infrastructure, UPYOG adoption, governance intelligence, citizen engagement, climate-resilient cities, and RERA data standards. In each case, MoHUA leads; eGov supports.</p>
-
-      <div style="margin-top:1.8rem;margin-bottom:0.4rem;">
-        <div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:0.75rem;">Active engagements with MoHUA ecosystem</div>
-        <div style="display:flex;flex-wrap:wrap;gap:0.5rem;">
-          <span style="background:var(--green-light);border:1px solid var(--green-mid);border-radius:20px;padding:0.25rem 0.7rem;font-size:0.73rem;color:var(--green);font-weight:500;">NUDM / UPYOG architecture</span>
-          <span style="background:var(--green-light);border:1px solid var(--green-mid);border-radius:20px;padding:0.25rem 0.7rem;font-size:0.73rem;color:var(--green);font-weight:500;">NMAM 2.0 — Digital MFM Advisor</span>
-          <span style="background:var(--green-light);border:1px solid var(--green-mid);border-radius:20px;padding:0.25rem 0.7rem;font-size:0.73rem;color:var(--green);font-weight:500;">XVI FC Digital Grants Management</span>
-          <span style="background:var(--green-light);border:1px solid var(--green-mid);border-radius:20px;padding:0.25rem 0.7rem;font-size:0.73rem;color:var(--green);font-weight:500;">AIFORERA — RERA data standards</span>
-          <span style="background:var(--green-light);border:1px solid var(--green-mid);border-radius:20px;padding:0.25rem 0.7rem;font-size:0.73rem;color:var(--green);font-weight:500;">PM SVANidhi — product support</span>
-          <span style="background:var(--green-light);border:1px solid var(--green-mid);border-radius:20px;padding:0.25rem 0.7rem;font-size:0.73rem;color:var(--green);font-weight:500;">AI CoE with IIT-K · urban governance</span>
-        </div>
-      </div>
-
-      <div class="legacy-strip">
-        <div class="legacy-item">
-          <div class="legacy-num">4,400+</div>
-          <div class="legacy-label">Urban local bodies in scope on UPYOG</div>
-        </div>
-        <div class="legacy-item">
-          <div class="legacy-num">30</div>
-          <div class="legacy-label">States &amp; UTs signed on to UPYOG</div>
-        </div>
-        <div class="legacy-item">
-          <div class="legacy-num">16</div>
-          <div class="legacy-label">Urban service modules on the platform</div>
-        </div>
-        <div class="legacy-item">
-          <div class="legacy-num">20,000+</div>
-          <div class="legacy-label">Training hours delivered for UPYOG rollout</div>
-        </div>
-        <div class="legacy-item">
-          <div class="legacy-num">70</div>
-          <div class="legacy-label">Empanelled technical implementation partners</div>
-        </div>
-      </div>
-      <p style="font-size:0.7rem;color:var(--text-dim);margin-top:0.5rem;font-family:var(--font-mono);">Legacy figures sourced from NUDM/NIUA official publications.</p>
+      <p>eGov Foundation and MoHUA have worked together on urban digital governance for over a decade. Under MoHUA's leadership, eGov supported the architecture of DIGIT, which became the technical foundation for UPYOG — India's national urban governance platform, now fully owned and operated by MoHUA through NIUA, serving 4,400+ urban local bodies across 30 states.</p>
+      <p>Given MoHUA's current priorities and the policy context in 2026 — the launch of UCF, the 16th Finance Commission's urban grants, the new SWM Rules, and active work on NMAM 2.0 and RERA data standards — there are several areas where eGov can offer technical support. The six ideas below set out what that could look like in practice.</p>
+      <p>In each case, the framing is the same: MoHUA and its agencies determine the direction; eGov contributes technical capacity, platform infrastructure, and implementation support where it is useful.</p>
     </div>
 
     <div>
@@ -603,7 +586,7 @@ footer {
             <span style="font-family:var(--font-mono);font-size:0.65rem;background:#fef3c7;color:#92400e;border-radius:4px;padding:0.1rem 0.4rem;font-weight:600;">Apr 2026</span>
             <span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-dim);">Ideas 1 · 2 · 3</span>
           </div>
-          <div style="font-size:0.82rem;color:var(--text-mid);line-height:1.5;">UCF operational guidelines published. The reform toolkit — which defines what counts as governance reform — is explicitly flagged as "to be issued separately." That window is open now.</div>
+          <div style="font-size:0.82rem;color:var(--text-mid);line-height:1.5;">UCF operational guidelines published. The reform toolkit — which defines what counts as governance reform — is yet to be issued. The design stage for that toolkit is now.</div>
         </div>
 
         <div class="hero-stat">
@@ -619,7 +602,7 @@ footer {
             <span style="font-family:var(--font-mono);font-size:0.65rem;background:#fef3c7;color:#92400e;border-radius:4px;padding:0.1rem 0.4rem;font-weight:600;">Sept 2026</span>
             <span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-dim);">Idea 5</span>
           </div>
-          <div style="font-size:0.82rem;color:var(--text-mid);line-height:1.5;">DRAP's "Lakshya Zero Dumpsites" deadline. 1,428 sites in remediation across 202 ULBs — but no unified tracking system yet connecting dumpsite status to CPCB air quality data.</div>
+          <div style="font-size:0.82rem;color:var(--text-mid);line-height:1.5;">DRAP's "Lakshya Zero Dumpsites" deadline. 1,428 sites in remediation across 202 ULBs — no unified tracking system yet connects dumpsite status to CPCB air quality data.</div>
         </div>
 
         <div class="hero-stat">
@@ -627,7 +610,7 @@ footer {
             <span style="font-family:var(--font-mono);font-size:0.65rem;background:#fef3c7;color:#92400e;border-radius:4px;padding:0.1rem 0.4rem;font-weight:600;">In progress</span>
             <span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-dim);">Idea 6</span>
           </div>
-          <div style="font-size:0.82rem;color:var(--text-mid);line-height:1.5;">AIFORERA Technical Committee is drafting common data standards for all state RERA platforms — with eGov on the committee. Standards without a platform implementation plan lose momentum.</div>
+          <div style="font-size:0.82rem;color:var(--text-mid);line-height:1.5;">AIFORERA Technical Committee is drafting common data standards for all state RERA platforms — eGov is on the committee. The transition from standards to implementation is the next step.</div>
         </div>
 
         <div class="hero-stat" style="border-bottom:none;">
@@ -646,69 +629,105 @@ footer {
 <section id="track-record">
   <div class="section-eyebrow">What this partnership has already enabled</div>
   <h2 class="section-title">Urban governance on DIGIT —<br>the foundation we're building on</h2>
-  <p class="section-sub">Before turning to new ideas, it helps to understand the scale of what MoHUA's UPYOG platform and its predecessor state programmes have collectively unlocked — through eGov's direct work, through commercial and government partners building on DIGIT, and through the pipeline of states now in active procurement.</p>
+  <p class="section-sub">Through direct state work, a growing partner ecosystem, and the NUDM/UPYOG national platform, DIGIT-based urban governance systems have reached most of India's states. The full picture is one click away on the interactive portfolio map.</p>
 
-  <div class="track-record-grid">
-
-    <!-- Band 1: eGov direct -->
-    <div class="track-band band-direct">
-      <div class="track-band-eyebrow">eGov direct</div>
-      <div class="track-band-title">State implementations led by eGov</div>
-      <div class="track-band-sub">Long-term embedded engagements where eGov directly supported state governments on urban service digitisation — predating and informing UPYOG's architecture.</div>
-      <div class="track-band-states">
-        <div class="track-state-pill">Andhra Pradesh<small>Property tax · Trade licences · Water · Grievances · 33M citizens</small></div>
-        <div class="track-state-pill">Punjab<small>Property tax · Water · Trade licences · Fire NOC</small></div>
-        <div class="track-state-pill">Karnataka<small>Finance &amp; property tax · since 2004 · migrating to UPYOG</small></div>
-        <div class="track-state-pill">Tamil Nadu<small>Property tax · Trade licences · Water · Greater Chennai</small></div>
-        <div class="track-state-pill">Uttarakhand<small>Property tax · Trade licences · dashboards</small></div>
-        <div class="track-state-pill">Delhi<small>NDMC &amp; MCD · Finance &amp; property tax · UPYOG migration underway</small></div>
-        <div class="track-state-pill">Puducherry<small>Online building plan approval · eDCR integration</small></div>
-        <div class="track-state-pill">NUDM / UPYOG<small>Platform architecture · programme design · 20,000+ training hours</small></div>
-      </div>
+  <!-- Active engagements strip -->
+  <div style="background:var(--green-light);border:1px solid var(--green-mid);border-radius:12px;padding:1.2rem 1.4rem;margin-top:1.8rem;">
+    <div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--green);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:0.5rem;">Active engagements with MoHUA's ecosystem · 2024–26</div>
+    <p style="font-size:0.82rem;color:var(--text-mid);line-height:1.6;margin-bottom:0.9rem;">Beyond the state-level implementation history, eGov is currently engaged with MoHUA in several active capacities — as a technical advisor, a committee member, and a product development partner across different parts of the ministry's work.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:0.45rem;">
+      <span style="background:white;border:1px solid var(--green-mid);color:var(--green);border-radius:6px;padding:0.28rem 0.7rem;font-size:0.72rem;font-weight:500;">NUDM / UPYOG — platform architecture &amp; 20,000+ training hours</span>
+      <span style="background:white;border:1px solid var(--green-mid);color:var(--green);border-radius:6px;padding:0.28rem 0.7rem;font-size:0.72rem;font-weight:500;">NMAM 2.0 — appointed Digital MFM Advisor by CAG/MoHUA</span>
+      <span style="background:white;border:1px solid var(--green-mid);color:var(--green);border-radius:6px;padding:0.28rem 0.7rem;font-size:0.72rem;font-weight:500;">XVI FC Digital Grants Management — DGM system design</span>
+      <span style="background:white;border:1px solid var(--green-mid);color:var(--green);border-radius:6px;padding:0.28rem 0.7rem;font-size:0.72rem;font-weight:500;">AIFORERA — RERA common data standards committee</span>
+      <span style="background:white;border:1px solid var(--green-mid);color:var(--green);border-radius:6px;padding:0.28rem 0.7rem;font-size:0.72rem;font-weight:500;">PM SVANidhi — product development support</span>
+      <span style="background:white;border:1px solid var(--green-mid);color:var(--green);border-radius:6px;padding:0.28rem 0.7rem;font-size:0.72rem;font-weight:500;">AI CoE with IIT-K — urban governance AI pilots in Odisha &amp; Punjab</span>
     </div>
-
-    <!-- Band 2: Partner-led -->
-    <div class="track-band band-partner">
-      <div class="track-band-eyebrow">Partner-led on DIGIT</div>
-      <div class="track-band-title">Commercial &amp; government partners deploying UPYOG independently</div>
-      <div class="track-band-sub">The measure of a platform's maturity is whether others can deploy it without the original builder. These implementations were led entirely by certified partners — eGov's role was ecosystem enablement, not direct delivery.</div>
-      <div class="track-band-states">
-        <div class="track-state-pill">Kerala · IKM Kerala<small>All 94 ULBs · Full suite incl. Finance &amp; HR · 18.7M population</small></div>
-        <div class="track-state-pill">Odisha · PwC<small>SUJOG · 114 ULBs · Urban service delivery · 7.25M population</small></div>
-        <div class="track-state-pill">West Bengal · PwC<small>Kolkata Municipal Corporation · 13 modules</small></div>
-        <div class="track-state-pill">Chandigarh · PwC<small>Property tax · trade licences · 10 custom apps</small></div>
-        <div class="track-state-pill">Manipur · Deloitte<small>Property tax · Finance · Water &amp; Sewerage · 26 ULBs</small></div>
-        <div class="track-state-pill">Himachal Pradesh · Deloitte<small>Finance &amp; Accounting · OBPAS</small></div>
-        <div class="track-state-pill">All Cantonments · BEL<small>eChhawani · Ministry of Defence · 2.5M citizens</small></div>
-        <div class="track-state-pill">Central Govt · Accenture<small>National grievance redressal platform on DIGIT</small></div>
-        <div class="track-state-pill">Tamil Nadu · Interlace<small>Building plan approval · all 14,000+ local bodies</small></div>
-        <div class="track-state-pill">Assam · Sumato<small>Finance &amp; Accounting · 2 ULBs</small></div>
-      </div>
-    </div>
-
-    <!-- Band 3: Pipeline -->
-    <div class="track-band band-pipeline">
-      <div class="track-band-eyebrow">Active pipeline</div>
-      <div class="track-band-title">States in active UPYOG procurement or rollout</div>
-      <div class="track-band-sub">States that have initiated UPYOG implementation — in RfP, design, or early deployment stage. The adoption wave is still building.</div>
-      <div class="track-band-states">
-        <div class="track-state-pill">Gujarat<small>Full urban suite · implementation initiated</small></div>
-        <div class="track-state-pill">Maharashtra<small>BMC-first · state-specific modules in development</small></div>
-        <div class="track-state-pill">Bihar<small>RfP stage · full suite incl. OBPAS &amp; Finance</small></div>
-        <div class="track-state-pill">Madhya Pradesh<small>All modules · open-source migration</small></div>
-        <div class="track-state-pill">Rajasthan<small>Finance &amp; Accounting · Water &amp; Sewerage</small></div>
-        <div class="track-state-pill">Uttar Pradesh<small>Finance &amp; Accounting module</small></div>
-        <div class="track-state-pill">Haryana<small>Finance &amp; Accounting · RfP &amp; evaluation stage</small></div>
-        <div class="track-state-pill">Jammu &amp; Kashmir<small>Finance &amp; Accounting · OBPAS</small></div>
-        <div class="track-state-pill">Ladakh<small>All services exc. Birth &amp; Death · RfP stage</small></div>
-        <div class="track-state-pill">Goa<small>Finance &amp; Accounting</small></div>
-        <div class="track-state-pill">Tamil Nadu<small>Finance &amp; Accounting migration to UPYOG</small></div>
-        <div class="track-state-pill">Telangana<small>OBPAS module</small></div>
-      </div>
-    </div>
-
   </div>
-  <div class="track-record-note">Programme data sourced from eGov Foundation's internal programme portfolio. Pipeline entries reflect RfP/design stage as of early 2025; status may have evolved.</div>
+
+  <!-- Summary row with descriptions -->
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.2rem;">
+    <div style="background:var(--surface);border:1px solid var(--border-warm);border-top:3px solid var(--green);border-radius:10px;padding:1rem 1.1rem;">
+      <div style="font-family:var(--font-display);font-size:1.6rem;color:var(--green);">8</div>
+      <div style="font-size:0.78rem;font-weight:600;color:var(--green);margin-bottom:0.3rem;">eGov direct</div>
+      <div style="font-size:0.72rem;color:var(--text-dim);line-height:1.5;">Long-term embedded engagements where eGov directly supported state governments on urban service digitisation — predating and informing UPYOG's architecture.</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border-warm);border-top:3px solid var(--blue);border-radius:10px;padding:1rem 1.1rem;">
+      <div style="font-family:var(--font-display);font-size:1.6rem;color:var(--blue);">10</div>
+      <div style="font-size:0.78rem;font-weight:600;color:var(--blue);margin-bottom:0.3rem;">Partner-led on DIGIT</div>
+      <div style="font-size:0.72rem;color:var(--text-dim);line-height:1.5;">Commercial and government partners deploying UPYOG independently. A platform's maturity is best measured by whether others can build on it without the original team's involvement.</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border-warm);border-top:3px solid var(--amber);border-radius:10px;padding:1rem 1.1rem;">
+      <div style="font-family:var(--font-display);font-size:1.6rem;color:var(--amber);">12</div>
+      <div style="font-size:0.78rem;font-weight:600;color:var(--amber);margin-bottom:0.3rem;">Active pipeline</div>
+      <div style="font-size:0.72rem;color:var(--text-dim);line-height:1.5;">States that have initiated UPYOG implementation — in RfP, design, or early deployment stage. The adoption wave is still underway.</div>
+    </div>
+  </div>
+
+  <!-- Chip cloud -->
+  <div style="margin-top:1.2rem;position:relative;">
+    <div id="chipCloud" style="display:flex;flex-wrap:wrap;gap:0.4rem;max-height:96px;overflow:hidden;transition:max-height 0.4s ease;">
+      <span style="background:var(--green-light);border:1px solid var(--green-mid);color:var(--green);border-radius:20px;padding:0.22rem 0.65rem;font-size:0.73rem;font-weight:500;">Andhra Pradesh</span>
+      <span style="background:var(--green-light);border:1px solid var(--green-mid);color:var(--green);border-radius:20px;padding:0.22rem 0.65rem;font-size:0.73rem;font-weight:500;">Punjab</span>
+      <span style="background:var(--green-light);border:1px solid var(--green-mid);color:var(--green);border-radius:20px;padding:0.22rem 0.65rem;font-size:0.73rem;font-weight:500;">Karnataka</span>
+      <span style="background:var(--green-light);border:1px solid var(--green-mid);color:var(--green);border-radius:20px;padding:0.22rem 0.65rem;font-size:0.73rem;font-weight:500;">Tamil Nadu (Chennai)</span>
+      <span style="background:var(--green-light);border:1px solid var(--green-mid);color:var(--green);border-radius:20px;padding:0.22rem 0.65rem;font-size:0.73rem;font-weight:500;">Uttarakhand</span>
+      <span style="background:var(--green-light);border:1px solid var(--green-mid);color:var(--green);border-radius:20px;padding:0.22rem 0.65rem;font-size:0.73rem;font-weight:500;">Delhi (NDMC &amp; MCD)</span>
+      <span style="background:var(--green-light);border:1px solid var(--green-mid);color:var(--green);border-radius:20px;padding:0.22rem 0.65rem;font-size:0.73rem;font-weight:500;">Puducherry</span>
+      <span style="background:var(--green-light);border:1px solid var(--green-mid);color:var(--green);border-radius:20px;padding:0.22rem 0.65rem;font-size:0.73rem;font-weight:500;">NUDM / UPYOG (National)</span>
+      <span style="background:var(--blue-light);border:1px solid #bfdbfe;color:var(--blue);border-radius:20px;padding:0.22rem 0.65rem;font-size:0.73rem;font-weight:500;">Kerala · IKM</span>
+      <span style="background:var(--blue-light);border:1px solid #bfdbfe;color:var(--blue);border-radius:20px;padding:0.22rem 0.65rem;font-size:0.73rem;font-weight:500;">Odisha · PwC</span>
+      <span style="background:var(--blue-light);border:1px solid #bfdbfe;color:var(--blue);border-radius:20px;padding:0.22rem 0.65rem;font-size:0.73rem;font-weight:500;">West Bengal · PwC</span>
+      <span style="background:var(--blue-light);border:1px solid #bfdbfe;color:var(--blue);border-radius:20px;padding:0.22rem 0.65rem;font-size:0.73rem;font-weight:500;">Chandigarh · PwC</span>
+      <span style="background:var(--blue-light);border:1px solid #bfdbfe;color:var(--blue);border-radius:20px;padding:0.22rem 0.65rem;font-size:0.73rem;font-weight:500;">Manipur · Deloitte</span>
+      <span style="background:var(--blue-light);border:1px solid #bfdbfe;color:var(--blue);border-radius:20px;padding:0.22rem 0.65rem;font-size:0.73rem;font-weight:500;">Himachal Pradesh · Deloitte</span>
+      <span style="background:var(--blue-light);border:1px solid #bfdbfe;color:var(--blue);border-radius:20px;padding:0.22rem 0.65rem;font-size:0.73rem;font-weight:500;">All Cantonments · BEL</span>
+      <span style="background:var(--blue-light);border:1px solid #bfdbfe;color:var(--blue);border-radius:20px;padding:0.22rem 0.65rem;font-size:0.73rem;font-weight:500;">Central Govt · Accenture</span>
+      <span style="background:var(--blue-light);border:1px solid #bfdbfe;color:var(--blue);border-radius:20px;padding:0.22rem 0.65rem;font-size:0.73rem;font-weight:500;">Tamil Nadu · Interlace</span>
+      <span style="background:var(--blue-light);border:1px solid #bfdbfe;color:var(--blue);border-radius:20px;padding:0.22rem 0.65rem;font-size:0.73rem;font-weight:500;">Assam · Sumato</span>
+      <span style="background:var(--amber-light);border:1px solid #fde68a;color:var(--amber);border-radius:20px;padding:0.22rem 0.65rem;font-size:0.73rem;font-weight:500;">Gujarat</span>
+      <span style="background:var(--amber-light);border:1px solid #fde68a;color:var(--amber);border-radius:20px;padding:0.22rem 0.65rem;font-size:0.73rem;font-weight:500;">Maharashtra</span>
+      <span style="background:var(--amber-light);border:1px solid #fde68a;color:var(--amber);border-radius:20px;padding:0.22rem 0.65rem;font-size:0.73rem;font-weight:500;">Bihar</span>
+      <span style="background:var(--amber-light);border:1px solid #fde68a;color:var(--amber);border-radius:20px;padding:0.22rem 0.65rem;font-size:0.73rem;font-weight:500;">Madhya Pradesh</span>
+      <span style="background:var(--amber-light);border:1px solid #fde68a;color:var(--amber);border-radius:20px;padding:0.22rem 0.65rem;font-size:0.73rem;font-weight:500;">Rajasthan</span>
+      <span style="background:var(--amber-light);border:1px solid #fde68a;color:var(--amber);border-radius:20px;padding:0.22rem 0.65rem;font-size:0.73rem;font-weight:500;">Uttar Pradesh</span>
+      <span style="background:var(--amber-light);border:1px solid #fde68a;color:var(--amber);border-radius:20px;padding:0.22rem 0.65rem;font-size:0.73rem;font-weight:500;">Haryana</span>
+      <span style="background:var(--amber-light);border:1px solid #fde68a;color:var(--amber);border-radius:20px;padding:0.22rem 0.65rem;font-size:0.73rem;font-weight:500;">Jammu &amp; Kashmir</span>
+      <span style="background:var(--amber-light);border:1px solid #fde68a;color:var(--amber);border-radius:20px;padding:0.22rem 0.65rem;font-size:0.73rem;font-weight:500;">Ladakh</span>
+      <span style="background:var(--amber-light);border:1px solid #fde68a;color:var(--amber);border-radius:20px;padding:0.22rem 0.65rem;font-size:0.73rem;font-weight:500;">Goa</span>
+      <span style="background:var(--amber-light);border:1px solid #fde68a;color:var(--amber);border-radius:20px;padding:0.22rem 0.65rem;font-size:0.73rem;font-weight:500;">Tamil Nadu (F&amp;A)</span>
+      <span style="background:var(--amber-light);border:1px solid #fde68a;color:var(--amber);border-radius:20px;padding:0.22rem 0.65rem;font-size:0.73rem;font-weight:500;">Telangana</span>
+    </div>
+    <div id="chipFade" style="position:absolute;bottom:0;left:0;right:0;height:36px;background:linear-gradient(transparent,var(--bg));pointer-events:none;"></div>
+  </div>
+
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem;margin-top:0.75rem;">
+    <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:0.35rem;font-size:0.72rem;color:var(--text-dim);"><span style="width:10px;height:10px;border-radius:50%;background:var(--green);display:inline-block;"></span>eGov direct</div>
+      <div style="display:flex;align-items:center;gap:0.35rem;font-size:0.72rem;color:var(--text-dim);"><span style="width:10px;height:10px;border-radius:50%;background:var(--blue);display:inline-block;"></span>Partner-led</div>
+      <div style="display:flex;align-items:center;gap:0.35rem;font-size:0.72rem;color:var(--text-dim);"><span style="width:10px;height:10px;border-radius:50%;background:var(--amber);display:inline-block;"></span>Pipeline</div>
+      <button id="chipToggle" onclick="toggleChips()" style="background:none;border:none;cursor:pointer;font-family:var(--font-mono);font-size:0.68rem;color:var(--green);padding:0;text-decoration:underline;">Show all →</button>
+    </div>
+    <a href="https://kriticalthinking.github.io/digit-building-blocks-visualization/digit-portfolio-v2.html" target="_blank"
+       style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--surface);border:1px solid var(--border-warm);border-radius:8px;padding:0.5rem 0.9rem;font-size:0.78rem;font-weight:600;color:var(--green);text-decoration:none;box-shadow:var(--shadow-sm);transition:box-shadow 0.15s;"
+       onmouseover="this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.boxShadow='var(--shadow-sm)'">
+      View full interactive portfolio map →
+    </a>
+  </div>
+  <div class="track-record-note" style="margin-top:0.6rem;">Programme data from eGov Foundation's internal portfolio. Pipeline status as of early 2025 — may have evolved.</div>
+
+  <script>
+  let chipsExpanded = false;
+  function toggleChips() {
+    chipsExpanded = !chipsExpanded;
+    const cloud = document.getElementById('chipCloud');
+    const fade = document.getElementById('chipFade');
+    const btn = document.getElementById('chipToggle');
+    cloud.style.maxHeight = chipsExpanded ? '600px' : '96px';
+    fade.style.display = chipsExpanded ? 'none' : 'block';
+    btn.textContent = chipsExpanded ? '← Show less' : 'Show all →';
+  }
+  </script>
 </section>
 
 <!-- IDEAS -->
@@ -716,21 +735,22 @@ footer {
   <div class="section-eyebrow">Six proposals</div>
   <h2 class="section-title">Where eGov can support<br>MoHUA's urban agenda</h2>
   <div class="ideas-intro">
-    <p>Each proposal identifies a gap in MoHUA's current digital infrastructure where eGov's existing work and technical capacity could be useful. In each case, MoHUA and its agencies (NIUA, AIFORERA, HUDCO) would lead and own the initiative. eGov's role is to provide technical support, platform capacity, and implementation assistance — on MoHUA's terms.</p>
+    <p>Each proposal identifies an area where eGov's existing work and technical capacity could be useful to MoHUA's priorities. MoHUA and its agencies would lead and own each initiative. Click any card to read the full detail.</p>
   </div>
 
   <!-- IDEA 1 -->
-  <div class="idea-card idea-1">
+  <div class="idea-card idea-1" onclick="toggleIdea(this)">
     <div class="idea-header">
       <div class="idea-number">01</div>
       <div class="idea-title-block">
         <div class="idea-title">UCF Digital Operating System</div>
-        <div class="idea-tagline">The mission-management backbone MoHUA needs to actually run UCF at ₹4 lakh crore scale — reform tracking, tranche-linked fund release, and DPR quality infrastructure.</div>
+        <div class="idea-summary">UCF's operational guidelines require a centralised reform portal for tracking city reform roadmaps and triggering fund tranches. eGov can contribute technical architecture drawing from the NMAM 2.0 and DGM work already underway.</div>
       </div>
+      <div class="idea-chevron">▾</div>
     </div>
     <div class="idea-body">
       <div class="idea-desc">
-        The UCF operational guidelines mandate a centralised reform portal where cities submit roadmaps, report progress, and trigger tranche releases — but this portal has no designated builder yet. Fund releases require geo-tagged physical progress evidence, utilisation certificates, and IRMA verification. At the scale of 4,223 eligible cities across three verticals and five reform tracks, this is a significant digital infrastructure challenge. eGov's ongoing NMAM 2.0 and XVI FC DGM work has produced directly relevant system design thinking that could feed into MoHUA's approach here.
+        The UCF guidelines mandate a centralised reform portal where cities submit roadmaps, report progress, and trigger tranche releases — but this portal has no designated builder yet. Fund releases require geo-tagged physical progress evidence, utilisation certificates, and verification by Independent Review and Monitoring Agencies. At the scale of 4,223 eligible cities across three verticals and five reform tracks, this is a significant digital infrastructure challenge. eGov's ongoing NMAM 2.0 and XVI FC DGM work has produced directly relevant system design thinking that could feed into MoHUA's approach here.
       </div>
       <table class="idea-table">
         <tr>
@@ -752,28 +772,29 @@ footer {
       </table>
       <div class="idea-now">
         <span class="idea-now-label">Why now →</span>
-        UCF operational guidelines were published April 2026. The reform portal is referenced but unbuilt. States must submit project proposals within 6 months. eGov's DGM workshops (April 7–9) already produced system design thinking directly relevant to this.
+        UCF operational guidelines were published April 2026. The reform portal is referenced but unbuilt. States must submit project proposals within 6 months. eGov's DGM workshops (April 7–9) produced system design thinking directly relevant to this.
       </div>
     </div>
   </div>
 
   <!-- IDEA 2 -->
-  <div class="idea-card idea-2">
+  <div class="idea-card idea-2" onclick="toggleIdea(this)">
     <div class="idea-header">
       <div class="idea-number">02</div>
       <div class="idea-title-block">
         <div class="idea-title">UPYOG Adoption as UCF Reform Evidence</div>
-        <div class="idea-tagline">Define UPYOG operational status as the measurable benchmark for Digital Governance reform compliance under UCF — turning adoption from a push exercise into a national pull.</div>
+        <div class="idea-summary">UCF requires cities to demonstrate digital governance reform, but no standards are currently in place to define what that means. eGov can support MoHUA and NIUA in designing an assessment framework based on UPYOG adoption metrics.</div>
       </div>
+      <div class="idea-chevron">▾</div>
     </div>
     <div class="idea-body">
       <div class="idea-desc">
-        Digital Governance is an admissible UCF project category, explicitly including digitisation of property records, utilities, and family IDs. UCF's reform framework requires "end-to-end digitisation of select municipal functions" as a governance reform condition — but the reform toolkit, which will define this standard, is yet to be issued. MoHUA and NIUA are well-placed to define UPYOG operational status (property tax, water billing, trade licences, grievance redressal live with transaction volume) as the measurable benchmark for this condition. Cities that already have it get reform credit; cities that don't can use it as their UCF Digital Governance project funded through the PPCBF track. eGov can provide technical support in designing this maturity framework.
+        Digital Governance is an admissible UCF project category, explicitly including digitisation of property records, utilities, and family IDs. UCF's reform framework requires "end-to-end digitisation of select municipal functions" as a governance reform condition — but the reform toolkit, which will define this standard, is yet to be issued. MoHUA and NIUA are well-placed to define UPYOG operational status (property tax, water billing, trade licences, grievance redressal live with transaction volume) as the measurable benchmark for this condition. Cities that already have it get reform credit; cities that don't can use it as their UCF Digital Governance project funded through the project preparation track. eGov can provide technical support in designing this maturity framework.
       </div>
       <table class="idea-table">
         <tr>
           <td>MoHUA's role</td>
-          <td>Lead the design and notification of the Digital Governance Reform Index through the UCF reform toolkit. Embed UPYOG operational status in challenge-mode evaluation criteria at NAC. NIUA to coordinate with state teams on adoption pathways.</td>
+          <td>Lead the design and notification of the Digital Governance Reform standard through the UCF reform toolkit. Embed UPYOG operational status in challenge-mode evaluation criteria at NAC. NIUA to coordinate with state teams on adoption pathways.</td>
         </tr>
         <tr>
           <td>eGov's support</td>
@@ -790,23 +811,24 @@ footer {
       </table>
       <div class="idea-now">
         <span class="idea-now-label">Why now →</span>
-        The UCF reform toolkit is explicitly listed as "to be issued separately." The window to shape what counts as digital governance reform is open now — once notified without this standard, it closes. A brief technical note from eGov to MoHUA/NIUA could seed this conversation.
+        The UCF reform toolkit is listed as "to be issued separately." The design stage for that toolkit is now. A brief technical note from eGov to MoHUA/NIUA could contribute to its scope.
       </div>
     </div>
   </div>
 
   <!-- IDEA 3 -->
-  <div class="idea-card idea-3">
+  <div class="idea-card idea-3" onclick="toggleIdea(this)">
     <div class="idea-header">
       <div class="idea-number">03</div>
       <div class="idea-title-block">
         <div class="idea-title">National Urban Governance Intelligence Layer</div>
-        <div class="idea-tagline">A synthesis platform that pulls from UPYOG, cityfinance.in, AAINA, and the UCF reform portal to give MoHUA and cities an integrated governance health view that no existing system provides.</div>
+        <div class="idea-summary">MoHUA's programme data sits in separate systems with no synthesis layer — e.g. AAINA for self-reported service benchmarks, UPYOG for live transactional service delivery data, MIS with administrative data on various schemes, and the upcoming UCF monitoring portal. eGov can support building an integration layer that gives the ministry and cities a single composite view at the ULB and state level.</div>
       </div>
+      <div class="idea-chevron">▾</div>
     </div>
     <div class="idea-body">
       <div class="idea-desc">
-        MoHUA currently has fragmented data systems covering different dimensions of city performance: cityfinance.in (financial accounts and rankings, built by Janaagraha), AAINA (self-reported service benchmarks), UPYOG (live transactional service delivery data), and the nascent UCF reform portal. No system synthesises across them. The challenge-mode evaluation for UCF requires MoHUA to assess cities across vision/capacity, transformative outcomes, and financial sustainability — each drawing on a different source. A governance intelligence layer that integrates these through APIs could give MoHUA, states, and cities a composite health view that doesn't exist today. This is not a competing portal — it would make existing portals more useful. A design conversation that includes Janaagraha (given their cityfinance.in ownership) would be the natural starting point. The prototype below illustrates what this could look like.
+        MoHUA currently has fragmented data systems covering different dimensions of city performance: cityfinance.in (financial accounts and rankings, built by Janaagraha), AAINA (self-reported service benchmarks), UPYOG (live transactional service delivery data), and the nascent UCF reform portal. No system synthesises across them. A governance intelligence layer that integrates these through APIs could give MoHUA, states, and cities a composite health view that doesn't exist today. This is not a competing portal — it would make existing portals more useful. A design conversation that includes Janaagraha, given their cityfinance.in ownership, would be the natural starting point.
       </div>
       <table class="idea-table">
         <tr>
@@ -828,28 +850,29 @@ footer {
       </table>
       <div class="idea-now">
         <span class="idea-now-label">Why now →</span>
-        UCF's NAC will need to evaluate thousands of city proposals. MoHUA's budget has grown 50% to ₹85,522 crore. An integrated view of how that investment performs across cities would be valuable — and the data sources to build it already exist.
+        UCF's National Apex Committee will need to evaluate city proposals across multiple data dimensions. The data sources to build a synthesis view already exist — the integration layer does not.
       </div>
     </div>
   </div>
 
   <!-- IDEA 4 -->
-  <div class="idea-card idea-4">
+  <div class="idea-card idea-4" onclick="toggleIdea(this)">
     <div class="idea-header">
       <div class="idea-number">04</div>
       <div class="idea-title-block">
         <div class="idea-title">Ward-Level Citizen Engagement Layer</div>
-        <div class="idea-tagline">A structured digital citizen voice mechanism — multilingual, ward-mapped, linked to UPYOG service delivery data — closing the loop between what MoHUA sees and what citizens actually experience.</div>
+        <div class="idea-summary">No existing system currently captures the citizen experience of service delivery at ward level. eGov has a working multilingual prototype and can support scaling it nationally under MoHUA's direction.</div>
       </div>
+      <div class="idea-chevron">▾</div>
     </div>
     <div class="idea-body">
       <div class="idea-desc">
-        Every existing data system in the urban governance stack — UPYOG, AAINA, cityfinance.in — captures government-generated data. None systematically captures the citizen experience of service delivery at ward level. The UCF guidelines require community engagement and stakeholder consultations as eligible PPCBF activities. eGov has a working prototype of a ward-level citizen voice platform (developed for Bengaluru, multilingual) that captures grievances, service ratings, and local priority inputs — mapped to wards and cross-referenced with UPYOG service delivery records. If MoHUA sees value in a national citizen engagement standard for UCF, eGov can support the technical design and scaling of such a platform.
+        Every existing data system in the urban governance stack — UPYOG, AAINA, cityfinance.in — captures government-generated data. None systematically captures citizen experience of service delivery at ward level. eGov has a working prototype of a ward-level citizen voice platform (developed for Bengaluru, multilingual) that captures grievances, service ratings, and local priority inputs — mapped to wards and cross-referenced with UPYOG service delivery records. If MoHUA sees value in a national citizen engagement standard, eGov can support the technical design and scaling of such a platform.
       </div>
       <table class="idea-table">
         <tr>
           <td>MoHUA's role</td>
-          <td>Determine whether citizen engagement standards should be embedded in the UCF reform toolkit. If so, define what ward-level digital participation means as a governance reform indicator. Provide the policy framework for cities to adopt this as part of their UCF reform roadmap.</td>
+          <td>Determine whether citizen engagement standards should be embedded in the UCF reform toolkit. Define what ward-level digital participation means as a governance reform indicator. Provide the policy framework for cities to adopt this as part of their reform roadmap.</td>
         </tr>
         <tr>
           <td>eGov's support</td>
@@ -861,69 +884,72 @@ footer {
         </tr>
         <tr>
           <td>Policy layer</td>
-          <td>UCF PPCBF covers community engagement activities. The 74th Constitutional Amendment mandates Ward Committees as participatory bodies — a digital citizen engagement platform operationalises that mandate. Citizen participation data could inform AAINA's benchmarking framework over time.</td>
+          <td>The 74th Constitutional Amendment mandates Ward Committees as participatory bodies — a digital citizen engagement platform operationalises that mandate. Citizen participation data could inform AAINA's benchmarking framework over time.</td>
         </tr>
       </table>
       <div class="idea-now">
         <span class="idea-now-label">Why now →</span>
-        UCF explicitly funds community engagement under the ₹5,000 crore PPCBF. A working prototype already exists. The governance intelligence layer (Idea 3) benefits from a citizen data source. eGov can share the prototype with MoHUA/NIUA as a starting point for discussion.
+        A working prototype already exists. The governance intelligence layer (Idea 3) benefits from a citizen data source. eGov can share the prototype with MoHUA/NIUA as a starting point for discussion.
       </div>
     </div>
   </div>
+
   <!-- IDEA 5 -->
-  <div class="idea-card idea-5">
+  <div class="idea-card idea-5" onclick="toggleIdea(this)">
     <div class="idea-header">
       <div class="idea-number">05</div>
       <div class="idea-title-block">
         <div class="idea-title">Inter-Departmental Convergence for Climate-Resilient Cities</div>
-        <div class="idea-tagline">MoHUA as convener of cross-ministry digital infrastructure — connecting SWM, air quality enforcement, and urban livelihoods data to activate climate resilience at city scale.</div>
+        <div class="idea-summary">Cities are building climate action plans, which require significant inter-departmental coordination and overcoming information asymmetry. For example, SWM and air quality enforcement sit in separate departments with no shared data infrastructure, and urban heat strategies and support for street vendors are in separate silos. eGov can support MoHUA in building the connections that would make inter-departmental climate action practical.</div>
       </div>
+      <div class="idea-chevron">▾</div>
     </div>
     <div class="idea-body">
       <div class="idea-desc">
-        UCF explicitly lists climate-resilient infrastructure as a project category. But the most impactful climate interventions in cities require data and regulatory authority that sits across multiple departments — SWM with ULBs, air quality with pollution control boards, livelihoods with MoLE. MoHUA is uniquely positioned to convene this convergence. Two early-stage activations illustrate the opportunity, both grounded in eGov's ongoing work:
+        Effective urban climate action depends on data and regulatory authority that sits across multiple departments — SWM with ULBs, air quality with pollution control boards, heat risk and livelihoods with different line ministries. MoHUA is well-placed to convene this convergence. Two early-stage activations illustrate what this could look like:
         <br><br>
-        <strong>SWM → Air Quality enforcement pipeline.</strong> Open waste burning is a significant source of PM2.5 in Indian cities. The Solid Waste Management Rules 2026 (in force from April 1, 2026) formally designate State Pollution Control Boards (e.g. KSPCB) as enforcement authorities for SWM — but there is currently no data pipeline connecting SWM operations to these boards. A centralised national digital waste tracking portal is mandated within 6 months under the new rules. eGov is already building SWM digital infrastructure on DIGIT with the Government of Karnataka (MoU with RDPR in place). This architecture — covering waste classification, route optimisation, MRF management, and citizen grievance — could feed directly into the national portal architecture MoHUA will need to commission. Connecting it to CPCB's ambient air quality monitoring data creates a traceable SWM-to-air-quality accountability chain that enforcement authorities currently lack.
+        <strong>SWM → Air Quality enforcement pipeline.</strong> Open waste burning is a significant source of PM2.5 in Indian cities. The Solid Waste Management Rules 2026 (in force from April 1, 2026) formally designate State Pollution Control Boards as enforcement authorities for SWM — but there is currently no data pipeline connecting SWM operations to these boards. A centralised national digital waste tracking portal is mandated within 6 months. eGov is already building SWM digital infrastructure on DIGIT with the Government of Karnataka (MoU with RDPR in place), covering waste classification, route optimisation, MRF management, and citizen grievance. This architecture could feed into the national portal design. Connecting it to CPCB's ambient air quality monitoring data creates a traceable SWM-to-air-quality accountability chain that enforcement authorities currently lack.
         <br><br>
-        <strong>Parametric heat insurance for PM SVANidhi vendors.</strong> <span class="early-tag">● early stage</span> Street vendors — SVANidhi beneficiaries — are among the most exposed urban populations to extreme heat events. Parametric insurance products triggered by heat index thresholds (rather than assessed claims) are being explored by climate finance specialists as a way to provide rapid, verifiable income support during heat waves. eGov is in early-stage discussion with climate finance partners on this concept. MoHUA's existing SVANidhi digital infrastructure (vendor registration, geolocation, digital payment rails) provides a ready beneficiary identification and disbursement layer that such a product would need. If MoHUA were interested in piloting this, eGov could facilitate a design conversation between the ministry, potential insurance partners, and IRDAI.
+        <strong>Parametric heat support for PM SVANidhi vendors.</strong> <span class="early-tag">● early stage</span> Street vendors are among the most exposed urban populations to extreme heat events. Parametric financial support products — triggered by heat index thresholds rather than assessed claims — are being explored by climate finance partners as a way to provide rapid, verifiable income support during heat waves. MoHUA's existing SVANidhi digital infrastructure (vendor registration, geolocation, digital payment rails) provides a ready beneficiary identification and disbursement layer. eGov is in early-stage discussion with climate finance partners on this concept and could facilitate a design conversation with MoHUA and relevant agencies if there is interest.
       </div>
       <table class="idea-table">
         <tr>
           <td>MoHUA's role</td>
-          <td>Convene the inter-departmental working group (MoHUA + MoEFCC + CPCB + MoLE) to identify convergence points. Commission the national SWM digital portal under the SWM Rules 2026 mandate. If the SVANidhi heat insurance pilot is of interest, facilitate conversations with IRDAI and finance partners.</td>
+          <td>Convene inter-departmental coordination with MoEFCC, CPCB, and other relevant ministries to identify convergence points. Commission the national SWM digital portal under the SWM Rules 2026 mandate. If the SVANidhi heat support concept is of interest, facilitate conversations with relevant agencies.</td>
         </tr>
         <tr>
           <td>eGov's support</td>
-          <td>Share Karnataka SWM DPI architecture as a potential input to the national portal design. Support CPCB and KSPCB in designing the SWM-to-air-quality data pipeline. On SVANidhi heat insurance, facilitate early-stage design conversations and provide the SVANidhi data layer design support.</td>
+          <td>Share Karnataka SWM DPI architecture as a potential input to the national portal design. Support CPCB and SPCBs in designing the SWM-to-air-quality data pipeline. On SVANidhi heat support, facilitate early-stage design conversations and provide the SVANidhi data layer design inputs.</td>
         </tr>
         <tr>
           <td>Platform layer</td>
-          <td>Karnataka SWM platform (DIGIT-based) as architectural reference. CPCB's ambient air quality monitoring data as the enforcement trigger source. SVANidhi vendor registry and digital payment rails as the insurance disbursement layer. Satellite / sensor data and community field reporting for waste burning detection.</td>
+          <td>Karnataka SWM platform (DIGIT-based) as architectural reference. CPCB ambient air quality monitoring data as the enforcement trigger source. SVANidhi vendor registry and digital payment rails as the disbursement layer. Satellite/sensor data and community field reporting for waste burning detection.</td>
         </tr>
         <tr>
           <td>Policy layer</td>
-          <td>SWM Rules 2026 — SPCB enforcement authority and 6-month national portal mandate. UCF Water &amp; Sanitation and Climate Resilience verticals for funding pathway. SVANidhi programme framework for the heat insurance pilot. CPCB's national ambient air quality standards as the regulatory anchor.</td>
+          <td>SWM Rules 2026 — SPCB enforcement authority and 6-month national portal mandate. DRAP's September 2026 dumpsite remediation deadline. CPCB's national ambient air quality standards as the regulatory anchor. SVANidhi programme framework for the heat support pilot.</td>
         </tr>
       </table>
       <div class="idea-now">
         <span class="idea-now-label">Why now →</span>
-        SWM Rules 2026 came into force April 1, 2026. The national portal mandate has a 6-month window. Karnataka SWM work is already live. DRAP's Sept 2026 deadline creates additional urgency on the waste tracking infrastructure. The convergence opportunity is time-bound.
+        SWM Rules 2026 came into force April 1, 2026. The national portal mandate has a 6-month window. Karnataka SWM work is already live. DRAP's September 2026 deadline creates additional urgency on waste tracking infrastructure.
       </div>
     </div>
   </div>
 
   <!-- IDEA 6 -->
-  <div class="idea-card idea-6">
+  <div class="idea-card idea-6" onclick="toggleIdea(this)">
     <div class="idea-header">
       <div class="idea-number">06</div>
       <div class="idea-title-block">
         <div class="idea-title">National RERA Data Standards Platform</div>
-        <div class="idea-tagline">Building on eGov's existing role on the AIFORERA Technical Committee — from common data standards to a unified national RERA platform that gives homebuyers, states, and MoHUA consistent visibility.</div>
+        <div class="idea-summary">eGov is already on the AIFORERA Technical Committee developing common data standards for state RERA platforms. The natural next step is supporting MoHUA in moving from standards to a unified national implementation.</div>
       </div>
+      <div class="idea-chevron">▾</div>
     </div>
     <div class="idea-body">
       <div class="idea-desc">
-        MoHUA and AIFORERA (All India Forum of Real Estate Regulatory Authorities) are developing a Unified RERA Dashboard and API-based platform connecting all state and UT RERAs. AIFORERA has constituted a Technical Committee of five RERA Chairpersons and invited eGov to support the development of common data standards for all state RERA platforms. The draft standards aim to ensure uniform implementation of the RERA Act and a consistent homebuyer experience across states, while providing MoHUA with sector-wide visibility through a common data architecture. The foundation work — standards design — is already underway. The logical next step, if MoHUA chooses to pursue it, is moving from standards to platform implementation.
+        MoHUA and AIFORERA (All India Forum of Real Estate Regulatory Authorities) are developing a Unified RERA Dashboard and API-based platform connecting all state and UT RERAs. AIFORERA has constituted a Technical Committee of five RERA Chairpersons and invited eGov to support the development of common data standards for all state RERA platforms. The draft standards aim to ensure uniform implementation of the RERA Act and a consistent homebuyer experience across states, while providing MoHUA with sector-wide visibility through a common data architecture. The standards design is already underway. The logical next step, if MoHUA chooses to pursue it, is moving from standards to platform implementation.
       </div>
       <table class="idea-table">
         <tr>
@@ -932,24 +958,32 @@ footer {
         </tr>
         <tr>
           <td>eGov's support</td>
-          <td>Continue technical committee participation on data standards. If MoHUA moves to platform implementation, provide technical support for the API integration layer connecting state RERA systems. DIGIT's interoperability architecture is directly applicable to a federated multi-state platform of this kind.</td>
+          <td>Continue Technical Committee participation on data standards. If MoHUA moves to platform implementation, provide technical support for the API integration layer connecting state RERA systems. DIGIT's interoperability architecture is directly applicable to a federated multi-state platform.</td>
         </tr>
         <tr>
           <td>Platform layer</td>
-          <td>API-based integration with all state RERA portals. Common data schema (under development) as the interoperability standard. Unified dashboard for MoHUA oversight, homebuyer transparency, and state-level benchmarking. DIGIT's federated architecture as a potential implementation reference.</td>
+          <td>API-based integration with all state RERA portals. Common data schema (under development) as the interoperability standard. Unified dashboard for MoHUA oversight, homebuyer transparency, and state-level benchmarking.</td>
         </tr>
         <tr>
           <td>Policy layer</td>
-          <td>RERA Act 2016 as the legal foundation. AIFORERA's mandate to drive uniform implementation. The common data standards (currently being drafted with eGov's support) as the technical policy instrument. MoHUA's oversight role provides the national coordination authority.</td>
+          <td>RERA Act 2016 as the legal foundation. AIFORERA's mandate to drive uniform implementation. The common data standards currently being drafted as the technical policy instrument. MoHUA's oversight role provides the national coordination authority.</td>
         </tr>
       </table>
       <div class="idea-now">
         <span class="idea-now-label">Why now →</span>
-        eGov is already on the AIFORERA Technical Committee — the standards work is live. The transition from standards to platform is the natural next step and can be proposed without needing to establish a new relationship. This is the most immediately actionable idea on the page.
+        eGov is already on the AIFORERA Technical Committee — the standards work is live. The transition from standards to platform is the natural next step and can be proposed within the existing committee structure.
       </div>
     </div>
   </div>
+
+  <script>
+  function toggleIdea(card) {
+    card.classList.toggle('open');
+  }
+  </script>
 </section>
+
+
 <section id="dashboard">
   <div class="section-eyebrow">Prototype · Idea 3</div>
   <h2 class="section-title">What the governance<br>intelligence layer looks like</h2>
