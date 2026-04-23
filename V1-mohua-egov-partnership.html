@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>eGov × MoHUA — A Partnership for Urban India</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f7f4ef;
+  --surface: #ffffff;
+  --surface2: #f0ece4;
+  --border: rgba(0,0,0,0.08);
+  --border-warm: rgba(0,0,0,0.12);
+  --text: #1c1917;
+  --text-mid: #44403c;
+  --text-dim: #78716c;
+  --green: #2a6e47;
+  --green-light: #e8f3ed;
+  --green-mid: #c5dece;
+  --amber: #b45309;
+  --amber-light: #fef3c7;
+  --blue: #1d4ed8;
+  --blue-light: #eff6ff;
+  --indigo: #4338ca;
+  --indigo-light: #eef2ff;
+  --rose: #be123c;
+  --rose-light: #fff1f2;
+
+  --font-display: 'DM Serif Display', serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.05);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,0.1), 0 4px 8px rgba(0,0,0,0.06);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 400;
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: -1;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+/* ── BANNER ── */
+.status-banner {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+  background: #1a3a2a;
+  padding: 0.45rem 1.5rem;
+  display: flex; align-items: center; justify-content: center; gap: 1rem;
+  font-family: var(--font-body); font-size: 0.78rem; font-weight: 600;
+  color: #c5dece; letter-spacing: 0.02em;
+}
+.status-banner-dot { width: 6px; height: 6px; border-radius: 50%; background: #4ade80; flex-shrink: 0; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 32px; left: 0; right: 0; z-index: 100;
+  background: rgba(247,244,239,0.95);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-warm);
+  padding: 0 2rem; height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 1rem; color: var(--text);
+  display: flex; align-items: center; gap: 0.5rem;
+  text-decoration: none;
+}
+.nav-logo-x { color: var(--text-dim); font-family: var(--font-body); font-weight: 300; }
+.nav-links { display: flex; gap: 0.15rem; align-items: center; }
+.nav-links a {
+  color: var(--text-dim); text-decoration: none;
+  font-size: 0.78rem; font-weight: 500;
+  padding: 0.3rem 0.65rem; border-radius: 20px;
+  transition: all 0.15s; white-space: nowrap;
+}
+.nav-links a:hover { color: var(--text); background: var(--surface2); }
+.nav-back {
+  font-size: 0.72rem; color: var(--text-dim); text-decoration: none;
+  display: flex; align-items: center; gap: 0.3rem;
+  padding: 0.25rem 0.6rem; border: 1px solid var(--border-warm);
+  border-radius: 20px; transition: all 0.15s;
+}
+.nav-back:hover { color: var(--text); background: var(--surface2); }
+
+/* ── LAYOUT ── */
+section { scroll-margin-top: 100px; }
+main { padding-top: 92px; }
+section { padding: 4rem 2rem; max-width: 1100px; margin: 0 auto; }
+section.full-bleed { max-width: none; padding-left: 0; padding-right: 0; }
+.section-eyebrow {
+  font-family: var(--font-mono); font-size: 0.72rem; font-weight: 500;
+  color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+.section-title {
+  font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.8rem);
+  line-height: 1.15; color: var(--text); margin-bottom: 1rem;
+}
+.section-sub {
+  font-size: 1rem; color: var(--text-mid); max-width: 640px; line-height: 1.7;
+}
+
+/* ── HERO ── */
+#hero { padding-top: 5rem; padding-bottom: 4rem; }
+.hero-grid {
+  display: grid; grid-template-columns: 1fr 340px; gap: 4rem; align-items: start;
+  margin-top: 2rem;
+}
+.hero-body p { color: var(--text-mid); font-size: 1rem; line-height: 1.75; margin-bottom: 1rem; }
+.hero-stats {
+  background: var(--surface);
+  border: 1px solid var(--border-warm);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-md);
+}
+.hero-stats-title {
+  font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-dim);
+  text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.2rem;
+}
+.hero-stat {
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.hero-stat:last-child { border-bottom: none; }
+.hero-stat-num {
+  font-family: var(--font-display); font-size: 1.6rem; color: var(--green);
+  line-height: 1.1;
+}
+.hero-stat-label { font-size: 0.78rem; color: var(--text-dim); margin-top: 0.15rem; }
+.hero-stat-source { font-family: var(--font-mono); font-size: 0.62rem; color: var(--text-dim); opacity: 0.6; margin-top: 0.2rem; }
+
+.partnership-pill {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: var(--green-light); border: 1px solid var(--green-mid);
+  border-radius: 20px; padding: 0.3rem 0.8rem;
+  font-size: 0.75rem; font-weight: 600; color: var(--green);
+  margin-bottom: 1.5rem; font-family: var(--font-mono);
+}
+
+.legacy-strip {
+  margin-top: 2.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border-warm);
+  border-radius: 10px;
+  padding: 1.2rem 1.5rem;
+  display: flex; gap: 2rem; flex-wrap: wrap;
+}
+.legacy-item { display: flex; flex-direction: column; gap: 0.1rem; }
+.legacy-num { font-family: var(--font-display); font-size: 1.3rem; color: var(--text); }
+.legacy-label { font-size: 0.72rem; color: var(--text-dim); max-width: 130px; line-height: 1.3; }
+
+/* ── IDEAS SECTION ── */
+#ideas { padding-top: 2rem; }
+.ideas-intro { max-width: 640px; margin-bottom: 3rem; }
+.ideas-intro p { color: var(--text-mid); font-size: 1rem; line-height: 1.75; }
+
+.idea-card {
+  background: var(--surface);
+  border: 1px solid var(--border-warm);
+  border-radius: 14px;
+  margin-bottom: 2rem;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s;
+}
+.idea-card:hover { box-shadow: var(--shadow-md); }
+
+.idea-header {
+  padding: 1.5rem 2rem 1.2rem;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: flex-start; gap: 1.2rem;
+}
+.idea-number {
+  font-family: var(--font-mono); font-size: 0.68rem; font-weight: 500;
+  color: #fff; padding: 0.2rem 0.5rem; border-radius: 4px;
+  flex-shrink: 0; margin-top: 0.2rem; letter-spacing: 0.05em;
+}
+.idea-title-block { flex: 1; }
+.idea-title {
+  font-family: var(--font-display); font-size: 1.3rem; color: var(--text);
+  line-height: 1.25; margin-bottom: 0.4rem;
+}
+.idea-tagline { font-size: 0.88rem; color: var(--text-mid); line-height: 1.55; }
+
+.idea-body { padding: 1.5rem 2rem; }
+.idea-desc { font-size: 0.9rem; color: var(--text-mid); line-height: 1.7; margin-bottom: 1.5rem; }
+
+.idea-table {
+  width: 100%; border-collapse: collapse; margin-bottom: 1.2rem;
+}
+.idea-table tr { border-bottom: 1px solid var(--border); }
+.idea-table tr:last-child { border-bottom: none; }
+.idea-table td {
+  padding: 0.65rem 0.5rem; font-size: 0.82rem; vertical-align: top;
+  line-height: 1.5;
+}
+.idea-table td:first-child {
+  font-family: var(--font-mono); font-size: 0.68rem; font-weight: 500;
+  color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em;
+  width: 130px; padding-top: 0.7rem; white-space: nowrap;
+}
+.idea-table td:last-child { color: var(--text-mid); }
+
+.idea-now {
+  display: flex; align-items: flex-start; gap: 0.6rem;
+  background: var(--amber-light);
+  border: 1px solid #fde68a;
+  border-radius: 8px; padding: 0.75rem 1rem;
+  font-size: 0.8rem; color: var(--amber); line-height: 1.5;
+}
+.idea-now-label {
+  font-family: var(--font-mono); font-size: 0.65rem; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.06em; flex-shrink: 0;
+  padding-top: 0.1rem;
+}
+
+/* idea accent colors */
+.idea-1 .idea-number { background: var(--green); }
+.idea-1 .idea-header { border-left: 4px solid var(--green); }
+.idea-2 .idea-number { background: var(--amber); }
+.idea-2 .idea-header { border-left: 4px solid var(--amber); }
+.idea-3 .idea-number { background: var(--blue); }
+.idea-3 .idea-header { border-left: 4px solid var(--blue); }
+.idea-4 .idea-number { background: var(--indigo); }
+.idea-4 .idea-header { border-left: 4px solid var(--indigo); }
+.idea-5 .idea-number { background: #0f766e; }
+.idea-5 .idea-header { border-left: 4px solid #0f766e; }
+.idea-6 .idea-number { background: var(--rose); }
+.idea-6 .idea-header { border-left: 4px solid var(--rose); }
+.early-tag {
+  display:inline-flex;align-items:center;gap:0.35rem;
+  background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;
+  padding:0.18rem 0.55rem;font-size:0.68rem;color:#15803d;
+  font-family:var(--font-mono);margin-left:0.5rem;vertical-align:middle;
+}
+
+/* ── DASHBOARD SECTION ── */
+#dashboard {
+  padding-top: 2rem; padding-bottom: 5rem;
+  background: none;
+}
+.dash-frame {
+  background: var(--surface);
+  border: 1px solid var(--border-warm);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  margin-top: 2rem;
+}
+.dash-topbar {
+  background: #1a2e1f;
+  padding: 0.7rem 1.2rem;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.dash-topbar-title {
+  font-family: var(--font-mono); font-size: 0.72rem; color: #86efac;
+  letter-spacing: 0.06em;
+}
+.dash-topbar-meta { font-family: var(--font-mono); font-size: 0.65rem; color: #4ade8066; }
+.dash-topbar-dot { width: 7px; height: 7px; border-radius: 50%; background: #4ade80; animation: pulse 2s infinite; }
+
+.dash-inner { display: grid; grid-template-columns: 1.4fr 1fr; gap: 0; }
+.dash-left { border-right: 1px solid var(--border); }
+.dash-right { }
+
+.dash-panel-header {
+  padding: 0.8rem 1rem 0.6rem;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-dim);
+  text-transform: uppercase; letter-spacing: 0.07em;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.dash-sort-hint { font-size: 0.6rem; opacity: 0.6; }
+
+/* City table */
+.city-table { width: 100%; border-collapse: collapse; }
+.city-table th {
+  font-family: var(--font-mono); font-size: 0.6rem; font-weight: 500;
+  color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em;
+  padding: 0.4rem 0.6rem 0.4rem; text-align: left; border-bottom: 1px solid var(--border);
+  cursor: pointer; user-select: none; white-space: nowrap;
+}
+.city-table th:hover { color: var(--text); }
+.city-table td {
+  padding: 0.45rem 0.6rem; font-size: 0.78rem; color: var(--text-mid);
+  border-bottom: 1px solid var(--border); cursor: pointer; white-space: nowrap;
+}
+.city-table tr:last-child td { border-bottom: none; }
+.city-table tr:hover td { background: var(--surface2); }
+.city-table tr.selected td { background: var(--green-light); }
+.city-name { font-weight: 600; color: var(--text); font-size: 0.8rem; }
+.city-tier { font-family: var(--font-mono); font-size: 0.6rem; color: var(--text-dim); }
+
+.rag { display: inline-block; width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.rag-g { background: #16a34a; }
+.rag-a { background: #d97706; }
+.rag-r { background: #dc2626; }
+
+.rag-cell { display: flex; align-items: center; gap: 0.4rem; }
+.rag-label { font-size: 0.72rem; }
+
+/* Right panel */
+.dash-right-inner { padding: 0.8rem 1rem; }
+.city-detail-name {
+  font-family: var(--font-display); font-size: 1.05rem; color: var(--text);
+  margin-bottom: 0.2rem;
+}
+.city-detail-meta { font-size: 0.72rem; color: var(--text-dim); margin-bottom: 1rem; }
+
+.sparkline-label {
+  font-family: var(--font-mono); font-size: 0.62rem; color: var(--text-dim);
+  text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.4rem;
+}
+.sparkline-wrap { margin-bottom: 1.2rem; }
+
+.reform-tracks { }
+.reform-label {
+  font-family: var(--font-mono); font-size: 0.62rem; color: var(--text-dim);
+  text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.6rem;
+}
+.reform-track { margin-bottom: 0.55rem; }
+.reform-track-name { font-size: 0.72rem; color: var(--text-mid); margin-bottom: 0.2rem; display: flex; justify-content: space-between; }
+.reform-track-bar-wrap { height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
+.reform-track-bar { height: 100%; border-radius: 3px; transition: width 0.5s ease; }
+
+.dash-provenance {
+  padding: 0.6rem 1rem;
+  border-top: 1px solid var(--border);
+  background: #fafaf8;
+  display: flex; gap: 1.5rem; flex-wrap: wrap;
+}
+.prov-item {
+  display: flex; align-items: center; gap: 0.4rem;
+  font-family: var(--font-mono); font-size: 0.6rem; color: var(--text-dim);
+}
+.prov-dot { width: 7px; height: 7px; border-radius: 2px; flex-shrink: 0; }
+
+.dash-disclaimer {
+  margin-top: 0.75rem;
+  font-family: var(--font-mono); font-size: 0.62rem; color: var(--text-dim);
+  opacity: 0.6; text-align: center;
+}
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border-warm);
+  padding: 2rem;
+  text-align: center;
+}
+.footer-inner { max-width: 1100px; margin: 0 auto; }
+.footer-text { font-size: 0.78rem; color: var(--text-dim); }
+.footer-link { color: var(--green); text-decoration: none; }
+.footer-link:hover { text-decoration: underline; }
+
+/* ── TRACK RECORD SECTION ── */
+#track-record { padding-top: 1rem; padding-bottom: 2rem; }
+.track-record-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem; margin-top: 2rem;
+}
+.track-band {
+  background: var(--surface);
+  border: 1px solid var(--border-warm);
+  border-radius: 12px; padding: 1.25rem 1.25rem 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+.track-band-eyebrow {
+  font-family: var(--font-mono); font-size: 0.62rem; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  margin-bottom: 0.3rem;
+}
+.track-band-title {
+  font-family: var(--font-display); font-size: 0.95rem;
+  color: var(--text); margin-bottom: 0.2rem; line-height: 1.3;
+}
+.track-band-sub {
+  font-size: 0.75rem; color: var(--text-dim); margin-bottom: 1rem;
+  line-height: 1.5;
+}
+.track-band-states { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+.track-state-pill {
+  font-size: 0.73rem; font-weight: 500;
+  border-radius: 20px; padding: 0.28rem 0.65rem;
+  line-height: 1.3; cursor: default;
+}
+.track-state-pill small {
+  display: block; font-family: var(--font-mono);
+  font-size: 0.58rem; font-weight: 400; opacity: 0.75;
+  margin-top: 0.05rem;
+}
+/* band accent colours */
+.band-direct .track-band-eyebrow { color: var(--green); }
+.band-direct { border-top: 3px solid var(--green); }
+.band-direct .track-state-pill { background: var(--green-light); color: var(--green); border: 1px solid var(--green-mid); }
+
+.band-partner .track-band-eyebrow { color: var(--blue); }
+.band-partner { border-top: 3px solid var(--blue); }
+.band-partner .track-state-pill { background: var(--blue-light); color: var(--blue); border: 1px solid #bfdbfe; }
+
+.band-pipeline .track-band-eyebrow { color: var(--amber); }
+.band-pipeline { border-top: 3px solid var(--amber); }
+.band-pipeline .track-state-pill { background: var(--amber-light); color: var(--amber); border: 1px solid #fde68a; }
+
+.track-record-note {
+  margin-top: 1rem; font-family: var(--font-mono); font-size: 0.62rem;
+  color: var(--text-dim); opacity: 0.65;
+}
+
+/* ── RESPONSIVE ── */
+
+/* Tablet: 768px and below */
+@media (max-width: 768px) {
+  /* Nav */
+  .nav-links { display: none; }
+  nav { padding: 0 1rem; }
+  .nav-logo { font-size: 0.88rem; }
+  .nav-back { font-size: 0.68rem; padding: 0.2rem 0.5rem; }
+
+  /* Sections */
+  section { padding: 2.5rem 1.25rem; }
+
+  /* Hero */
+  .hero-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .legacy-strip { gap: 1rem; flex-wrap: wrap; }
+  .legacy-item { min-width: 40%; }
+
+  /* Ideas */
+  .idea-header { flex-direction: row; gap: 0.75rem; align-items: flex-start; }
+  .idea-body { padding: 1.25rem 1.25rem; }
+  .idea-header { padding: 1.25rem 1.25rem 1rem; }
+  .idea-table td:first-child { width: 100px; font-size: 0.62rem; }
+
+  /* Track record */
+  .track-bands { gap: 1.5rem; }
+  .track-band-states { gap: 0.4rem; }
+
+  /* Dashboard */
+  .dash-inner { grid-template-columns: 1fr; }
+  .dash-left { border-right: none; border-bottom: 1px solid var(--border); }
+  .dash-topbar { flex-direction: column; gap: 0.3rem; align-items: flex-start; }
+  .dash-topbar-meta { font-size: 0.58rem; }
+  .dash-provenance { gap: 0.8rem; }
+}
+
+/* Mobile: 480px and below */
+@media (max-width: 480px) {
+  /* Banner */
+  .status-banner { font-size: 0.68rem; gap: 0.5rem; padding: 0.4rem 1rem; }
+  .status-banner-dot:last-child { display: none; }
+
+  /* Nav */
+  nav { height: 52px; top: 28px; }
+  main { padding-top: 80px; }
+
+  /* Typography */
+  .section-title { font-size: 1.5rem; }
+  h1.section-title { font-size: 1.6rem; }
+
+  /* Hero */
+  .hero-grid { gap: 1.5rem; }
+  .hero-body p { font-size: 0.9rem; }
+  .legacy-strip { flex-direction: column; gap: 0.8rem; }
+  .legacy-item { min-width: unset; }
+  .legacy-num { font-size: 1.1rem; }
+  .partnership-pill { font-size: 0.68rem; }
+
+  /* Active engagements pills — wrap naturally, smaller text */
+  .active-pills { gap: 0.4rem; }
+  .active-pills span { font-size: 0.65rem; padding: 0.2rem 0.55rem; }
+
+  /* Hero stats card */
+  .hero-stats { padding: 1rem; }
+  .hero-stat { padding: 0.65rem 0; }
+
+  /* Track record section */
+  .track-record-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+  .track-band { padding: 1rem; }
+  .track-band-title { font-size: 0.82rem; }
+  .track-state-pill { font-size: 0.7rem; padding: 0.25rem 0.55rem; }
+
+  /* Ideas */
+  .idea-card { border-radius: 10px; }
+  .idea-header { padding: 1rem 1rem 0.75rem; gap: 0.6rem; }
+  .idea-title { font-size: 1.1rem; }
+  .idea-tagline { font-size: 0.82rem; }
+  .idea-body { padding: 1rem; }
+  .idea-desc { font-size: 0.85rem; }
+  .idea-table td { padding: 0.5rem 0.35rem; font-size: 0.78rem; }
+  .idea-table td:first-child { width: 80px; font-size: 0.6rem; }
+  .idea-now { flex-direction: column; gap: 0.2rem; font-size: 0.75rem; }
+  .idea-number { font-size: 0.62rem; }
+
+  /* Dashboard */
+  .dash-frame { border-radius: 10px; }
+  .dash-right-inner { padding: 0.75rem; }
+  .city-table th { font-size: 0.55rem; padding: 0.35rem 0.4rem; }
+  .city-table td { font-size: 0.72rem; padding: 0.4rem 0.4rem; }
+  .city-name { font-size: 0.74rem; }
+  .dash-provenance { flex-direction: column; gap: 0.4rem; padding: 0.6rem 0.75rem; }
+
+  /* Footer */
+  footer { padding: 1.5rem 1rem; }
+  .footer-text { font-size: 0.72rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="status-banner">
+  <div class="status-banner-dot"></div>
+  Working document · eGov Foundation · April 2026
+  <div class="status-banner-dot"></div>
+</div>
+
+<nav>
+  <a class="nav-logo" href="#">
+    eGov Foundation <span class="nav-logo-x">×</span> MoHUA
+  </a>
+  <div class="nav-links">
+    <a href="#hero">Context</a>
+    <a href="#track-record">Track Record</a>
+    <a href="#ideas">Six Ideas</a>
+    <a href="#dashboard">Dashboard</a>
+  </div>
+  <a class="nav-back" href="https://kriticalthinking.github.io/digit-building-blocks-visualization/" target="_blank">← eGov microsite</a>
+</nav>
+
+<main>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="section-eyebrow">Partnership Proposal · Urban India</div>
+  <h1 class="section-title">Reviving and deepening<br><em>the eGov–MoHUA partnership</em></h1>
+
+  <div class="hero-grid">
+    <div class="hero-body">
+      <div class="partnership-pill">● Technical support to MoHUA's urban transformation agenda</div>
+      <p>eGov Foundation and MoHUA have a shared history that few partnerships in Indian digital governance can match. Working under MoHUA's leadership, eGov supported the architecture of DIGIT, which became the technical foundation for UPYOG — India's national urban governance platform, now fully owned and operated by MoHUA through NIUA, serving 4,400+ urban local bodies across 30 states.</p>
+      <p>The context for deepening this partnership is significant. The UCF operational guidelines were launched in April 2026, unlocking ₹4 lakh crore in urban investment on a reform-linked, challenge-mode basis. The 16th Finance Commission has committed ₹3.56 lakh crore to ULBs over 2026–31. eGov's PFM team is already engaged under MoHUA's direction on NMAM 2.0 and the XVI FC Digital Grants Management system.</p>
+      <p>The six ideas below are not about resting on past work. They are areas where eGov believes it can contribute technical capacity in support of MoHUA's priorities — on UCF programme infrastructure, UPYOG adoption, governance intelligence, citizen engagement, climate-resilient cities, and RERA data standards. In each case, MoHUA leads; eGov supports.</p>
+
+      <div style="margin-top:1.8rem;margin-bottom:0.4rem;">
+        <div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:0.75rem;">Active engagements with MoHUA ecosystem</div>
+        <div style="display:flex;flex-wrap:wrap;gap:0.5rem;">
+          <span style="background:var(--green-light);border:1px solid var(--green-mid);border-radius:20px;padding:0.25rem 0.7rem;font-size:0.73rem;color:var(--green);font-weight:500;">NUDM / UPYOG architecture</span>
+          <span style="background:var(--green-light);border:1px solid var(--green-mid);border-radius:20px;padding:0.25rem 0.7rem;font-size:0.73rem;color:var(--green);font-weight:500;">NMAM 2.0 — Digital MFM Advisor</span>
+          <span style="background:var(--green-light);border:1px solid var(--green-mid);border-radius:20px;padding:0.25rem 0.7rem;font-size:0.73rem;color:var(--green);font-weight:500;">XVI FC Digital Grants Management</span>
+          <span style="background:var(--green-light);border:1px solid var(--green-mid);border-radius:20px;padding:0.25rem 0.7rem;font-size:0.73rem;color:var(--green);font-weight:500;">AIFORERA — RERA data standards</span>
+          <span style="background:var(--green-light);border:1px solid var(--green-mid);border-radius:20px;padding:0.25rem 0.7rem;font-size:0.73rem;color:var(--green);font-weight:500;">PM SVANidhi — product support</span>
+          <span style="background:var(--green-light);border:1px solid var(--green-mid);border-radius:20px;padding:0.25rem 0.7rem;font-size:0.73rem;color:var(--green);font-weight:500;">AI CoE with IIT-K · urban governance</span>
+        </div>
+      </div>
+
+      <div class="legacy-strip">
+        <div class="legacy-item">
+          <div class="legacy-num">4,400+</div>
+          <div class="legacy-label">Urban local bodies in scope on UPYOG</div>
+        </div>
+        <div class="legacy-item">
+          <div class="legacy-num">30</div>
+          <div class="legacy-label">States &amp; UTs signed on to UPYOG</div>
+        </div>
+        <div class="legacy-item">
+          <div class="legacy-num">16</div>
+          <div class="legacy-label">Urban service modules on the platform</div>
+        </div>
+        <div class="legacy-item">
+          <div class="legacy-num">20,000+</div>
+          <div class="legacy-label">Training hours delivered for UPYOG rollout</div>
+        </div>
+        <div class="legacy-item">
+          <div class="legacy-num">70</div>
+          <div class="legacy-label">Empanelled technical implementation partners</div>
+        </div>
+      </div>
+      <p style="font-size:0.7rem;color:var(--text-dim);margin-top:0.5rem;font-family:var(--font-mono);">Legacy figures sourced from NUDM/NIUA official publications.</p>
+    </div>
+
+    <div>
+      <div class="hero-stats">
+        <div class="hero-stats-title">Current policy context · April 2026</div>
+
+        <div class="hero-stat">
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.2rem;">
+            <span style="font-family:var(--font-mono);font-size:0.65rem;background:#fef3c7;color:#92400e;border-radius:4px;padding:0.1rem 0.4rem;font-weight:600;">Apr 2026</span>
+            <span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-dim);">Ideas 1 · 2 · 3</span>
+          </div>
+          <div style="font-size:0.82rem;color:var(--text-mid);line-height:1.5;">UCF operational guidelines published. The reform toolkit — which defines what counts as governance reform — is explicitly flagged as "to be issued separately." That window is open now.</div>
+        </div>
+
+        <div class="hero-stat">
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.2rem;">
+            <span style="font-family:var(--font-mono);font-size:0.65rem;background:#fef3c7;color:#92400e;border-radius:4px;padding:0.1rem 0.4rem;font-weight:600;">6 months</span>
+            <span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-dim);">Idea 5</span>
+          </div>
+          <div style="font-size:0.82rem;color:var(--text-mid);line-height:1.5;">SWM Rules 2026 (in force April 1) mandate a centralised national digital waste tracking portal within 6 months. The architecture question is live and unanswered.</div>
+        </div>
+
+        <div class="hero-stat">
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.2rem;">
+            <span style="font-family:var(--font-mono);font-size:0.65rem;background:#fef3c7;color:#92400e;border-radius:4px;padding:0.1rem 0.4rem;font-weight:600;">Sept 2026</span>
+            <span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-dim);">Idea 5</span>
+          </div>
+          <div style="font-size:0.82rem;color:var(--text-mid);line-height:1.5;">DRAP's "Lakshya Zero Dumpsites" deadline. 1,428 sites in remediation across 202 ULBs — but no unified tracking system yet connecting dumpsite status to CPCB air quality data.</div>
+        </div>
+
+        <div class="hero-stat">
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.2rem;">
+            <span style="font-family:var(--font-mono);font-size:0.65rem;background:#fef3c7;color:#92400e;border-radius:4px;padding:0.1rem 0.4rem;font-weight:600;">In progress</span>
+            <span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-dim);">Idea 6</span>
+          </div>
+          <div style="font-size:0.82rem;color:var(--text-mid);line-height:1.5;">AIFORERA Technical Committee is drafting common data standards for all state RERA platforms — with eGov on the committee. Standards without a platform implementation plan lose momentum.</div>
+        </div>
+
+        <div class="hero-stat" style="border-bottom:none;">
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.2rem;">
+            <span style="font-family:var(--font-mono);font-size:0.65rem;background:#fef3c7;color:#92400e;border-radius:4px;padding:0.1rem 0.4rem;font-weight:600;">2026–31</span>
+            <span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-dim);">All ideas</span>
+          </div>
+          <div style="font-size:0.82rem;color:var(--text-mid);line-height:1.5;">₹3.56 lakh crore in 16th FC grants flow to ULBs over five years. The quality of digital systems cities build now determines how accountably that money gets spent.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRACK RECORD -->
+<section id="track-record">
+  <div class="section-eyebrow">What this partnership has already enabled</div>
+  <h2 class="section-title">Urban governance on DIGIT —<br>the foundation we're building on</h2>
+  <p class="section-sub">Before turning to new ideas, it helps to understand the scale of what MoHUA's UPYOG platform and its predecessor state programmes have collectively unlocked — through eGov's direct work, through commercial and government partners building on DIGIT, and through the pipeline of states now in active procurement.</p>
+
+  <div class="track-record-grid">
+
+    <!-- Band 1: eGov direct -->
+    <div class="track-band band-direct">
+      <div class="track-band-eyebrow">eGov direct</div>
+      <div class="track-band-title">State implementations led by eGov</div>
+      <div class="track-band-sub">Long-term embedded engagements where eGov directly supported state governments on urban service digitisation — predating and informing UPYOG's architecture.</div>
+      <div class="track-band-states">
+        <div class="track-state-pill">Andhra Pradesh<small>Property tax · Trade licences · Water · Grievances · 33M citizens</small></div>
+        <div class="track-state-pill">Punjab<small>Property tax · Water · Trade licences · Fire NOC</small></div>
+        <div class="track-state-pill">Karnataka<small>Finance &amp; property tax · since 2004 · migrating to UPYOG</small></div>
+        <div class="track-state-pill">Tamil Nadu<small>Property tax · Trade licences · Water · Greater Chennai</small></div>
+        <div class="track-state-pill">Uttarakhand<small>Property tax · Trade licences · dashboards</small></div>
+        <div class="track-state-pill">Delhi<small>NDMC &amp; MCD · Finance &amp; property tax · UPYOG migration underway</small></div>
+        <div class="track-state-pill">Puducherry<small>Online building plan approval · eDCR integration</small></div>
+        <div class="track-state-pill">NUDM / UPYOG<small>Platform architecture · programme design · 20,000+ training hours</small></div>
+      </div>
+    </div>
+
+    <!-- Band 2: Partner-led -->
+    <div class="track-band band-partner">
+      <div class="track-band-eyebrow">Partner-led on DIGIT</div>
+      <div class="track-band-title">Commercial &amp; government partners deploying UPYOG independently</div>
+      <div class="track-band-sub">The measure of a platform's maturity is whether others can deploy it without the original builder. These implementations were led entirely by certified partners — eGov's role was ecosystem enablement, not direct delivery.</div>
+      <div class="track-band-states">
+        <div class="track-state-pill">Kerala · IKM Kerala<small>All 94 ULBs · Full suite incl. Finance &amp; HR · 18.7M population</small></div>
+        <div class="track-state-pill">Odisha · PwC<small>SUJOG · 114 ULBs · Urban service delivery · 7.25M population</small></div>
+        <div class="track-state-pill">West Bengal · PwC<small>Kolkata Municipal Corporation · 13 modules</small></div>
+        <div class="track-state-pill">Chandigarh · PwC<small>Property tax · trade licences · 10 custom apps</small></div>
+        <div class="track-state-pill">Manipur · Deloitte<small>Property tax · Finance · Water &amp; Sewerage · 26 ULBs</small></div>
+        <div class="track-state-pill">Himachal Pradesh · Deloitte<small>Finance &amp; Accounting · OBPAS</small></div>
+        <div class="track-state-pill">All Cantonments · BEL<small>eChhawani · Ministry of Defence · 2.5M citizens</small></div>
+        <div class="track-state-pill">Central Govt · Accenture<small>National grievance redressal platform on DIGIT</small></div>
+        <div class="track-state-pill">Tamil Nadu · Interlace<small>Building plan approval · all 14,000+ local bodies</small></div>
+        <div class="track-state-pill">Assam · Sumato<small>Finance &amp; Accounting · 2 ULBs</small></div>
+      </div>
+    </div>
+
+    <!-- Band 3: Pipeline -->
+    <div class="track-band band-pipeline">
+      <div class="track-band-eyebrow">Active pipeline</div>
+      <div class="track-band-title">States in active UPYOG procurement or rollout</div>
+      <div class="track-band-sub">States that have initiated UPYOG implementation — in RfP, design, or early deployment stage. The adoption wave is still building.</div>
+      <div class="track-band-states">
+        <div class="track-state-pill">Gujarat<small>Full urban suite · implementation initiated</small></div>
+        <div class="track-state-pill">Maharashtra<small>BMC-first · state-specific modules in development</small></div>
+        <div class="track-state-pill">Bihar<small>RfP stage · full suite incl. OBPAS &amp; Finance</small></div>
+        <div class="track-state-pill">Madhya Pradesh<small>All modules · open-source migration</small></div>
+        <div class="track-state-pill">Rajasthan<small>Finance &amp; Accounting · Water &amp; Sewerage</small></div>
+        <div class="track-state-pill">Uttar Pradesh<small>Finance &amp; Accounting module</small></div>
+        <div class="track-state-pill">Haryana<small>Finance &amp; Accounting · RfP &amp; evaluation stage</small></div>
+        <div class="track-state-pill">Jammu &amp; Kashmir<small>Finance &amp; Accounting · OBPAS</small></div>
+        <div class="track-state-pill">Ladakh<small>All services exc. Birth &amp; Death · RfP stage</small></div>
+        <div class="track-state-pill">Goa<small>Finance &amp; Accounting</small></div>
+        <div class="track-state-pill">Tamil Nadu<small>Finance &amp; Accounting migration to UPYOG</small></div>
+        <div class="track-state-pill">Telangana<small>OBPAS module</small></div>
+      </div>
+    </div>
+
+  </div>
+  <div class="track-record-note">Programme data sourced from eGov Foundation's internal programme portfolio. Pipeline entries reflect RfP/design stage as of early 2025; status may have evolved.</div>
+</section>
+
+<!-- IDEAS -->
+<section id="ideas">
+  <div class="section-eyebrow">Six proposals</div>
+  <h2 class="section-title">Where eGov can support<br>MoHUA's urban agenda</h2>
+  <div class="ideas-intro">
+    <p>Each proposal identifies a gap in MoHUA's current digital infrastructure where eGov's existing work and technical capacity could be useful. In each case, MoHUA and its agencies (NIUA, AIFORERA, HUDCO) would lead and own the initiative. eGov's role is to provide technical support, platform capacity, and implementation assistance — on MoHUA's terms.</p>
+  </div>
+
+  <!-- IDEA 1 -->
+  <div class="idea-card idea-1">
+    <div class="idea-header">
+      <div class="idea-number">01</div>
+      <div class="idea-title-block">
+        <div class="idea-title">UCF Digital Operating System</div>
+        <div class="idea-tagline">The mission-management backbone MoHUA needs to actually run UCF at ₹4 lakh crore scale — reform tracking, tranche-linked fund release, and DPR quality infrastructure.</div>
+      </div>
+    </div>
+    <div class="idea-body">
+      <div class="idea-desc">
+        The UCF operational guidelines mandate a centralised reform portal where cities submit roadmaps, report progress, and trigger tranche releases — but this portal has no designated builder yet. Fund releases require geo-tagged physical progress evidence, utilisation certificates, and IRMA verification. At the scale of 4,223 eligible cities across three verticals and five reform tracks, this is a significant digital infrastructure challenge. eGov's ongoing NMAM 2.0 and XVI FC DGM work has produced directly relevant system design thinking that could feed into MoHUA's approach here.
+      </div>
+      <table class="idea-table">
+        <tr>
+          <td>MoHUA's role</td>
+          <td>Lead the design and ownership of the UCF programme management system through the UCF division and NIUA. Define the reform portal architecture, NAC workflows, and IRMA coordination framework. Operate and own the system long-term.</td>
+        </tr>
+        <tr>
+          <td>eGov's support</td>
+          <td>Provide technical inputs on system architecture drawing from NMAM 2.0 and DGM work — reform milestone schema, UC generation from transactional data, tranche-release workflow design. Available to embed a technical team within MoHUA's programme unit.</td>
+        </tr>
+        <tr>
+          <td>Platform layer</td>
+          <td>DIGIT infrastructure as a potential foundation. PFMS integration for fund flow verification. APIs to UPYOG for service delivery data and cityfinance.in for financial account status.</td>
+        </tr>
+        <tr>
+          <td>Policy layer</td>
+          <td>NMAM 2.0 accounting standards inform the data schema. UCF reform tracks (Sections 8.1–8.5 of guidelines) define the milestone framework. XVI FC grant conditions provide the compliance baseline.</td>
+        </tr>
+      </table>
+      <div class="idea-now">
+        <span class="idea-now-label">Why now →</span>
+        UCF operational guidelines were published April 2026. The reform portal is referenced but unbuilt. States must submit project proposals within 6 months. eGov's DGM workshops (April 7–9) already produced system design thinking directly relevant to this.
+      </div>
+    </div>
+  </div>
+
+  <!-- IDEA 2 -->
+  <div class="idea-card idea-2">
+    <div class="idea-header">
+      <div class="idea-number">02</div>
+      <div class="idea-title-block">
+        <div class="idea-title">UPYOG Adoption as UCF Reform Evidence</div>
+        <div class="idea-tagline">Define UPYOG operational status as the measurable benchmark for Digital Governance reform compliance under UCF — turning adoption from a push exercise into a national pull.</div>
+      </div>
+    </div>
+    <div class="idea-body">
+      <div class="idea-desc">
+        Digital Governance is an admissible UCF project category, explicitly including digitisation of property records, utilities, and family IDs. UCF's reform framework requires "end-to-end digitisation of select municipal functions" as a governance reform condition — but the reform toolkit, which will define this standard, is yet to be issued. MoHUA and NIUA are well-placed to define UPYOG operational status (property tax, water billing, trade licences, grievance redressal live with transaction volume) as the measurable benchmark for this condition. Cities that already have it get reform credit; cities that don't can use it as their UCF Digital Governance project funded through the PPCBF track. eGov can provide technical support in designing this maturity framework.
+      </div>
+      <table class="idea-table">
+        <tr>
+          <td>MoHUA's role</td>
+          <td>Lead the design and notification of the Digital Governance Reform Index through the UCF reform toolkit. Embed UPYOG operational status in challenge-mode evaluation criteria at NAC. NIUA to coordinate with state teams on adoption pathways.</td>
+        </tr>
+        <tr>
+          <td>eGov's support</td>
+          <td>Provide technical inputs on UPYOG module maturity levels (configured / live / transaction-generating / outcome-tracked). Support state onboarding through the 70-partner empanelled SI network. eGov Academy available for the individual capacity building the UCF guidelines require.</td>
+        </tr>
+        <tr>
+          <td>Platform layer</td>
+          <td>UPYOG's 16 service modules as the implementation vehicle. DIGIT's open APIs allow state SIs to configure at scale. The maturity framework would be tracked within the UCF reform portal (Idea 1).</td>
+        </tr>
+        <tr>
+          <td>Policy layer</td>
+          <td>UCF Section 8.2 (Governance &amp; Digital Reforms) provides the policy hook. The UCF reform toolkit — to be issued separately per the guidelines — is the right vehicle for MoHUA to formalise this standard.</td>
+        </tr>
+      </table>
+      <div class="idea-now">
+        <span class="idea-now-label">Why now →</span>
+        The UCF reform toolkit is explicitly listed as "to be issued separately." The window to shape what counts as digital governance reform is open now — once notified without this standard, it closes. A brief technical note from eGov to MoHUA/NIUA could seed this conversation.
+      </div>
+    </div>
+  </div>
+
+  <!-- IDEA 3 -->
+  <div class="idea-card idea-3">
+    <div class="idea-header">
+      <div class="idea-number">03</div>
+      <div class="idea-title-block">
+        <div class="idea-title">National Urban Governance Intelligence Layer</div>
+        <div class="idea-tagline">A synthesis platform that pulls from UPYOG, cityfinance.in, AAINA, and the UCF reform portal to give MoHUA and cities an integrated governance health view that no existing system provides.</div>
+      </div>
+    </div>
+    <div class="idea-body">
+      <div class="idea-desc">
+        MoHUA currently has fragmented data systems covering different dimensions of city performance: cityfinance.in (financial accounts and rankings, built by Janaagraha), AAINA (self-reported service benchmarks), UPYOG (live transactional service delivery data), and the nascent UCF reform portal. No system synthesises across them. The challenge-mode evaluation for UCF requires MoHUA to assess cities across vision/capacity, transformative outcomes, and financial sustainability — each drawing on a different source. A governance intelligence layer that integrates these through APIs could give MoHUA, states, and cities a composite health view that doesn't exist today. This is not a competing portal — it would make existing portals more useful. A design conversation that includes Janaagraha (given their cityfinance.in ownership) would be the natural starting point. The prototype below illustrates what this could look like.
+      </div>
+      <table class="idea-table">
+        <tr>
+          <td>MoHUA's role</td>
+          <td>Determine whether a ministry-level governance intelligence view is a priority. If so, lead the convening of a design group with NIUA, Janaagraha, and technical partners. Enable API access across UPYOG/NIUA, AAINA, and the UCF reform portal. Own the platform and its public transparency layer.</td>
+        </tr>
+        <tr>
+          <td>eGov's support</td>
+          <td>Contribute technical architecture inputs and the UPYOG data pipeline design. Support the API integration work given eGov's existing relationship with NIUA. Facilitate a design conversation with Janaagraha to ensure cityfinance.in data is integrated, not replicated.</td>
+        </tr>
+        <tr>
+          <td>Platform layer</td>
+          <td>API integrations: UPYOG (transactional service data) + cityfinance.in (financial accounts) + AAINA (benchmarks) + UCF portal (reform trajectory). No new data collection — synthesis and presentation only.</td>
+        </tr>
+        <tr>
+          <td>Policy layer</td>
+          <td>UCF's challenge-mode evaluation framework (Sections 7.2 A/B/C) provides the natural assessment structure. A ministry-owned governance intelligence platform would make UCF evaluation evidence-based rather than reliant on self-reporting.</td>
+        </tr>
+      </table>
+      <div class="idea-now">
+        <span class="idea-now-label">Why now →</span>
+        UCF's NAC will need to evaluate thousands of city proposals. MoHUA's budget has grown 50% to ₹85,522 crore. An integrated view of how that investment performs across cities would be valuable — and the data sources to build it already exist.
+      </div>
+    </div>
+  </div>
+
+  <!-- IDEA 4 -->
+  <div class="idea-card idea-4">
+    <div class="idea-header">
+      <div class="idea-number">04</div>
+      <div class="idea-title-block">
+        <div class="idea-title">Ward-Level Citizen Engagement Layer</div>
+        <div class="idea-tagline">A structured digital citizen voice mechanism — multilingual, ward-mapped, linked to UPYOG service delivery data — closing the loop between what MoHUA sees and what citizens actually experience.</div>
+      </div>
+    </div>
+    <div class="idea-body">
+      <div class="idea-desc">
+        Every existing data system in the urban governance stack — UPYOG, AAINA, cityfinance.in — captures government-generated data. None systematically captures the citizen experience of service delivery at ward level. The UCF guidelines require community engagement and stakeholder consultations as eligible PPCBF activities. eGov has a working prototype of a ward-level citizen voice platform (developed for Bengaluru, multilingual) that captures grievances, service ratings, and local priority inputs — mapped to wards and cross-referenced with UPYOG service delivery records. If MoHUA sees value in a national citizen engagement standard for UCF, eGov can support the technical design and scaling of such a platform.
+      </div>
+      <table class="idea-table">
+        <tr>
+          <td>MoHUA's role</td>
+          <td>Determine whether citizen engagement standards should be embedded in the UCF reform toolkit. If so, define what ward-level digital participation means as a governance reform indicator. Provide the policy framework for cities to adopt this as part of their UCF reform roadmap.</td>
+        </tr>
+        <tr>
+          <td>eGov's support</td>
+          <td>Share the Bengaluru prototype for MoHUA/NIUA's review. If taken forward, support scaling to a multi-city, multilingual platform and build the API connecting citizen signals to the governance intelligence layer (Idea 3).</td>
+        </tr>
+        <tr>
+          <td>Platform layer</td>
+          <td>Ward-mapped feedback interface (multilingual, mobile-first). Cross-referencing with UPYOG service transaction data. Optional ICCC integration for real-time grievance routing — consistent with UCF's mandatory ICCC requirement for all projects.</td>
+        </tr>
+        <tr>
+          <td>Policy layer</td>
+          <td>UCF PPCBF covers community engagement activities. The 74th Constitutional Amendment mandates Ward Committees as participatory bodies — a digital citizen engagement platform operationalises that mandate. Citizen participation data could inform AAINA's benchmarking framework over time.</td>
+        </tr>
+      </table>
+      <div class="idea-now">
+        <span class="idea-now-label">Why now →</span>
+        UCF explicitly funds community engagement under the ₹5,000 crore PPCBF. A working prototype already exists. The governance intelligence layer (Idea 3) benefits from a citizen data source. eGov can share the prototype with MoHUA/NIUA as a starting point for discussion.
+      </div>
+    </div>
+  </div>
+  <!-- IDEA 5 -->
+  <div class="idea-card idea-5">
+    <div class="idea-header">
+      <div class="idea-number">05</div>
+      <div class="idea-title-block">
+        <div class="idea-title">Inter-Departmental Convergence for Climate-Resilient Cities</div>
+        <div class="idea-tagline">MoHUA as convener of cross-ministry digital infrastructure — connecting SWM, air quality enforcement, and urban livelihoods data to activate climate resilience at city scale.</div>
+      </div>
+    </div>
+    <div class="idea-body">
+      <div class="idea-desc">
+        UCF explicitly lists climate-resilient infrastructure as a project category. But the most impactful climate interventions in cities require data and regulatory authority that sits across multiple departments — SWM with ULBs, air quality with pollution control boards, livelihoods with MoLE. MoHUA is uniquely positioned to convene this convergence. Two early-stage activations illustrate the opportunity, both grounded in eGov's ongoing work:
+        <br><br>
+        <strong>SWM → Air Quality enforcement pipeline.</strong> Open waste burning is a significant source of PM2.5 in Indian cities. The Solid Waste Management Rules 2026 (in force from April 1, 2026) formally designate State Pollution Control Boards (e.g. KSPCB) as enforcement authorities for SWM — but there is currently no data pipeline connecting SWM operations to these boards. A centralised national digital waste tracking portal is mandated within 6 months under the new rules. eGov is already building SWM digital infrastructure on DIGIT with the Government of Karnataka (MoU with RDPR in place). This architecture — covering waste classification, route optimisation, MRF management, and citizen grievance — could feed directly into the national portal architecture MoHUA will need to commission. Connecting it to CPCB's ambient air quality monitoring data creates a traceable SWM-to-air-quality accountability chain that enforcement authorities currently lack.
+        <br><br>
+        <strong>Parametric heat insurance for PM SVANidhi vendors.</strong> <span class="early-tag">● early stage</span> Street vendors — SVANidhi beneficiaries — are among the most exposed urban populations to extreme heat events. Parametric insurance products triggered by heat index thresholds (rather than assessed claims) are being explored by climate finance specialists as a way to provide rapid, verifiable income support during heat waves. eGov is in early-stage discussion with climate finance partners on this concept. MoHUA's existing SVANidhi digital infrastructure (vendor registration, geolocation, digital payment rails) provides a ready beneficiary identification and disbursement layer that such a product would need. If MoHUA were interested in piloting this, eGov could facilitate a design conversation between the ministry, potential insurance partners, and IRDAI.
+      </div>
+      <table class="idea-table">
+        <tr>
+          <td>MoHUA's role</td>
+          <td>Convene the inter-departmental working group (MoHUA + MoEFCC + CPCB + MoLE) to identify convergence points. Commission the national SWM digital portal under the SWM Rules 2026 mandate. If the SVANidhi heat insurance pilot is of interest, facilitate conversations with IRDAI and finance partners.</td>
+        </tr>
+        <tr>
+          <td>eGov's support</td>
+          <td>Share Karnataka SWM DPI architecture as a potential input to the national portal design. Support CPCB and KSPCB in designing the SWM-to-air-quality data pipeline. On SVANidhi heat insurance, facilitate early-stage design conversations and provide the SVANidhi data layer design support.</td>
+        </tr>
+        <tr>
+          <td>Platform layer</td>
+          <td>Karnataka SWM platform (DIGIT-based) as architectural reference. CPCB's ambient air quality monitoring data as the enforcement trigger source. SVANidhi vendor registry and digital payment rails as the insurance disbursement layer. Satellite / sensor data and community field reporting for waste burning detection.</td>
+        </tr>
+        <tr>
+          <td>Policy layer</td>
+          <td>SWM Rules 2026 — SPCB enforcement authority and 6-month national portal mandate. UCF Water &amp; Sanitation and Climate Resilience verticals for funding pathway. SVANidhi programme framework for the heat insurance pilot. CPCB's national ambient air quality standards as the regulatory anchor.</td>
+        </tr>
+      </table>
+      <div class="idea-now">
+        <span class="idea-now-label">Why now →</span>
+        SWM Rules 2026 came into force April 1, 2026. The national portal mandate has a 6-month window. Karnataka SWM work is already live. DRAP's Sept 2026 deadline creates additional urgency on the waste tracking infrastructure. The convergence opportunity is time-bound.
+      </div>
+    </div>
+  </div>
+
+  <!-- IDEA 6 -->
+  <div class="idea-card idea-6">
+    <div class="idea-header">
+      <div class="idea-number">06</div>
+      <div class="idea-title-block">
+        <div class="idea-title">National RERA Data Standards Platform</div>
+        <div class="idea-tagline">Building on eGov's existing role on the AIFORERA Technical Committee — from common data standards to a unified national RERA platform that gives homebuyers, states, and MoHUA consistent visibility.</div>
+      </div>
+    </div>
+    <div class="idea-body">
+      <div class="idea-desc">
+        MoHUA and AIFORERA (All India Forum of Real Estate Regulatory Authorities) are developing a Unified RERA Dashboard and API-based platform connecting all state and UT RERAs. AIFORERA has constituted a Technical Committee of five RERA Chairpersons and invited eGov to support the development of common data standards for all state RERA platforms. The draft standards aim to ensure uniform implementation of the RERA Act and a consistent homebuyer experience across states, while providing MoHUA with sector-wide visibility through a common data architecture. The foundation work — standards design — is already underway. The logical next step, if MoHUA chooses to pursue it, is moving from standards to platform implementation.
+      </div>
+      <table class="idea-table">
+        <tr>
+          <td>MoHUA's role</td>
+          <td>Lead the AIFORERA initiative as the apex ministry for RERA. Drive adoption of common data standards across state RERAs. Commission and own the Unified RERA Dashboard as the national homebuyer transparency and regulatory oversight tool.</td>
+        </tr>
+        <tr>
+          <td>eGov's support</td>
+          <td>Continue technical committee participation on data standards. If MoHUA moves to platform implementation, provide technical support for the API integration layer connecting state RERA systems. DIGIT's interoperability architecture is directly applicable to a federated multi-state platform of this kind.</td>
+        </tr>
+        <tr>
+          <td>Platform layer</td>
+          <td>API-based integration with all state RERA portals. Common data schema (under development) as the interoperability standard. Unified dashboard for MoHUA oversight, homebuyer transparency, and state-level benchmarking. DIGIT's federated architecture as a potential implementation reference.</td>
+        </tr>
+        <tr>
+          <td>Policy layer</td>
+          <td>RERA Act 2016 as the legal foundation. AIFORERA's mandate to drive uniform implementation. The common data standards (currently being drafted with eGov's support) as the technical policy instrument. MoHUA's oversight role provides the national coordination authority.</td>
+        </tr>
+      </table>
+      <div class="idea-now">
+        <span class="idea-now-label">Why now →</span>
+        eGov is already on the AIFORERA Technical Committee — the standards work is live. The transition from standards to platform is the natural next step and can be proposed without needing to establish a new relationship. This is the most immediately actionable idea on the page.
+      </div>
+    </div>
+  </div>
+</section>
+<section id="dashboard">
+  <div class="section-eyebrow">Prototype · Idea 3</div>
+  <h2 class="section-title">What the governance<br>intelligence layer looks like</h2>
+  <p class="section-sub" style="margin-bottom:0.5rem;">Dummy data. Illustrative of the MoHUA-facing view — an integrated read on each city's service delivery performance, financial health, and reform trajectory. Click any city row to explore.</p>
+
+  <div class="dash-frame">
+    <div class="dash-topbar">
+      <div style="display:flex;align-items:center;gap:0.6rem;">
+        <div class="dash-topbar-dot"></div>
+        <div class="dash-topbar-title">National Urban Governance Intelligence · Ministry View</div>
+      </div>
+      <div class="dash-topbar-meta">10 cities shown · April 2026 · Illustrative prototype</div>
+    </div>
+
+    <div class="dash-inner">
+      <!-- LEFT: city table -->
+      <div class="dash-left">
+        <div class="dash-panel-header">
+          City Governance Health
+          <span class="dash-sort-hint">click columns to sort</span>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="city-table" id="cityTable">
+            <thead>
+              <tr>
+                <th onclick="sortTable('name')">City</th>
+                <th onclick="sortTable('upyog')">UPYOG<br>Services</th>
+                <th onclick="sortTable('ptax')">Prop Tax<br>Eff %</th>
+                <th onclick="sortTable('fc')">16FC<br>Util %</th>
+                <th onclick="sortTable('ucf')">UCF<br>Score</th>
+                <th onclick="sortTable('rag')">Status</th>
+              </tr>
+            </thead>
+            <tbody id="cityTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- RIGHT: city detail -->
+      <div class="dash-right">
+        <div class="dash-panel-header">City Detail</div>
+        <div class="dash-right-inner" id="cityDetail">
+          <div style="color:var(--text-dim);font-size:0.82rem;padding:1rem 0;">← Select a city to explore</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- provenance footer -->
+    <div class="dash-provenance">
+      <span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-dim);margin-right:0.5rem;">Data sources:</span>
+      <div class="prov-item"><div class="prov-dot" style="background:#2a6e47;"></div>UPYOG / NIUA — service delivery</div>
+      <div class="prov-item"><div class="prov-dot" style="background:#1d4ed8;"></div>cityfinance.in — financial accounts</div>
+      <div class="prov-item"><div class="prov-dot" style="background:#b45309;"></div>UCF Reform Portal — reform milestones</div>
+      <div class="prov-item"><div class="prov-dot" style="background:#7c3aed;"></div>AAINA — service benchmarks</div>
+    </div>
+  </div>
+
+  <div class="dash-disclaimer">All data above is illustrative dummy data for prototype purposes only. No real city data is represented.</div>
+</section>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-text">
+      Working document · eGov Foundation · April 2026 ·
+      <a class="footer-link" href="https://kriticalthinking.github.io/digit-building-blocks-visualization/" target="_blank">← Back to eGov microsite</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── CITY DATA (dummy, illustrative) ──
+const cities = [
+  { name:'Pune',         tier:'Tier I',   state:'Maharashtra', upyog:14, ptax:74, fc:68, ucf:78, rag:'g',
+    spark:[42,48,55,61,58,67], reforms:[{name:'Market & Financial',pct:80,color:'#16a34a'},{name:'Governance & Digital',pct:90,color:'#1d4ed8'},{name:'Operational & Capacity',pct:65,color:'#b45309'},{name:'Urban Planning & Spatial',pct:55,color:'#7c3aed'}] },
+  { name:'Surat',        tier:'Tier I',   state:'Gujarat',     upyog:13, ptax:81, fc:72, ucf:82, rag:'g',
+    spark:[38,44,50,58,63,71], reforms:[{name:'Market & Financial',pct:85,color:'#16a34a'},{name:'Governance & Digital',pct:88,color:'#1d4ed8'},{name:'Operational & Capacity',pct:70,color:'#b45309'},{name:'Urban Planning & Spatial',pct:60,color:'#7c3aed'}] },
+  { name:'Bhopal',       tier:'Tier II',  state:'Madhya Pradesh', upyog:10, ptax:52, fc:55, ucf:58, rag:'a',
+    spark:[18,22,25,28,31,34], reforms:[{name:'Market & Financial',pct:40,color:'#16a34a'},{name:'Governance & Digital',pct:62,color:'#1d4ed8'},{name:'Operational & Capacity',pct:48,color:'#b45309'},{name:'Urban Planning & Spatial',pct:35,color:'#7c3aed'}] },
+  { name:'Coimbatore',   tier:'Tier II',  state:'Tamil Nadu',  upyog:11, ptax:61, fc:60, ucf:64, rag:'a',
+    spark:[22,26,29,33,36,38], reforms:[{name:'Market & Financial',pct:55,color:'#16a34a'},{name:'Governance & Digital',pct:70,color:'#1d4ed8'},{name:'Operational & Capacity',pct:52,color:'#b45309'},{name:'Urban Planning & Spatial',pct:44,color:'#7c3aed'}] },
+  { name:'Agartala',     tier:'NE Capital', state:'Tripura',   upyog:6,  ptax:31, fc:38, ucf:34, rag:'r',
+    spark:[6,7,8,9,10,11], reforms:[{name:'Market & Financial',pct:20,color:'#16a34a'},{name:'Governance & Digital',pct:38,color:'#1d4ed8'},{name:'Operational & Capacity',pct:28,color:'#b45309'},{name:'Urban Planning & Spatial',pct:18,color:'#7c3aed'}] },
+  { name:'Nashik',       tier:'Tier II',  state:'Maharashtra', upyog:12, ptax:58, fc:61, ucf:62, rag:'a',
+    spark:[20,24,28,32,35,38], reforms:[{name:'Market & Financial',pct:50,color:'#16a34a'},{name:'Governance & Digital',pct:65,color:'#1d4ed8'},{name:'Operational & Capacity',pct:55,color:'#b45309'},{name:'Urban Planning & Spatial',pct:40,color:'#7c3aed'}] },
+  { name:'Rajkot',       tier:'Tier II',  state:'Gujarat',     upyog:12, ptax:67, fc:64, ucf:70, rag:'g',
+    spark:[28,32,36,40,44,48], reforms:[{name:'Market & Financial',pct:65,color:'#16a34a'},{name:'Governance & Digital',pct:78,color:'#1d4ed8'},{name:'Operational & Capacity',pct:60,color:'#b45309'},{name:'Urban Planning & Spatial',pct:50,color:'#7c3aed'}] },
+  { name:'Guwahati',     tier:'NE Metro', state:'Assam',       upyog:7,  ptax:34, fc:41, ucf:38, rag:'r',
+    spark:[8,10,11,12,13,14], reforms:[{name:'Market & Financial',pct:22,color:'#16a34a'},{name:'Governance & Digital',pct:42,color:'#1d4ed8'},{name:'Operational & Capacity',pct:30,color:'#b45309'},{name:'Urban Planning & Spatial',pct:20,color:'#7c3aed'}] },
+  { name:'Vijayawada',   tier:'Tier II',  state:'Andhra Pradesh', upyog:13, ptax:62, fc:58, ucf:66, rag:'a',
+    spark:[25,29,32,36,40,43], reforms:[{name:'Market & Financial',pct:58,color:'#16a34a'},{name:'Governance & Digital',pct:72,color:'#1d4ed8'},{name:'Operational & Capacity',pct:56,color:'#b45309'},{name:'Urban Planning & Spatial',pct:46,color:'#7c3aed'}] },
+  { name:'Udaipur',      tier:'Tier III', state:'Rajasthan',   upyog:8,  ptax:43, fc:44, ucf:46, rag:'a',
+    spark:[12,14,15,17,18,20], reforms:[{name:'Market & Financial',pct:35,color:'#16a34a'},{name:'Governance & Digital',pct:50,color:'#1d4ed8'},{name:'Operational & Capacity',pct:38,color:'#b45309'},{name:'Urban Planning & Spatial',pct:28,color:'#7c3aed'}] },
+];
+
+const ragLabels = { g:'On Track', a:'In Progress', r:'Needs Support' };
+const months = ['Nov','Dec','Jan','Feb','Mar','Apr'];
+let sortKey = null, sortAsc = true, selectedIdx = 0;
+
+function renderTable() {
+  const tbody = document.getElementById('cityTableBody');
+  const data = [...cities];
+  if (sortKey) {
+    data.sort((a,b) => {
+      const va = typeof a[sortKey]==='string' ? a[sortKey].toLowerCase() : a[sortKey];
+      const vb = typeof b[sortKey]==='string' ? b[sortKey].toLowerCase() : b[sortKey];
+      return sortAsc ? (va>vb?1:-1) : (va<vb?1:-1);
+    });
+  }
+  tbody.innerHTML = data.map((c,i) => {
+    const origIdx = cities.indexOf(c);
+    const ragClass = {g:'rag-g',a:'rag-a',r:'rag-r'}[c.rag];
+    const sel = origIdx === selectedIdx ? 'selected' : '';
+    return `<tr class="${sel}" onclick="selectCity(${origIdx})">
+      <td><div class="city-name">${c.name}</div><div class="city-tier">${c.state}</div></td>
+      <td>${c.upyog} / 16</td>
+      <td>${c.ptax}%</td>
+      <td>${c.fc}%</td>
+      <td>${c.ucf}</td>
+      <td><div class="rag-cell"><div class="rag ${ragClass}"></div><span class="rag-label">${ragLabels[c.rag]}</span></div></td>
+    </tr>`;
+  }).join('');
+}
+
+function sortTable(key) {
+  if (sortKey === key) sortAsc = !sortAsc; else { sortKey = key; sortAsc = true; }
+  renderTable();
+}
+
+function drawSparkline(data, color) {
+  const w=260, h=52, pad=4;
+  const min=Math.min(...data), max=Math.max(...data);
+  const range=max-min||1;
+  const pts = data.map((v,i)=>{
+    const x=pad+(i/(data.length-1))*(w-pad*2);
+    const y=h-pad-((v-min)/range)*(h-pad*2);
+    return `${x},${y}`;
+  }).join(' ');
+  const lastX=pad+((data.length-1)/(data.length-1))*(w-pad*2);
+  const lastY=h-pad-((data[data.length-1]-min)/range)*(h-pad*2);
+  const firstX=pad, firstY=h-pad-((data[0]-min)/range)*(h-pad*2);
+  const areapts=`${firstX},${h-pad} ${pts} ${lastX},${h-pad}`;
+
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" style="display:block;overflow:visible;">
+    <defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${color}" stop-opacity="0.18"/><stop offset="100%" stop-color="${color}" stop-opacity="0.02"/></linearGradient></defs>
+    <polygon points="${areapts}" fill="url(#sg)"/>
+    <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${lastX}" cy="${lastY}" r="3" fill="${color}"/>
+    ${months.map((m,i)=>{
+      const x=pad+(i/(data.length-1))*(w-pad*2);
+      return `<text x="${x}" y="${h}" text-anchor="middle" font-size="8" fill="#78716c" font-family="IBM Plex Mono">${m}</text>`;
+    }).join('')}
+  </svg>`;
+}
+
+function selectCity(idx) {
+  selectedIdx = idx;
+  renderTable();
+  const c = cities[idx];
+  const color = c.rag==='g'?'#16a34a':c.rag==='a'?'#d97706':'#dc2626';
+  const ragLabel = ragLabels[c.rag];
+
+  const reformHTML = c.reforms.map(r=>`
+    <div class="reform-track">
+      <div class="reform-track-name">
+        <span>${r.name}</span>
+        <span style="font-family:var(--font-mono);font-size:0.65rem;color:${r.color};">${r.pct}%</span>
+      </div>
+      <div class="reform-track-bar-wrap">
+        <div class="reform-track-bar" style="width:${r.pct}%;background:${r.color};"></div>
+      </div>
+    </div>`).join('');
+
+  document.getElementById('cityDetail').innerHTML = `
+    <div class="city-detail-name">${c.name}</div>
+    <div class="city-detail-meta">${c.tier} · ${c.state} · Status: <span style="color:${color};font-weight:600;">${ragLabel}</span></div>
+
+    <div class="sparkline-wrap">
+      <div class="sparkline-label">UPYOG monthly transactions (000s) · Nov 25–Apr 26</div>
+      ${drawSparkline(c.spark, '#2a6e47')}
+    </div>
+
+    <div class="reform-tracks">
+      <div class="reform-label">UCF Reform Track Progress</div>
+      ${reformHTML}
+    </div>
+
+    <div style="margin-top:1rem;padding-top:0.8rem;border-top:1px solid var(--border);">
+      <div style="font-family:var(--font-mono);font-size:0.62rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.5rem;">Key metrics</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.4rem;">
+        <div style="background:var(--surface2);border-radius:6px;padding:0.5rem 0.6rem;">
+          <div style="font-family:var(--font-display);font-size:1rem;color:var(--text);">${c.upyog}/16</div>
+          <div style="font-size:0.65rem;color:var(--text-dim);">UPYOG modules live</div>
+        </div>
+        <div style="background:var(--surface2);border-radius:6px;padding:0.5rem 0.6rem;">
+          <div style="font-family:var(--font-display);font-size:1rem;color:var(--text);">${c.ptax}%</div>
+          <div style="font-size:0.65rem;color:var(--text-dim);">Property tax efficiency</div>
+        </div>
+        <div style="background:var(--surface2);border-radius:6px;padding:0.5rem 0.6rem;">
+          <div style="font-family:var(--font-display);font-size:1rem;color:var(--text);">${c.fc}%</div>
+          <div style="font-size:0.65rem;color:var(--text-dim);">16th FC utilisation</div>
+        </div>
+        <div style="background:var(--surface2);border-radius:6px;padding:0.5rem 0.6rem;">
+          <div style="font-family:var(--font-display);font-size:1rem;color:var(--text);">${c.ucf}</div>
+          <div style="font-size:0.65rem;color:var(--text-dim);">UCF reform score /100</div>
+        </div>
+      </div>
+    </div>`;
+}
+
+// init
+renderTable();
+selectCity(0);
+</script>
+</body>
+</html>
