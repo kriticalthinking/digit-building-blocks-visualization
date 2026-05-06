@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Public Service Delivery Stack</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f2ede4;
+  --surface: #ffffff;
+  --border: rgba(0,0,0,0.09);
+  --border-warm: rgba(0,0,0,0.13);
+  --text: #1c1917;
+  --text-mid: #44403c;
+  --text-dim: #78716c;
+
+  /* Layer colours */
+  --sky: #e8f0f7;
+  --sky-2: #d4e4f0;
+  --ground-line: #8b7355;
+  --underground: #1e293b;
+  --underground-2: #172033;
+  --bedrock: #0f172a;
+  --bedrock-2: #0a1020;
+
+  --green: #2a6e47;
+  --green-light: #e8f3ed;
+  --amber: #b45309;
+  --amber-light: #fef3c7;
+  --rust: #9a3412;
+
+  /* Cluster pipe colours */
+  --pipe-identity: #6366f1;
+  --pipe-registry:  #16a34a;
+  --pipe-workflow:  #d97706;
+  --pipe-notify:    #0284c7;
+  --pipe-docs:      #9333ea;
+  --pipe-payments:  #e11d48;
+
+  --font-display: 'DM Serif Display', serif;
+  --font-body:    'Plus Jakarta Sans', sans-serif;
+  --font-mono:    'IBM Plex Mono', monospace;
+
+  --shadow-sm: 0 1px 4px rgba(0,0,0,0.1);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.12), 0 2px 4px rgba(0,0,0,0.06);
+  --shadow-lg: 0 16px 48px rgba(0,0,0,0.16), 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-building: 2px 0 12px rgba(0,0,0,0.15), -2px 0 8px rgba(0,0,0,0.08);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* noise grain overlay */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 999;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+/* ── STATUS BANNER ── */
+.banner {
+  background: #7c2d12;
+  padding: 0.38rem 1.5rem;
+  display: flex; align-items: center; justify-content: center; gap: 0.8rem;
+  font-family: var(--font-body); font-size: 0.72rem; font-weight: 600;
+  color: #fed7aa; letter-spacing: 0.03em; z-index: 100; position: relative;
+}
+.banner-dot { width: 5px; height: 5px; border-radius: 50%; background: #fb923c; }
+
+/* ── PAGE ── */
+.page {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem 5rem;
+}
+
+/* ── PAGE HEADER ── */
+.page-top {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.page-title-block {}
+.page-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 0.4rem;
+}
+.page-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 2.8vw, 2.2rem);
+  color: var(--text);
+  line-height: 1.1;
+}
+
+.header-actions {
+  display: flex;
+  gap: 0.65rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 20px;
+  font-size: 0.74rem;
+  font-family: var(--font-body);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.16s;
+  border: 1.5px solid var(--border-warm);
+  background: var(--surface);
+  color: var(--text-mid);
+  box-shadow: var(--shadow-sm);
+  white-space: nowrap;
+}
+.action-btn:hover { border-color: var(--green); color: var(--green); background: var(--green-light); }
+
+.action-btn.impact {
+  background: var(--green);
+  color: white;
+  border-color: var(--green);
+}
+.action-btn.impact:hover { background: #235d3b; border-color: #235d3b; }
+
+/* ── CROSS-SECTION DIAGRAM ── */
+.cross-section {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  border: 1.5px solid var(--border-warm);
+  position: relative;
+}
+
+/* ════ SKY / ABOVE GROUND ════ */
+.zone-sky {
+  background: linear-gradient(180deg, #dbeafe 0%, #e8f4f9 50%, #eff6f2 100%);
+  padding: 0;
+  position: relative;
+  min-height: 220px;
+}
+
+.zone-sky-label {
+  position: absolute;
+  top: 0.75rem;
+  left: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 2;
+}
+
+.zone-tag {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.22rem 0.55rem;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.zone-tag.sky-tag {
+  background: rgba(255,255,255,0.7);
+  color: #0369a1;
+  border: 1px solid rgba(3,105,161,0.18);
+  backdrop-filter: blur(4px);
+}
+
+.zone-tag.ground-tag {
+  background: rgba(139,115,85,0.12);
+  color: var(--ground-line);
+  border: 1px solid rgba(139,115,85,0.25);
+}
+
+.zone-tag.underground-tag {
+  background: rgba(255,255,255,0.07);
+  color: rgba(255,255,255,0.55);
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+.zone-tag.bedrock-tag {
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,200,100,0.7);
+  border: 1px solid rgba(255,200,100,0.15);
+}
+
+/* Buildings row */
+.buildings-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 0;
+  padding: 2.5rem 0.5rem 0;
+  min-height: 210px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.buildings-row::-webkit-scrollbar { display: none; }
+
+/* Individual building */
+.building {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.18s;
+  flex-shrink: 0;
+  margin: 0 2px;
+}
+.building:hover { transform: translateY(-4px); }
+.building.active { transform: translateY(-6px); }
+
+.building-body {
+  border-radius: 6px 6px 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0.5rem 0.6rem 0.55rem;
+  position: relative;
+  box-shadow: var(--shadow-building);
+  transition: all 0.18s;
+  min-width: 72px;
+  border: 1.5px solid rgba(255,255,255,0.4);
+  border-bottom: none;
+}
+
+.building.active .building-body {
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.2), var(--shadow-building);
+}
+
+/* Windows on buildings */
+.building-windows {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 3px;
+  margin-bottom: 0.5rem;
+  width: 100%;
+}
+.bw {
+  height: 8px;
+  border-radius: 1px;
+  background: rgba(255,255,255,0.35);
+  transition: background 0.15s;
+}
+.building:hover .bw, .building.active .bw {
+  background: rgba(255,255,255,0.7);
+}
+
+.building-icon { font-size: 1.1rem; margin-bottom: 0.25rem; }
+.building-name {
+  font-size: 0.63rem;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.25;
+  color: white;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+.building-sector {
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  text-align: center;
+  color: rgba(255,255,255,0.7);
+  margin-top: 0.18rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* Emerging building */
+.building.emerging .building-body {
+  border-style: dashed;
+  border-color: rgba(255,255,255,0.5);
+  opacity: 0.8;
+}
+.emerging-badge {
+  position: absolute;
+  top: -0.5rem;
+  right: -0.4rem;
+  background: var(--amber);
+  color: white;
+  font-family: var(--font-mono);
+  font-size: 0.48rem;
+  padding: 0.12rem 0.3rem;
+  border-radius: 3px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+/* ════ GROUND LINE ════ */
+.ground-line {
+  height: 28px;
+  background: linear-gradient(180deg, #c8b99a 0%, #a8956e 40%, #8b7355 100%);
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0 1.1rem;
+  gap: 1rem;
+  overflow: hidden;
+}
+
+/* Ground texture dots */
+.ground-line::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(255,255,255,0.06) 0px, rgba(255,255,255,0.06) 2px,
+    transparent 2px, transparent 18px
+  );
+}
+
+.ground-line-label {
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.75);
+  white-space: nowrap;
+  position: relative;
+}
+
+.ground-pipes-preview {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+}
+.pipe-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.3);
+}
+
+/* ════ UNDERGROUND / DIGITAL BLOCKS ════ */
+.zone-underground {
+  background: linear-gradient(180deg, var(--underground) 0%, var(--underground-2) 100%);
+  padding: 1.1rem 1.1rem 0.85rem;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.zone-underground:hover {
+  background: linear-gradient(180deg, #253346 0%, #1e2d44 100%);
+}
+.zone-underground.active {
+  background: linear-gradient(180deg, #1e3a5f 0%, #172d4a 100%);
+}
+
+/* Underground texture */
+.zone-underground::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0px, transparent 24px,
+      rgba(255,255,255,0.015) 24px, rgba(255,255,255,0.015) 25px
+    );
+  pointer-events: none;
+}
+
+.underground-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.underground-title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: rgba(255,255,255,0.92);
+  line-height: 1.2;
+}
+
+.underground-sub {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 0.08em;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+/* Pipe runs */
+.pipes-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.5rem;
+  position: relative;
+}
+
+.pipe-run {
+  border-radius: 8px;
+  padding: 0.7rem 0.55rem 0.8rem;
+  border: 1.5px solid rgba(255,255,255,0.06);
+  transition: all 0.2s;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Pipe texture — horizontal line stripes */
+.pipe-run::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 7px;
+  background-image: repeating-linear-gradient(
+    180deg,
+    rgba(255,255,255,0.03) 0px,
+    rgba(255,255,255,0.03) 1px,
+    transparent 1px,
+    transparent 5px
+  );
+  pointer-events: none;
+}
+
+.pipe-run:hover {
+  border-color: rgba(255,255,255,0.18);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.pipe-run.lit {
+  border-color: rgba(255,255,255,0.3);
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.06), 0 4px 16px rgba(0,0,0,0.4);
+}
+
+.pipe-icon { font-size: 1.05rem; display: block; margin-bottom: 0.35rem; }
+.pipe-name {
+  font-size: 0.65rem;
+  font-weight: 700;
+  line-height: 1.25;
+  margin-bottom: 0.4rem;
+}
+.pipe-blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.pb {
+  font-size: 0.58rem;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.3;
+  transition: color 0.15s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pipe-run.lit .pb { color: rgba(255,255,255,0.7); }
+
+/* Connecting lines from pipes to buildings */
+.pipe-connections {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+/* ════ BEDROCK / FOUNDATIONS ════ */
+.zone-bedrock {
+  background: linear-gradient(180deg, var(--bedrock) 0%, var(--bedrock-2) 100%);
+  padding: 1rem 1.1rem 1.2rem;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.zone-bedrock:hover {
+  background: linear-gradient(180deg, #141f35 0%, #0e1828 100%);
+}
+.zone-bedrock.active {
+  background: linear-gradient(180deg, #1a2d1e 0%, #101f15 100%);
+}
+
+/* Rock strata texture */
+.zone-bedrock::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(
+      -2deg,
+      transparent 0px, transparent 18px,
+      rgba(255,255,255,0.012) 18px, rgba(255,255,255,0.012) 19px
+    ),
+    repeating-linear-gradient(
+      1deg,
+      transparent 0px, transparent 32px,
+      rgba(255,255,255,0.008) 32px, rgba(255,255,255,0.008) 33px
+    );
+  pointer-events: none;
+}
+
+.bedrock-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.9rem;
+  position: relative;
+}
+
+.bedrock-title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: rgba(255,230,160,0.9);
+  line-height: 1.2;
+}
+
+.bedrock-sub {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  color: rgba(255,200,100,0.3);
+  letter-spacing: 0.08em;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.bedrock-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.55rem;
+}
+
+.bedrock-tile {
+  border-radius: 8px;
+  padding: 0.85rem 0.85rem 0.9rem;
+  border: 1.5px solid rgba(255,200,100,0.1);
+  background: rgba(255,200,100,0.04);
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Stratum lines on each tile */
+.bedrock-tile::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; top: 0;
+  height: 3px;
+  border-radius: 8px 8px 0 0;
+  opacity: 0.4;
+}
+
+.bedrock-tile:hover {
+  border-color: rgba(255,200,100,0.25);
+  background: rgba(255,200,100,0.07);
+}
+
+.bt-icon { font-size: 1.1rem; display: block; margin-bottom: 0.4rem; }
+.bt-name {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: rgba(255,220,120,0.9);
+  margin-bottom: 0.3rem;
+  line-height: 1.25;
+}
+.bt-desc {
+  font-size: 0.67rem;
+  color: rgba(255,255,255,0.38);
+  line-height: 1.55;
+}
+
+/* ════ DETAIL PANEL (DRAWER) ════ */
+.panel-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  background: rgba(15,23,42,0.5);
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease;
+}
+.panel-overlay.open { display: flex; align-items: flex-start; justify-content: flex-end; }
+
+.detail-drawer {
+  width: 480px;
+  max-width: 95vw;
+  height: 100vh;
+  background: var(--surface);
+  box-shadow: var(--shadow-lg);
+  overflow-y: auto;
+  animation: slideInRight 0.26s cubic-bezier(0.22,1,0.36,1);
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(32px); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+
+.drawer-header {
+  padding: 1.5rem 1.75rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0;
+  background: var(--surface);
+  z-index: 2;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.drawer-header-text { flex: 1; }
+
+.drawer-close {
+  background: none; border: none; cursor: pointer;
+  color: var(--text-dim); font-size: 1rem; padding: 0.3rem;
+  border-radius: 4px; transition: color 0.15s; flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+.drawer-close:hover { color: var(--text); }
+
+.drawer-kicker {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.35rem;
+}
+
+.drawer-title {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 0.6rem;
+}
+
+.drawer-desc {
+  font-size: 0.875rem;
+  line-height: 1.75;
+  color: var(--text-mid);
+}
+
+.drawer-section {
+  padding: 1.25rem 1.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.drawer-section-title {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.85rem;
+}
+
+/* Building list in drawer */
+.building-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.bl-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--border);
+  background: #fafaf8;
+  transition: border-color 0.15s;
+}
+.bl-item:hover { border-color: rgba(42,110,71,0.3); }
+
+.bl-icon { font-size: 1rem; flex-shrink: 0; margin-top: 0.05rem; }
+.bl-name { font-size: 0.82rem; font-weight: 700; color: var(--text); margin-bottom: 0.2rem; line-height: 1.2; }
+.bl-sector { font-family: var(--font-mono); font-size: 0.6rem; color: var(--green); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.2rem; }
+.bl-desc { font-size: 0.77rem; color: var(--text-mid); line-height: 1.55; }
+
+/* Pipe detail in drawer */
+.pipe-detail-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.pd-item {
+  border-radius: 8px;
+  padding: 0.85rem 0.9rem;
+  border: 1.5px solid transparent;
+}
+
+.pd-header {
+  display: flex; align-items: center; gap: 0.55rem;
+  margin-bottom: 0.55rem;
+}
+.pd-icon { font-size: 0.95rem; }
+.pd-name { font-size: 0.82rem; font-weight: 700; }
+.pd-blocks { display: flex; flex-direction: column; gap: 0.32rem; }
+.pd-block {
+  font-size: 0.77rem;
+  line-height: 1.5;
+  color: var(--text-mid);
+  padding-left: 0.65rem;
+  border-left: 2px solid var(--border-warm);
+}
+.pd-block strong { display: block; font-size: 0.74rem; font-weight: 600; color: var(--text); }
+
+/* Foundation detail in drawer */
+.found-detail { display: flex; flex-direction: column; gap: 0.6rem; }
+.fd-item {
+  display: grid; grid-template-columns: 28px 1fr; gap: 0.65rem; align-items: start;
+}
+.fd-icon { font-size: 1.1rem; }
+.fd-name { font-size: 0.82rem; font-weight: 700; color: var(--text); margin-bottom: 0.2rem; }
+.fd-desc { font-size: 0.78rem; color: var(--text-mid); line-height: 1.65; }
+
+/* Case study in drawer */
+.drawer-case {
+  padding: 1.25rem 1.75rem 1.5rem;
+  background: #fafaf8;
+}
+
+.case-kicker {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.45rem;
+  font-weight: 600;
+}
+
+.case-geo {
+  font-size: 0.84rem; font-weight: 700; color: var(--text);
+  margin-bottom: 0.4rem; line-height: 1.3;
+}
+
+.case-desc {
+  font-size: 0.84rem; line-height: 1.7; color: var(--text-mid);
+  margin-bottom: 1rem;
+}
+
+.case-stats { display: flex; gap: 1.25rem; flex-wrap: wrap; }
+.cs-num {
+  font-family: var(--font-display);
+  font-size: 1.25rem; line-height: 1; margin-bottom: 0.15rem;
+}
+.cs-lbl { font-size: 0.67rem; color: var(--text-dim); line-height: 1.4; max-width: 110px; }
+
+/* ════ OUTCOMES PANEL ════ */
+.outcomes-panel {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  background: rgba(15,23,42,0.5);
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+.outcomes-panel.open { display: flex; }
+
+.outcomes-inner {
+  background: var(--surface);
+  border-radius: 16px;
+  box-shadow: var(--shadow-lg);
+  max-width: 640px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  animation: slideUp 0.24s cubic-bezier(0.22,1,0.36,1);
+}
+
+@keyframes slideUp {
+  from { transform: translateY(16px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+.oi-header {
+  padding: 1.75rem 2rem 1.4rem;
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; background: var(--surface); z-index: 2;
+  display: flex; align-items: flex-start; gap: 1rem;
+}
+.oi-header-text { flex: 1; }
+.oi-kicker {
+  font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--green); margin-bottom: 0.35rem;
+}
+.oi-title { font-family: var(--font-display); font-size: 1.5rem; color: var(--text); margin-bottom: 0.5rem; }
+.oi-desc { font-size: 0.875rem; line-height: 1.75; color: var(--text-mid); }
+
+.oi-body { padding: 1.4rem 2rem; border-bottom: 1px solid var(--border); }
+.oi-body-title {
+  font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.85rem;
+}
+
+.outcomes-list {
+  display: flex; flex-wrap: wrap; gap: 0.45rem;
+}
+.oc-chip {
+  font-size: 0.8rem; padding: 0.35rem 0.8rem; border-radius: 20px;
+  border: 1px solid rgba(42,110,71,0.2); background: var(--green-light);
+  color: var(--green); font-weight: 600;
+}
+
+.oi-case { padding: 1.4rem 2rem 1.75rem; background: #fafaf8; border-radius: 0 0 16px 16px; }
+
+/* ── INFO POPOVER ── */
+.info-overlay {
+  display: none;
+  position: fixed; inset: 0; z-index: 600;
+  background: rgba(15,23,42,0.45);
+  backdrop-filter: blur(4px);
+  align-items: center; justify-content: center;
+  padding: 2rem;
+  animation: fadeIn 0.18s ease;
+}
+.info-overlay.open { display: flex; }
+
+.info-card {
+  background: var(--surface); border-radius: 14px;
+  box-shadow: var(--shadow-lg); max-width: 580px; width: 100%;
+  padding: 2rem 2.25rem 2.25rem;
+  position: relative;
+  animation: slideUp 0.22s ease;
+}
+
+.info-close {
+  position: absolute; top: 1rem; right: 1rem;
+  background: none; border: none; cursor: pointer;
+  color: var(--text-dim); font-size: 1rem; padding: 0.3rem;
+  border-radius: 4px; transition: color 0.15s;
+}
+.info-close:hover { color: var(--text); }
+
+.info-kicker {
+  font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--green); margin-bottom: 0.6rem;
+}
+.info-title {
+  font-family: var(--font-display); font-size: 1.3rem; color: var(--text);
+  margin-bottom: 1rem; line-height: 1.2;
+}
+.info-body { font-size: 0.9rem; line-height: 1.82; color: var(--text-mid); }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* ── CLICK HINT ── */
+.click-hint-row {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 0.9rem;
+  flex-wrap: wrap;
+}
+.click-hint {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.ch-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  border: 1.5px solid currentColor; flex-shrink: 0;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 800px) {
+  .pipes-grid { grid-template-columns: repeat(3, 1fr); }
+  .bedrock-grid { grid-template-columns: 1fr 1fr; }
+  .detail-drawer { width: 100%; }
+}
+@media (max-width: 520px) {
+  .page { padding: 1.75rem 1rem 4rem; }
+  .pipes-grid { grid-template-columns: repeat(2, 1fr); }
+  .bedrock-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="banner">
+  <div class="banner-dot"></div>
+  Strawman for internal discussion only — please do not circulate
+  <div class="banner-dot"></div>
+</div>
+
+<div class="page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-top">
+    <div class="page-title-block">
+      <div class="page-eyebrow">eGov Foundation · DIGIT</div>
+      <h1 class="page-title">Public Service Delivery Stack</h1>
+    </div>
+    <div class="header-actions">
+      <button class="action-btn impact" onclick="openOutcomes()">
+        ✦ Outcomes &amp; Impact
+      </button>
+      <button class="action-btn" onclick="openInfo()">
+        ⓘ Why this matters
+      </button>
+    </div>
+  </div>
+
+  <!-- CLICK HINTS -->
+  <div class="click-hint-row">
+    <div class="click-hint"><div class="ch-dot" style="color:#0369a1;"></div>Click a product (above ground) to explore</div>
+    <div class="click-hint"><div class="ch-dot" style="color:rgba(255,255,255,0.4);"></div>Click a building block layer to see what's inside</div>
+    <div class="click-hint"><div class="ch-dot" style="color:rgba(255,200,100,0.5);"></div>Click the foundations layer for enabling conditions</div>
+  </div>
+
+  <!-- CROSS-SECTION DIAGRAM -->
+  <div class="cross-section">
+
+    <!-- ══ ABOVE GROUND: PRODUCTS & INTERFACES ══ -->
+    <div class="zone-sky">
+      <div class="zone-sky-label">
+        <div class="zone-tag sky-tag">Products · Apps · Interfaces</div>
+      </div>
+      <div class="buildings-row" id="buildingsRow"></div>
+    </div>
+
+    <!-- GROUND LINE -->
+    <div class="ground-line">
+      <div class="ground-line-label">Ground level · Citizen interface</div>
+      <div class="ground-pipes-preview" id="groundPipes"></div>
+    </div>
+
+    <!-- ══ UNDERGROUND: DIGITAL BUILDING BLOCKS ══ -->
+    <div class="zone-underground" id="zoneUnderground" onclick="openDrawer('digital')">
+      <div class="zone-tag underground-tag" style="position:absolute;top:0.75rem;right:1.1rem;">Click to explore ↗</div>
+      <div class="underground-header">
+        <div class="zone-tag underground-tag">Digital Building Blocks · DIGIT DPG</div>
+        <div class="underground-title">Reusable Digital Infrastructure</div>
+        <div class="underground-sub">MIT licensed · 24 services · 6 clusters</div>
+      </div>
+      <div class="pipes-grid" id="pipesGrid"></div>
+    </div>
+
+    <!-- ══ BEDROCK: FOUNDATIONS ══ -->
+    <div class="zone-bedrock" id="zoneBedrock" onclick="openDrawer('foundations')">
+      <div class="zone-tag bedrock-tag" style="position:absolute;top:0.75rem;right:1.1rem;">Click to explore ↗</div>
+      <div class="bedrock-header">
+        <div class="zone-tag bedrock-tag">Foundations · Enabling Conditions</div>
+        <div class="bedrock-title">Policy · Programs · Institutions</div>
+        <div class="bedrock-sub">The bedrock everything rests on</div>
+      </div>
+      <div class="bedrock-grid" id="bedrockGrid"></div>
+    </div>
+
+  </div><!-- /cross-section -->
+
+</div><!-- /page -->
+
+<!-- ══ DETAIL DRAWER ══ -->
+<div class="panel-overlay" id="panelOverlay" onclick="closeDrawerOnBackdrop(event)">
+  <div class="detail-drawer" id="detailDrawer">
+    <div class="drawer-header">
+      <div class="drawer-header-text">
+        <div class="drawer-kicker" id="drawerKicker"></div>
+        <div class="drawer-title" id="drawerTitle"></div>
+        <div class="drawer-desc" id="drawerDesc"></div>
+      </div>
+      <button class="drawer-close" onclick="closeDrawer()">✕</button>
+    </div>
+    <div class="drawer-section">
+      <div class="drawer-section-title" id="drawerBodyTitle"></div>
+      <div id="drawerBodyContent"></div>
+    </div>
+    <div class="drawer-case">
+      <div class="case-kicker" id="drawerCaseKicker"></div>
+      <div class="case-geo" id="drawerCaseGeo"></div>
+      <div class="case-desc" id="drawerCaseDesc"></div>
+      <div class="case-stats" id="drawerCaseStats"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ OUTCOMES PANEL ══ -->
+<div class="outcomes-panel" id="outcomesPanel" onclick="closeOutcomesOnBackdrop(event)">
+  <div class="outcomes-inner">
+    <div class="oi-header">
+      <div class="oi-header-text">
+        <div class="oi-kicker">What the stack delivers</div>
+        <div class="oi-title">Outcomes &amp; Impact</div>
+        <div class="oi-desc">Outcomes emerge when all three layers of the stack work together — sound foundations, shared digital infrastructure, and well-designed citizen-facing products. Technology alone delivers none of these.</div>
+      </div>
+      <button class="drawer-close" onclick="closeOutcomes()">✕</button>
+    </div>
+    <div class="oi-body">
+      <div class="oi-body-title">What good public service delivery achieves</div>
+      <div class="outcomes-list">
+        <div class="oc-chip">Equitable access to public services</div>
+        <div class="oc-chip">Faster permit &amp; licence issuance</div>
+        <div class="oc-chip">Increased own-source revenue</div>
+        <div class="oc-chip">Reduced leakage in benefit delivery</div>
+        <div class="oc-chip">Accountability across the service chain</div>
+        <div class="oc-chip">Data-informed policy decisions</div>
+        <div class="oc-chip">Reduced cost per transaction</div>
+        <div class="oc-chip">Services in local languages</div>
+        <div class="oc-chip">Climate-resilient infrastructure</div>
+        <div class="oc-chip">Sustainable livelihoods for vulnerable communities</div>
+      </div>
+    </div>
+    <div class="oi-case">
+      <div class="case-kicker" style="color:var(--green);">At scale · India</div>
+      <div class="case-geo">Results across the eGov Foundation portfolio</div>
+      <div class="case-desc">These are not projections. They are documented results from existing deployments across India and partner countries — achieved through the combination of enabling foundations, shared digital infrastructure, and citizen-facing products built on the same reusable building blocks.</div>
+      <div class="case-stats">
+        <div><div class="cs-num" style="color:var(--green);">260M+</div><div class="cs-lbl">Citizens reached through DIGIT-based platforms</div></div>
+        <div><div class="cs-num" style="color:var(--green);">10 countries</div><div class="cs-lbl">Active deployments across the Global South</div></div>
+        <div><div class="cs-num" style="color:var(--green);">2Bn+</div><div class="cs-lbl">COVID certificates issued via DIVOC in year one</div></div>
+        <div><div class="cs-num" style="color:var(--green);">250%+</div><div class="cs-lbl">Revenue increase over 6 years · Andhra Pradesh</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ INFO POPOVER ══ -->
+<div class="info-overlay" id="infoOverlay" onclick="closeInfoOnBackdrop(event)">
+  <div class="info-card">
+    <button class="info-close" onclick="closeInfo()">✕</button>
+    <div class="info-kicker">Context</div>
+    <div class="info-title">Why improving public service delivery matters</div>
+    <div class="info-body">Every government that delivers public services — property tax, health campaigns, water connections, social benefits — needs the same underlying digital capabilities: registries, workflows, identity verification, payments, notifications. Today, most build these independently, at significant cost, with limited interoperability and frequent dependency on proprietary vendors. The scale of this gap is measurable: only 39% of citizens in surveyed countries trust their government to deliver services reliably (OECD, 2023), fewer than 1 in 3 countries are on track for accountable public institutions by 2030 (UN SDG 16.6), and over $1 trillion is lost annually to fragmented, inefficient public administration (World Bank, 2022). We need to collectively reimagine and deliver what good public services can look like — and the building blocks approach is one proven path.</div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════
+// DATA
+// ══════════════════════════════════════
+
+const buildings = [
+  // Local Governance
+  { id:'upyog',    icon:'🏛️', name:'UPYOG',         sector:'Local Governance',  color:'#1d4ed8', height:155,
+    desc:'National Urban Governance Platform — 2,000+ cities across 19 states on a single shared platform. Property tax, trade licences, building permits, grievances, water charges.',
+    geo:'India · 19 states · Launched 2022', emerging:false },
+  { id:'puraseva', icon:'📱', name:'Puraseva',        sector:'Local Governance',  color:'#1e40af', height:130,
+    desc:'Andhra Pradesh\'s integrated multi-channel citizen services platform — mobile, web, and WhatsApp. 25+ services on a single interface, reducing service time from 112 to 12 days.',
+    geo:'Andhra Pradesh, India', emerging:false },
+  { id:'mseva',    icon:'🏙️', name:'mSeva',           sector:'Local Governance',  color:'#1d4ed8', height:118,
+    desc:'Punjab\'s citizen services app — 100 urban local bodies onboarded in the first 100 days under the Atmanirbhar (self-reliant) model. Government-owned from day one.',
+    geo:'Punjab, India', emerging:false },
+  // Public Health
+  { id:'cowin',    icon:'💉', name:'CoWIN / DIVOC',   sector:'Public Health',     color:'#0f766e', height:148,
+    desc:'National COVID vaccination management and certificate generation platform. Two billion tamper-proof, QR-linked certificates issued in the first year — valid in 120+ countries.',
+    geo:'India · National deployment · 2021', emerging:false },
+  { id:'hcm',      icon:'🏥', name:'DIGIT HCM',       sector:'Public Health',     color:'#0d9488', height:122,
+    desc:'Health Campaign Management platform — adaptable for any mass public health campaign. 9 campaigns across 4 African countries in 2024, reaching 14M+ people.',
+    geo:'India + Africa · 4 countries', emerging:false },
+  // Water
+  { id:'jjm',      icon:'💧', name:'JJM Dashboard',   sector:'Water & Sanitation',color:'#0369a1', height:135,
+    desc:'National monitoring platform for Jal Jeevan Mission — 600,000 villages, 148 million households on a single digital tracking system covering scheme registration, billing, and O&M.',
+    geo:'India · National · Assam first state 2024', emerging:false },
+  // PFM
+  { id:'muktasoft',icon:'💼', name:'MUKTASoft',        sector:'Public Finance',    color:'#7c3aed', height:120,
+    desc:'Odisha\'s urban wage employment platform — direct wage disbursement to workers, cutting payment time by 90%. Women\'s Self Help Groups empowered as delivery agents.',
+    geo:'Odisha, India · 115 ULBs', emerging:false },
+  { id:'sujog',    icon:'🤝', name:'SUJOG',            sector:'Public Finance',    color:'#6d28d9', height:108,
+    desc:'Odisha\'s integrated urban services platform — sanitation worker welfare, urban livelihoods, social benefit delivery, all on shared infrastructure across all 115 ULBs.',
+    geo:'Odisha, India', emerging:false },
+  // Livelihoods — emerging
+  { id:'e4h',      icon:'☀️', name:'Energy for Health',sector:'Livelihoods',      color:'#b45309', height:112,
+    desc:'eGov + SELCO Foundation — solar powering 25,000 public health centres across India. 5,000 facilities across 10 states already tracked digitally. Real-time fault detection reduced response time from weeks to hours. Extending into livelihoods for climate-vulnerable communities.',
+    geo:'India · 10 states · SELCO Foundation partnership', emerging:true },
+  // Climate — emerging
+  { id:'airawat',  icon:'🌍', name:'Digital Twin Cities',sector:'Climate & Cities',color:'#166534', height:105,
+    desc:'eGov + AIRAWAT Research Foundation (IIT Kanpur) — four-year partnership to build open-source Digital Twin Framework for Indian cities. Three use cases: Unified Service Delivery, Climate Resilient Infrastructure, Coordinated Governance.',
+    geo:'India · IIT Kanpur · Signed June 2025', emerging:true },
+];
+
+const clusters = [
+  { id:'identity', icon:'🔐', name:'Identity & Access',   color:'#6366f1', bg:'rgba(99,102,241,0.12)',
+    blocks:[
+      { name:'People & Accounts',    desc:'Everyone who uses the system.' },
+      { name:'Roles & Permissions',  desc:'Who can read, write, approve.' },
+      { name:'Identity Verification',desc:'OTP-based real person check.' },
+      { name:'Secure Entry',         desc:'Every request checked here first.' },
+      { name:'Data Privacy',         desc:'Sensitive data kept encrypted.' },
+      { name:'Audit Trail',          desc:'Permanent, unalterable log.' },
+    ],
+  },
+  { id:'registry', icon:'📊', name:'Registry & Data',     color:'#16a34a', bg:'rgba(22,163,74,0.12)',
+    blocks:[
+      { name:'Entity Registry',       desc:'One record per entity — property, farmer, facility.' },
+      { name:'Geographic Hierarchy',  desc:'Mapped to the right area, ward to national.' },
+      { name:'Unique IDs',            desc:'Every record has an official identifier.' },
+      { name:'Search',                desc:'Instant lookup across millions of records.' },
+      { name:'Reliable Storage',      desc:'Data written reliably, without loss.' },
+      { name:'Address Master',        desc:'Official vocabulary of localities and wards.' },
+    ],
+  },
+  { id:'workflow', icon:'⚙️',  name:'Workflow & Services', color:'#d97706', bg:'rgba(217,119,6,0.12)',
+    blocks:[
+      { name:'Approval Engine',    desc:'Configurable multi-step workflow — any service.' },
+      { name:'Citizen Application',desc:'The official form where every request begins.' },
+    ],
+  },
+  { id:'notify',   icon:'📣', name:'Notifications',        color:'#0284c7', bg:'rgba(2,132,199,0.12)',
+    blocks:[
+      { name:'SMS Alerts',         desc:'Text updates at population scale.' },
+      { name:'Email Alerts',       desc:'Documents and notices by email.' },
+      { name:'Multiple Languages', desc:'Every message in any language and script.' },
+      { name:'Short Links',        desc:'Long URLs shortened to fit a text message.' },
+    ],
+  },
+  { id:'docs',     icon:'📄', name:'Documents & Records',  color:'#9333ea', bg:'rgba(147,51,234,0.12)',
+    blocks:[
+      { name:'File Storage',           desc:'Upload, store, retrieve any file.' },
+      { name:'Certificate Generation', desc:'Official PDFs — certificates, receipts, notices.' },
+    ],
+  },
+  { id:'payments', icon:'💳', name:'Payments',              color:'#e11d48', bg:'rgba(225,29,72,0.12)',
+    blocks:[
+      { name:'Payment Collection', desc:'UPI, cards, net banking, cash — full reconciliation.' },
+    ],
+  },
+];
+
+const foundationTiles = [
+  { icon:'⚖️', name:'Policy & Legal Framework',
+    desc:'Enabling legislation, data protection rules, interoperability mandates, and legal grounding for digital authority. Without this, even technically sound systems cannot be enforced or trusted.',
+    color:'rgba(255,200,100,0.6)', borderColor:'rgba(255,200,100,0.15)' },
+  { icon:'📋', name:'Government Programs & Schemes',
+    desc:'National and state schemes — Jal Jeevan Mission, PMAY, health campaigns — that create the mandate, funding, and political will. Digital infrastructure must connect to and serve real programs.',
+    color:'rgba(255,200,100,0.6)', borderColor:'rgba(255,200,100,0.15)' },
+  { icon:'🏛️', name:'Institutions & Implementing Bodies',
+    desc:'Urban Local Bodies, State Nodal Agencies, Ministries, and the organisations that actually run services. Sustainable delivery requires clear institutional ownership and capacity to govern.',
+    color:'rgba(255,200,100,0.6)', borderColor:'rgba(255,200,100,0.15)' },
+];
+
+// ══════════════════════════════════════
+// RENDER BUILDINGS
+// ══════════════════════════════════════
+
+function renderBuildings() {
+  const row = document.getElementById('buildingsRow');
+  const gp  = document.getElementById('groundPipes');
+
+  buildings.forEach(b => {
+    const el = document.createElement('div');
+    el.className = 'building' + (b.emerging ? ' emerging' : '');
+    el.id = `bld-${b.id}`;
+    el.onclick = (e) => { e.stopPropagation(); openBuildingDrawer(b.id); };
+
+    // Generate windows
+    const winCount = Math.floor(b.height / 25);
+    let windows = '';
+    for (let i = 0; i < winCount; i++) windows += '<div class="bw"></div>';
+
+    el.innerHTML = `
+      <div class="building-body" style="height:${b.height}px; background:linear-gradient(160deg, ${b.color}dd, ${b.color}99); width:${78 + b.name.length * 2}px;">
+        ${b.emerging ? '<div class="emerging-badge">New</div>' : ''}
+        <div class="building-windows" style="grid-template-columns:repeat(${Math.min(3,Math.ceil(b.name.length/4))}, 1fr);">${windows}</div>
+        <div class="building-icon">${b.icon}</div>
+        <div class="building-name">${b.name}</div>
+        <div class="building-sector">${b.sector}</div>
+      </div>`;
+    row.appendChild(el);
+
+    // Ground pipe dot
+    const dot = document.createElement('div');
+    dot.className = 'pipe-dot';
+    dot.style.background = b.color;
+    gp.appendChild(dot);
+  });
+}
+
+// ══════════════════════════════════════
+// RENDER PIPES (CLUSTERS)
+// ══════════════════════════════════════
+
+function renderPipes() {
+  const grid = document.getElementById('pipesGrid');
+  clusters.forEach(c => {
+    const el = document.createElement('div');
+    el.className = 'pipe-run';
+    el.id = `pipe-${c.id}`;
+    el.style.background = c.bg;
+    el.style.borderColor = c.color + '30';
+    el.onclick = (e) => { e.stopPropagation(); openDrawer('digital'); };
+
+    const blocksHTML = c.blocks.map(b =>
+      `<div class="pb">${b.name}</div>`
+    ).join('');
+
+    el.innerHTML = `
+      <span class="pipe-icon">${c.icon}</span>
+      <div class="pipe-name" style="color:${c.color};">${c.name}</div>
+      <div class="pipe-blocks">${blocksHTML}</div>`;
+    grid.appendChild(el);
+  });
+}
+
+// ══════════════════════════════════════
+// RENDER BEDROCK
+// ══════════════════════════════════════
+
+function renderBedrock() {
+  const grid = document.getElementById('bedrockGrid');
+  foundationTiles.forEach((f, i) => {
+    const el = document.createElement('div');
+    el.className = 'bedrock-tile';
+    el.style.setProperty('--tile-top-color', f.color);
+    el.innerHTML = `
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:${f.color};border-radius:8px 8px 0 0;"></div>
+      <span class="bt-icon">${f.icon}</span>
+      <div class="bt-name">${f.name}</div>
+      <div class="bt-desc">${f.desc}</div>`;
+    grid.appendChild(el);
+  });
+}
+
+// ══════════════════════════════════════
+// DRAWER — BUILDING DETAIL
+// ══════════════════════════════════════
+
+function openBuildingDrawer(id) {
+  const b = buildings.find(x => x.id === id);
+  if (!b) return;
+
+  document.getElementById('drawerKicker').textContent = b.sector + ' · User-facing product';
+  document.getElementById('drawerKicker').style.color = b.color;
+  document.getElementById('drawerTitle').textContent = b.name;
+  document.getElementById('drawerDesc').textContent = b.desc;
+  document.getElementById('drawerBodyTitle').textContent = 'Which building blocks power this product';
+
+  // Show which clusters this product uses
+  const content = document.getElementById('drawerBodyContent');
+  content.innerHTML = '';
+  const grid = document.createElement('div');
+  grid.className = 'pipe-detail-grid';
+
+  clusters.forEach(c => {
+    const card = document.createElement('div');
+    card.className = 'pd-item';
+    card.style.cssText = `background:${c.bg.replace('0.12','0.08')}; border-color:${c.color}22;`;
+    const blocksHTML = c.blocks.map(bl =>
+      `<div class="pd-block"><strong style="color:${c.color};">${bl.name}</strong>${bl.desc}</div>`
+    ).join('');
+    card.innerHTML = `
+      <div class="pd-header">
+        <span class="pd-icon">${c.icon}</span>
+        <span class="pd-name" style="color:${c.color};">${c.name}</span>
+      </div>
+      <div class="pd-blocks">${blocksHTML}</div>`;
+    grid.appendChild(card);
+  });
+  content.appendChild(grid);
+
+  // Case study = the building itself
+  document.getElementById('drawerCaseKicker').textContent = 'In practice';
+  document.getElementById('drawerCaseKicker').style.color = b.color;
+  document.getElementById('drawerCaseGeo').textContent = b.geo;
+  document.getElementById('drawerCaseDesc').textContent = b.desc;
+  document.getElementById('drawerCaseStats').innerHTML = '';
+
+  document.getElementById('panelOverlay').classList.add('open');
+  document.querySelectorAll('.building').forEach(el => el.classList.remove('active'));
+  document.getElementById(`bld-${id}`)?.classList.add('active');
+}
+
+// ══════════════════════════════════════
+// DRAWER — LAYER DETAIL
+// ══════════════════════════════════════
+
+const layerPanels = {
+  digital: {
+    kicker: 'Middle layer · Underground infrastructure',
+    title: 'Digital Building Blocks',
+    desc: 'Twenty-four reusable services across six functional clusters. Governments configure and combine them — retaining full ownership. The same notification service that sends a tax receipt also sends a vaccination reminder or a flood alert, at no additional development cost. MIT licensed. Free to any government. No proprietary dependency.',
+    bodyTitle: 'Six clusters · 24 services · all MIT licensed',
+    caseKicker: 'In practice · Property tax collection · India',
+    caseKickerColor: '#1d4ed8',
+    caseGeo: 'How eight building blocks assemble for one citizen service',
+    caseDesc: 'A property owner is registered in the Entity Registry with a Unique ID. They submit via Citizen Application, routed through the Approval Engine to an officer. The officer verifies, Payment Collection processes the fee, Certificate Generation produces the PDF, and SMS Alerts confirm receipt. Every action is written to the Audit Trail. Eight building blocks — the same eight that underlie health campaigns and flood relief in different configurations.',
+    caseStats: [
+      { num:'24', label:'Reusable building blocks · 6 functional clusters' },
+      { num:'MIT', label:'Licensed — any government, no proprietary lock-in' },
+      { num:'1,000+', label:'Cities running citizen services on DIGIT infrastructure' },
+    ],
+  },
+  foundations: {
+    kicker: 'Deepest layer · The bedrock',
+    title: 'Foundations',
+    desc: 'The most significant barriers to effective public service delivery are rarely technical. They are institutional, legal, and human. These enabling conditions must be developed alongside — and often before — any digital investment. Without them, even the best technology fails to deliver lasting change.',
+    bodyTitle: 'Three categories of enabling conditions',
+    caseKicker: 'In practice · Punjab, India',
+    caseKickerColor: '#b45309',
+    caseGeo: 'The Atmanirbhar model — government ownership from day one',
+    caseDesc: 'Previous commercial RFPs worth ₹2 billion had been attempted without success. Rather than another procurement, Punjab built an Atmanirbhar (self-reliant) state team of 20+ people to manage the system in-house. Capacity building was a first-order deliverable, not an afterthought. 100 urban local bodies were onboarded in the first 100 days. The government now owns the knowledge and the infrastructure outright.',
+    caseStats: [
+      { num:'100 ULBs', label:'Onboarded in first 100 days' },
+      { num:'25–30%', label:'Revenue collection increase' },
+      { num:'20+ person', label:'In-house state team — government-owned from day one' },
+    ],
+  },
+};
+
+function openDrawer(id) {
+  const p = layerPanels[id];
+  if (!p) return;
+
+  document.getElementById('drawerKicker').textContent = p.kicker;
+  document.getElementById('drawerKicker').style.color = id === 'foundations' ? '#b45309' : '#6366f1';
+  document.getElementById('drawerTitle').textContent = p.title;
+  document.getElementById('drawerDesc').textContent = p.desc;
+  document.getElementById('drawerBodyTitle').textContent = p.bodyTitle;
+
+  const content = document.getElementById('drawerBodyContent');
+  content.innerHTML = '';
+
+  if (id === 'digital') {
+    const grid = document.createElement('div');
+    grid.className = 'pipe-detail-grid';
+    clusters.forEach(c => {
+      const card = document.createElement('div');
+      card.className = 'pd-item';
+      card.style.cssText = `background:${c.bg}; border-color:${c.color}33;`;
+      const blocksHTML = c.blocks.map(bl =>
+        `<div class="pd-block"><strong style="color:${c.color};">${bl.name}</strong>${bl.desc}</div>`
+      ).join('');
+      card.innerHTML = `
+        <div class="pd-header">
+          <span class="pd-icon">${c.icon}</span>
+          <span class="pd-name" style="color:${c.color};">${c.name}</span>
+        </div>
+        <div class="pd-blocks">${blocksHTML}</div>`;
+      grid.appendChild(card);
+    });
+    content.appendChild(grid);
+  }
+
+  if (id === 'foundations') {
+    const list = document.createElement('div');
+    list.className = 'found-detail';
+    foundationTiles.forEach(f => {
+      const item = document.createElement('div');
+      item.className = 'fd-item';
+      item.innerHTML = `
+        <span class="fd-icon">${f.icon}</span>
+        <div>
+          <div class="fd-name" style="color:var(--amber);">${f.name}</div>
+          <div class="fd-desc">${f.desc}</div>
+        </div>`;
+      list.appendChild(item);
+    });
+    content.appendChild(list);
+  }
+
+  document.getElementById('drawerCaseKicker').textContent = p.caseKicker;
+  document.getElementById('drawerCaseKicker').style.color = p.caseKickerColor;
+  document.getElementById('drawerCaseGeo').textContent = p.caseGeo;
+  document.getElementById('drawerCaseDesc').textContent = p.caseDesc;
+
+  const statsEl = document.getElementById('drawerCaseStats');
+  statsEl.innerHTML = '';
+  p.caseStats.forEach(s => {
+    const el = document.createElement('div');
+    el.innerHTML = `<div class="cs-num" style="color:${p.caseKickerColor};">${s.num}</div><div class="cs-lbl">${s.label}</div>`;
+    statsEl.appendChild(el);
+  });
+
+  document.getElementById('panelOverlay').classList.add('open');
+  document.getElementById('zoneUnderground').classList.toggle('active', id === 'digital');
+  document.getElementById('zoneBedrock').classList.toggle('active', id === 'foundations');
+}
+
+function closeDrawer() {
+  document.getElementById('panelOverlay').classList.remove('open');
+  document.querySelectorAll('.building').forEach(el => el.classList.remove('active'));
+  document.getElementById('zoneUnderground').classList.remove('active');
+  document.getElementById('zoneBedrock').classList.remove('active');
+}
+function closeDrawerOnBackdrop(e) {
+  if (e.target === document.getElementById('panelOverlay')) closeDrawer();
+}
+
+// ══════════════════════════════════════
+// OUTCOMES
+// ══════════════════════════════════════
+
+function openOutcomes()  { document.getElementById('outcomesPanel').classList.add('open'); }
+function closeOutcomes() { document.getElementById('outcomesPanel').classList.remove('open'); }
+function closeOutcomesOnBackdrop(e) {
+  if (e.target === document.getElementById('outcomesPanel')) closeOutcomes();
+}
+
+// ══════════════════════════════════════
+// INFO
+// ══════════════════════════════════════
+
+function openInfo()  { document.getElementById('infoOverlay').classList.add('open'); }
+function closeInfo() { document.getElementById('infoOverlay').classList.remove('open'); }
+function closeInfoOnBackdrop(e) {
+  if (e.target === document.getElementById('infoOverlay')) closeInfo();
+}
+
+// ══════════════════════════════════════
+// INIT
+// ══════════════════════════════════════
+
+renderBuildings();
+renderPipes();
+renderBedrock();
+</script>
+</body>
+</html>
