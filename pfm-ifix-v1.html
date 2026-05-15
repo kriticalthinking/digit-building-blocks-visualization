@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Public Financial Management & iFIX</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* Remove tap highlight on all interactive elements for mobile */
+a, button, [role="button"], .outcome-card, .ifix-tile, .event-tile, .principle-tile {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+  --bg: #f5f0e8;
+  --surface: #fff;
+  --surface-soft: #fafaf8;
+  --border: rgba(0,0,0,0.08);
+  --border-warm: rgba(0,0,0,0.12);
+  --text: #1a1714;
+  --text-mid: #3d3a36;
+  --text-dim: #6b6560;
+
+  --teal: #0d7a6e;
+  --teal-light: #d4f5ef;
+  --teal-dark: #0a5c52;
+
+  /* Zone 1: Sky — warm mint, airy */
+  --sky-top: #c8faf0;
+  --sky-bot: #e4f6f2;
+
+  /* Zone 2: iFIX — vivid cobalt, not navy. This is the hero zone. */
+  --ifix-bg: #1a3a8f;
+  --ifix-bg2: #142e74;
+  --ifix-text: #ffffff;
+  --ifix-text-sub: rgba(180,210,255,0.85);
+  --ifix-sub: rgba(140,185,255,0.55);
+  --ifix-tile-bg: rgba(255,255,255,0.08);
+  --ifix-tile-border: rgba(255,255,255,0.18);
+  --ifix-tile-hover: rgba(255,255,255,0.15);
+  --ifix-accent: #60a5fa;
+  --pipe-color: #93c5fd;
+
+  /* Zone 3: Fiscal Events — deep teal-green, clearly different from cobalt */
+  --ev-bg: #0f5048;
+  --ev-bg2: #0a3d38;
+  --ev-text: #ffffff;
+  --ev-text-sub: rgba(160,240,220,0.85);
+  --ev-sub: rgba(100,220,190,0.5);
+  --ev-tile-bg: rgba(255,255,255,0.07);
+  --ev-tile-border: rgba(100,220,190,0.2);
+  --ev-accent: #34d399;
+
+  /* Zone 4: Bedrock — warm amber-brown, clearly earthy */
+  --bedrock: #7c3d12;
+  --bedrock-2: #6b3310;
+  --bedrock-text: #ffffff;
+  --bedrock-text-sub: rgba(255,220,160,0.9);
+  --bedrock-sub: rgba(255,195,100,0.55);
+  --bedrock-tile-bg: rgba(255,255,255,0.07);
+  --bedrock-tile-border: rgba(255,195,100,0.25);
+  --bedrock-tile-hover-bg: rgba(255,195,100,0.15);
+  --bedrock-tile-hover-border: rgba(255,195,100,0.45);
+
+  --font-display: 'DM Serif Display', serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+
+  --sh-sm: 0 1px 4px rgba(0,0,0,0.1);
+  --sh-md: 0 4px 16px rgba(0,0,0,0.12), 0 2px 4px rgba(0,0,0,0.06);
+  --sh-lg: 0 20px 60px rgba(0,0,0,0.16), 0 4px 16px rgba(0,0,0,0.08);
+  --drawer-width: 500px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::after {
+  content: '';
+  position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 9999;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.018'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+/* ── BANNER ── */
+.banner {
+  background: #0a4f46;
+  padding: 0.55rem 1rem;
+  display: flex; align-items: center; justify-content: center; gap: 0.7rem;
+  font-family: var(--font-body); font-size: 0.78rem; font-weight: 600;
+  color: #6ee7d4; letter-spacing: 0.02em;
+  position: relative; z-index: 10; text-align: center;
+}
+.bdot { width: 5px; height: 5px; border-radius: 50%; background: #2dd4bf; flex-shrink: 0; }
+
+/* ── PAGE ── */
+.page { max-width: 1280px; margin: 0 auto; padding: clamp(1rem, 4vw, 2.5rem) clamp(1rem, 4vw, 2rem) 5rem; }
+
+/* ── HEADER ── */
+.page-top {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 1rem; margin-bottom: 1.75rem; flex-wrap: wrap;
+}
+.page-eyebrow {
+  font-family: var(--font-mono); font-size: clamp(0.6rem, 1.5vw, 0.68rem);
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--teal); margin-bottom: 0.4rem;
+}
+.page-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 4vw, 2.5rem);
+  color: var(--text); line-height: 1.1;
+}
+
+/* Global view toggle */
+.view-toggle-wrap { display: flex; align-items: center; gap: 0.65rem; padding-top: 0.4rem; flex-shrink: 0; }
+.view-label { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); }
+.view-toggle {
+  display: flex; background: var(--surface); border: 1.5px solid var(--border-warm);
+  border-radius: 24px; overflow: hidden; box-shadow: var(--sh-sm);
+}
+.vbtn {
+  padding: 0.5rem 1.1rem; font-size: 0.82rem; font-family: var(--font-body); font-weight: 600;
+  border: none; background: none; cursor: pointer; color: var(--text-dim);
+  transition: all 0.16s; white-space: nowrap; min-height: 44px;
+}
+.vbtn.on { background: var(--teal); color: white; }
+.vbtn:not(.on):hover { color: var(--teal); background: var(--teal-light); }
+
+/* ── HINT ROW ── */
+.hint-row { display: flex; gap: 0.6rem 1.2rem; margin-bottom: 1.2rem; flex-wrap: wrap; }
+.hint { display: flex; align-items: center; gap: 0.45rem; font-family: var(--font-mono); font-size: clamp(0.6rem, 1.5vw, 0.66rem); color: var(--text-dim); letter-spacing: 0.04em; }
+.hint-pip { width: 8px; height: 8px; border-radius: 50%; border: 2px solid currentColor; flex-shrink: 0; }
+
+/* ══ CROSS-SECTION ══ */
+.cross-section {
+  border-radius: 16px; overflow: hidden;
+  border: 2px solid var(--border-warm);
+  box-shadow: var(--sh-lg);
+}
+
+/* ── ZONE LABELS ── */
+.ztag {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  font-family: var(--font-mono); font-size: clamp(0.58rem, 1.5vw, 0.65rem);
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.25rem 0.65rem; border-radius: 20px; font-weight: 600;
+  flex-shrink: 0;
+}
+.ztag-sky  { background: rgba(255,255,255,0.75); color: #0d7a6e; border: 1.5px solid rgba(13,122,110,0.25); }
+.ztag-ifix { background: rgba(255,255,255,0.15); color: #bfdbfe; border: 1.5px solid rgba(191,219,254,0.3); }
+.ztag-events { background: rgba(255,255,255,0.12); color: #6ee7b7; border: 1.5px solid rgba(110,231,183,0.25); }
+.ztag-bedrock { background: rgba(255,255,255,0.1); color: #fcd34d; border: 1.5px solid rgba(252,211,77,0.25); }
+
+/* ─── ZONE 1: SKY (Outcomes) ─── */
+.zone-sky {
+  background: linear-gradient(165deg, var(--sky-top) 0%, var(--sky-bot) 100%);
+  padding: clamp(0.75rem, 3vw, 1.25rem) clamp(0.75rem, 3vw, 1.25rem) 0;
+  position: relative;
+}
+.sky-header { display: flex; align-items: center; gap: 0.85rem; margin-bottom: 1rem; flex-wrap: wrap; }
+.sky-title-wrap { display: flex; flex-direction: column; gap: 0.2rem; }
+.sky-zone-title {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 2.5vw, 1.3rem);
+  color: #0a5c52; line-height: 1.2;
+}
+
+/* Outcome cards */
+.outcomes-row {
+  display: flex; gap: 0.75rem;
+  padding-bottom: clamp(0.75rem, 2vw, 1.25rem);
+  padding-right: 1rem; /* ensures last card doesn't butt up to edge on mobile */
+  overflow-x: auto; scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+}
+.outcomes-row::-webkit-scrollbar { display: none; }
+
+.outcome-card {
+  flex-shrink: 0;
+  width: clamp(155px, 70vw, 210px);
+  scroll-snap-align: start;
+  background: rgba(255,255,255,0.93);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 2px solid rgba(13,122,110,0.12);
+  border-radius: 12px;
+  padding: clamp(0.85rem, 2.5vw, 1rem);
+  cursor: pointer; transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  -webkit-tap-highlight-color: transparent;
+}
+.outcome-card:hover,
+.outcome-card:active { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.13); border-color: var(--teal); }
+.outcome-card.active { transform: translateY(-6px); border-color: var(--teal); box-shadow: 0 10px 30px rgba(13,122,110,0.22); }
+.oc-icon { font-size: 1.5rem; margin-bottom: 0.5rem; display: block; }
+.oc-name { font-size: clamp(0.78rem, 2vw, 0.88rem); font-weight: 700; color: var(--text); line-height: 1.25; margin-bottom: 0.3rem; }
+.oc-plain { font-size: clamp(0.68rem, 1.8vw, 0.75rem); color: var(--text-mid); line-height: 1.55; }
+.oc-tech { font-size: clamp(0.68rem, 1.8vw, 0.75rem); color: var(--text-mid); line-height: 1.55; display: none; }
+
+/* ─── ZONE 2: iFIX ─── */
+.zone-ifix {
+  background: linear-gradient(160deg, var(--ifix-bg) 0%, var(--ifix-bg2) 100%);
+  padding: clamp(1.25rem, 3vw, 1.75rem) clamp(0.75rem, 3vw, 1.25rem);
+  position: relative;
+}
+.zone-ifix::before {
+  content: ''; position: absolute; top: 0; right: 0; bottom: 0; left: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(96,165,250,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(96,165,250,0.035) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.ifix-header { display: flex; align-items: center; gap: 0.85rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+.ifix-title {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 2.8vw, 1.4rem);
+  color: var(--ifix-text); line-height: 1.2;
+}
+.ifix-sub { font-family: var(--font-mono); font-size: 0.65rem; color: var(--ifix-sub); letter-spacing: 0.06em; margin-left: auto; }
+
+/* ── HUB-AND-SPOKE DIAGRAM ── */
+/* Three-column layout: sources | SVG hub | consumers */
+.ifix-hub-wrap {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 0 clamp(0.5rem, 2vw, 1.5rem);
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+/* Column labels */
+.hub-col-label {
+  font-family: var(--font-mono);
+  font-size: clamp(0.58rem, 1.4vw, 0.65rem);
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ifix-sub);
+  margin-bottom: 0.65rem;
+}
+.hub-col-label.right { text-align: right; }
+
+/* System rows — plain text + icon, NOT styled as buttons */
+.hub-systems { display: flex; flex-direction: column; gap: 0.55rem; }
+
+.hub-system {
+  display: flex; align-items: center; gap: 0.55rem;
+  font-size: clamp(0.78rem, 2vw, 0.88rem);
+  font-weight: 500; color: rgba(255,255,255,0.82);
+  line-height: 1.3;
+  padding: 0.1rem 0;
+}
+.hub-system.right { flex-direction: row-reverse; text-align: right; }
+.hub-system-icon { font-size: 1rem; flex-shrink: 0; opacity: 0.85; }
+
+/* Arrow lines from each system to/from the hub */
+.hub-system-arrow {
+  flex: 1; height: 1px; position: relative; overflow: hidden;
+}
+.hub-system-arrow::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, rgba(147,197,253,0.15), rgba(147,197,253,0.5));
+}
+/* Animated data pulse — transform-based for Android GPU acceleration */
+.hub-system-arrow::after {
+  content: '';
+  position: absolute; top: 50%; left: 0;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(147,197,253,0.9);
+  transform: translateX(-100%) translateY(-50%);
+  animation: arrowpulse 3s ease-in-out infinite;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+.hub-system:nth-child(1) .hub-system-arrow::after { animation-delay: 0s; }
+.hub-system:nth-child(2) .hub-system-arrow::after { animation-delay: 0.75s; }
+.hub-system:nth-child(3) .hub-system-arrow::after { animation-delay: 1.5s; }
+.hub-system:nth-child(4) .hub-system-arrow::after { animation-delay: 2.25s; }
+@keyframes arrowpulse {
+  0%   { transform: translateX(-100%) translateY(-50%); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateX(1600%) translateY(-50%); opacity: 0; }
+}
+/* Consumer side pulses travel right-to-left */
+.hub-system.right .hub-system-arrow::before {
+  background: linear-gradient(270deg, rgba(147,197,253,0.15), rgba(147,197,253,0.5));
+}
+.hub-system.right .hub-system-arrow::after {
+  left: auto; right: 0;
+  transform: translateX(100%) translateY(-50%);
+  animation-name: arrowpulse-r;
+}
+@keyframes arrowpulse-r {
+  0%   { transform: translateX(100%) translateY(-50%); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateX(-1600%) translateY(-50%); opacity: 0; }
+}
+
+/* Centre hub — the iFIX badge */
+.hub-centre {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 0.4rem; position: relative; z-index: 2;
+}
+.hub-badge {
+  background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%);
+  border: 2px solid rgba(147,197,253,0.5);
+  border-radius: 16px;
+  padding: 1rem 1.1rem;
+  text-align: center;
+  box-shadow: 0 0 0 6px rgba(37,99,235,0.15), 0 8px 32px rgba(37,99,235,0.45);
+  white-space: nowrap;
+  position: relative;
+  animation: hubring 3s ease-in-out infinite;
+  will-change: box-shadow;
+}
+@keyframes hubring {
+  0%, 100% { box-shadow: 0 0 0 4px rgba(37,99,235,0.12), 0 8px 32px rgba(37,99,235,0.4); }
+  50%       { box-shadow: 0 0 0 10px rgba(37,99,235,0.08), 0 8px 40px rgba(37,99,235,0.55); }
+}
+.hub-name {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 3vw, 1.7rem);
+  color: white; line-height: 1; margin-bottom: 0.2rem;
+}
+.hub-sub {
+  font-family: var(--font-mono); font-size: 0.52rem;
+  color: rgba(147,197,253,0.75); letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+/* The clarifying note under the hub */
+.hub-note {
+  font-family: var(--font-body);
+  font-size: clamp(0.62rem, 1.5vw, 0.68rem);
+  color: rgba(147,197,253,0.55);
+  text-align: center; font-style: italic;
+  line-height: 1.45; max-width: 140px;
+  padding-top: 0.2rem;
+}
+
+/* Mobile: stack to vertical list */
+@media (max-width: 580px) {
+  .ifix-hub-wrap {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .hub-col-label.right { text-align: left; }
+  .hub-system.right { flex-direction: row; text-align: left; }
+  .hub-system-arrow { display: none; }
+  .hub-centre { flex-direction: column; align-items: flex-start; gap: 0.6rem; }
+  .hub-note { max-width: none; text-align: left; }
+  .hub-badge { white-space: normal; }
+}
+
+/* iFIX capability tiles — these ARE interactive */
+.ifix-tiles-label {
+  font-family: var(--font-mono); font-size: 0.62rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ifix-sub); margin-bottom: 0.65rem;
+}
+.ifix-tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.6rem; }
+@media (max-width: 700px) { .ifix-tiles { grid-template-columns: repeat(2, 1fr); } }
+
+.ifix-tile {
+  border-radius: 10px;
+  padding: clamp(0.75rem, 2vw, 1rem) clamp(0.65rem, 2vw, 0.85rem);
+  border: 1.5px solid var(--ifix-tile-border);
+  background: var(--ifix-tile-bg);
+  cursor: pointer; transition: all 0.18s;
+  min-height: 60px;
+  position: relative;
+}
+/* Small tap-hint arrow to make interactivity obvious */
+.ifix-tile::after {
+  content: '↗';
+  position: absolute; top: 0.45rem; right: 0.55rem;
+  font-size: 0.55rem; color: rgba(147,197,253,0.3);
+  transition: color 0.18s;
+}
+.ifix-tile:hover,
+.ifix-tile:active { background: var(--ifix-tile-hover); border-color: rgba(147,197,253,0.5); transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,0.25); }
+.ifix-tile:hover::after,
+.ifix-tile:active::after { color: rgba(147,197,253,0.8); }
+.ifix-tile.active { border-color: rgba(147,197,253,0.7); background: rgba(255,255,255,0.16); }
+.it-icon { font-size: 1.2rem; display: block; margin-bottom: 0.35rem; }
+.it-name { font-size: clamp(0.76rem, 2vw, 0.84rem); font-weight: 700; color: var(--ifix-text); line-height: 1.25; }
+
+/* ─── ZONE 3: FISCAL EVENTS ─── */
+.zone-events {
+  background: linear-gradient(160deg, var(--ev-bg) 0%, var(--ev-bg2) 100%);
+  padding: clamp(1rem, 3vw, 1.5rem) clamp(0.75rem, 3vw, 1.25rem);
+  position: relative;
+}
+.zone-events::before {
+  content: ''; position: absolute; top: 0; right: 0; bottom: 0; left: 0; pointer-events: none;
+  /* Diagonal pipe/flow lines texture */
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent 0px, transparent 18px,
+    rgba(52,211,153,0.04) 18px, rgba(52,211,153,0.04) 19px
+  );
+}
+
+.ev-header { display: flex; align-items: center; gap: 0.85rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+.ev-title {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 2.8vw, 1.4rem);
+  color: var(--ev-text); line-height: 1.2;
+}
+.ev-sub { font-family: var(--font-mono); font-size: 0.65rem; color: var(--ev-sub); letter-spacing: 0.06em; margin-left: auto; }
+
+/* Event tiles — larger, clearer, coloured left border */
+.events-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.55rem; }
+@media (max-width: 700px) { .events-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 440px) { .events-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.event-tile {
+  border-radius: 10px;
+  padding: clamp(0.7rem, 2vw, 0.95rem) clamp(0.65rem, 2vw, 0.85rem);
+  border: 1.5px solid var(--ev-tile-border);
+  background: var(--ev-tile-bg);
+  cursor: pointer; transition: all 0.18s;
+  min-height: 60px;
+  border-left: 3px solid rgba(52,211,153,0.4);
+  position: relative;
+}
+.event-tile::after {
+  content: '↗';
+  position: absolute; top: 0.45rem; right: 0.55rem;
+  font-size: 0.55rem; color: rgba(52,211,153,0.25);
+  transition: color 0.18s;
+}
+.event-tile:hover,
+.event-tile:active { border-color: rgba(52,211,153,0.5); border-left-color: rgba(52,211,153,0.9); background: rgba(255,255,255,0.1); transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,0.25); }
+.event-tile:hover::after,
+.event-tile:active::after { color: rgba(52,211,153,0.7); }
+.event-tile.active { border-color: rgba(52,211,153,0.5); border-left-color: #34d399; background: rgba(255,255,255,0.12); }
+.et-icon { font-size: 1.1rem; display: block; margin-bottom: 0.3rem; }
+.et-name { font-size: clamp(0.74rem, 2vw, 0.82rem); font-weight: 700; color: var(--ev-text); line-height: 1.25; }
+.et-code { font-family: var(--font-mono); font-size: 0.5rem; color: var(--ev-sub); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.2rem; display: none; }
+
+/* ─── ZONE 4: BEDROCK (Governance Principles) ─── */
+.zone-bedrock {
+  background: linear-gradient(160deg, var(--bedrock) 0%, var(--bedrock-2) 100%);
+  padding: clamp(1rem, 3vw, 1.5rem) clamp(0.75rem, 3vw, 1.25rem) clamp(1.25rem, 4vw, 1.75rem);
+  position: relative;
+}
+/* Rock strata texture */
+.zone-bedrock::before {
+  content: ''; position: absolute; top: 0; right: 0; bottom: 0; left: 0; pointer-events: none;
+  background-image:
+    repeating-linear-gradient(-2deg, transparent 0px, transparent 12px, rgba(252,211,77,0.025) 12px, rgba(252,211,77,0.025) 13px),
+    repeating-linear-gradient(1.5deg, transparent 0px, transparent 22px, rgba(252,211,77,0.015) 22px, rgba(252,211,77,0.015) 23px);
+}
+
+.br-header { display: flex; align-items: center; gap: 0.85rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+.br-title {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 2.8vw, 1.4rem);
+  color: var(--bedrock-text); line-height: 1.2;
+}
+.br-sub { font-family: var(--font-mono); font-size: 0.65rem; color: var(--bedrock-sub); letter-spacing: 0.06em; margin-left: auto; }
+
+.principles-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.55rem; }
+@media (max-width: 700px) { .principles-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 440px) { .principles-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.principle-tile {
+  border-radius: 10px;
+  padding: clamp(0.8rem, 2vw, 1rem) clamp(0.7rem, 2vw, 0.85rem);
+  border: 1.5px solid var(--bedrock-tile-border);
+  background: var(--bedrock-tile-bg);
+  cursor: pointer; transition: all 0.2s;
+  position: relative; overflow: hidden; min-height: 60px;
+}
+.principle-tile::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: rgba(252,211,77,0.4); border-radius: 10px 10px 0 0;
+  transition: background 0.2s;
+}
+.principle-tile::after {
+  content: '↗';
+  position: absolute; top: 0.5rem; right: 0.6rem;
+  font-size: 0.55rem; color: rgba(252,211,77,0.25);
+  transition: color 0.2s;
+}
+.principle-tile:hover,
+.principle-tile:active { border-color: var(--bedrock-tile-hover-border); background: var(--bedrock-tile-hover-bg); transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+.principle-tile:hover::before,
+.principle-tile:active::before { background: rgba(252,211,77,0.8); }
+.principle-tile:hover::after,
+.principle-tile:active::after { color: rgba(252,211,77,0.7); }
+.principle-tile.active { border-color: var(--bedrock-tile-hover-border); background: rgba(255,255,255,0.12); }
+.pt-icon { font-size: 1.1rem; display: block; margin-bottom: 0.35rem; }
+.pt-name { font-size: clamp(0.74rem, 2vw, 0.82rem); font-weight: 700; color: var(--bedrock-text); line-height: 1.25; }
+
+/* ══ DRAWER ══ */
+.overlay { display: none; position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 500; background: rgba(10,15,30,0.55); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+.overlay.open { display: block; animation: fadein 0.2s ease; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+@keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+
+.drawer {
+  position: fixed; z-index: 501; background: var(--surface);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  transition: transform 0.28s cubic-bezier(0.22,1,0.36,1);
+}
+@media (min-width: 700px) {
+  .drawer { top: 0; right: 0; bottom: 0; width: var(--drawer-width); box-shadow: -8px 0 48px rgba(0,0,0,0.18); transform: translateX(100%); }
+  .drawer.open { transform: translateX(0); }
+}
+@media (max-width: 699px) {
+  .drawer { bottom: 0; left: 0; right: 0; max-height: 88vh; border-radius: 20px 20px 0 0; box-shadow: 0 -8px 40px rgba(0,0,0,0.2); transform: translateY(100%); }
+  .drawer.open { transform: translateY(0); }
+  .drawer-handle { display: block; width: 40px; height: 4px; background: var(--border-warm); border-radius: 2px; margin: 0.85rem auto 0; }
+}
+@media (min-width: 700px) { .drawer-handle { display: none; } }
+.drawer-handle-wrap { padding: 0 0 0.25rem; }
+
+.dh {
+  padding: 1.25rem 1.5rem 1.1rem; border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; background: var(--surface); z-index: 2;
+  display: flex; align-items: flex-start; gap: 0.85rem;
+}
+.dh-text { flex: 1; }
+.dh-kicker { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.35rem; }
+.dh-title { font-family: var(--font-display); font-size: clamp(1.2rem, 3vw, 1.5rem); color: var(--text); line-height: 1.2; margin-bottom: 0.5rem; }
+.dh-desc { font-size: clamp(0.85rem, 2.5vw, 0.92rem); line-height: 1.8; color: var(--text-mid); }
+.dclose { background: none; border: none; cursor: pointer; color: var(--text-dim); font-size: 1rem; padding: 0.4rem; border-radius: 8px; transition: all 0.15s; min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center; }
+.dclose:hover { background: var(--border); color: var(--text); }
+
+.drawer-toggle-row {
+  padding: 0.75rem 1.5rem; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 0.65rem;
+}
+.dtoggle-label { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); }
+.dtoggle { display: flex; background: var(--surface-soft); border: 1.5px solid var(--border-warm); border-radius: 20px; overflow: hidden; }
+.dtbtn { padding: 0.38rem 0.9rem; font-size: 0.78rem; font-family: var(--font-body); font-weight: 600; border: none; background: none; cursor: pointer; color: var(--text-dim); transition: all 0.15s; min-height: 38px; }
+.dtbtn.on { background: var(--teal); color: white; }
+
+.db { padding: 1.1rem 1.5rem; border-bottom: 1px solid var(--border); }
+.db-title { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.85rem; }
+
+.example-block {
+  background: #f0fdf9; border: 1.5px solid rgba(13,122,110,0.18);
+  border-radius: 10px; padding: 1rem 1.1rem; margin-bottom: 0.85rem;
+}
+.example-kicker { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); margin-bottom: 0.4rem; }
+.example-text { font-size: clamp(0.82rem, 2.5vw, 0.9rem); line-height: 1.78; color: var(--text-mid); }
+
+.problem-block {
+  background: #fff7ed; border: 1.5px solid rgba(180,83,9,0.15);
+  border-radius: 10px; padding: 1rem 1.1rem; margin-bottom: 0.85rem;
+}
+.problem-kicker { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: #b45309; margin-bottom: 0.4rem; }
+
+.stat-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.stat-card { background: var(--surface-soft); border: 1px solid var(--border-warm); border-radius: 10px; padding: 0.85rem 1rem; flex: 1; min-width: 100px; }
+.stat-num { font-family: var(--font-display); font-size: 1.5rem; color: var(--teal); line-height: 1; margin-bottom: 0.2rem; }
+.stat-lbl { font-size: 0.75rem; color: var(--text-dim); line-height: 1.4; }
+
+.block-cards { display: flex; flex-direction: column; gap: 0.55rem; }
+.block-card { border: 1.5px solid var(--border-warm); border-radius: 10px; padding: 0.9rem 1.1rem; }
+.bc-name { font-weight: 700; font-size: 0.88rem; margin-bottom: 0.35rem; }
+.bc-plain { font-size: clamp(0.82rem, 2.5vw, 0.88rem); line-height: 1.72; color: var(--text-mid); }
+.bc-tech { font-size: clamp(0.82rem, 2.5vw, 0.88rem); line-height: 1.72; color: var(--text-mid); display: none; }
+.bc-tag { font-family: var(--font-mono); font-size: 0.55rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.35rem; }
+.block-card.is-tech .bc-plain { display: none; }
+.block-card.is-tech .bc-tech { display: block; }/* ── VERY SMALL SCREENS (320px Android) ── */
+@media (max-width: 360px) {
+  .page { padding: 0.75rem 0.75rem 4rem; }
+  .page-top { flex-direction: column; gap: 0.75rem; }
+  .ifix-tiles { grid-template-columns: 1fr 1fr; }
+  .events-grid { grid-template-columns: 1fr 1fr; }
+  .principles-grid { grid-template-columns: 1fr 1fr; }
+  .hint-row { display: none; } /* hide hints on tiny screens — too cluttered */
+  .ifix-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+  .ifix-sub { margin-left: 0; }
+  .ev-header, .br-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+  .ev-sub, .br-sub { margin-left: 0; }
+}
+
+
+<body>
+
+<div class="banner">
+  <div class="bdot"></div>
+  eGov Foundation · Strategy Paper on Public Financial Management
+  <div class="bdot"></div>
+</div>
+
+<div class="page">
+
+  <div class="page-top">
+    <div>
+      <div class="page-eyebrow">eGov Foundation · Public Finance</div>
+      <h1 class="page-title">Public Financial Management & iFIX</h1>
+    </div>
+    <div class="view-toggle-wrap">
+      <span class="view-label">View</span>
+      <div class="view-toggle">
+        <button class="vbtn on" id="gPlain" onclick="setGlobalView('plain')">Plain English</button>
+        <button class="vbtn" id="gTech" onclick="setGlobalView('tech')">Technical</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- INTRO -->
+  <div style="max-width:760px; margin-bottom:2rem;">
+    <p class="intro-plain" style="font-size:1rem;line-height:1.85;color:var(--text-mid);margin-bottom:1rem;">Every rupee the government spends passes through a maze of disconnected systems — state treasuries, central scheme portals, urban local body accounts, district offices. Nobody has a single, live view of where money is, where it went, and whether it delivered results. iFIX is eGov Foundation's answer: a shared data layer that links all these systems without replacing them, creating real-time visibility for the first time.</p>
+    <p class="intro-tech" style="font-size:1rem;line-height:1.85;color:var(--text-mid);margin-bottom:1rem;display:none;">India's public financial management landscape is characterised by deep fragmentation — PFMS, state IFMIS platforms, treasury systems, and ULB accounting software operate in silos with no common data standard. iFIX (India Financial Information Exchange) proposes a standardised fiscal event model and an interoperability exchange layer, enabling real-time fund flow visibility, expenditure control, and service-finance event linkage across all tiers of government without requiring legacy system replacement.</p>
+    <p style="font-size:1rem;line-height:1.85;color:var(--text-mid);">The diagram below shows the full system in four layers. Toggle between Plain English and Technical views. Tap any element to explore.</p>
+  </div>
+
+  <div class="hint-row">
+    <div class="hint" style="color:var(--teal);"><div class="hint-pip"></div><span class="plain-hint">Tap an outcome to explore</span><span class="tech-hint" style="display:none">Tap an outcome node to explore</span></div>
+    <div class="hint" style="color:rgba(56,189,248,0.7);"><div class="hint-pip"></div><span class="plain-hint">Tap the iFIX capabilities for detail</span><span class="tech-hint" style="display:none">Tap iFIX capability tiles for specifications</span></div>
+    <div class="hint" style="color:rgba(148,163,184,0.65);"><div class="hint-pip"></div><span class="plain-hint">Tap a fiscal event type to understand it</span><span class="tech-hint" style="display:none">Tap standardised fiscal event types</span></div>
+    <div class="hint" style="color:rgba(255,200,100,0.65);"><div class="hint-pip"></div><span class="plain-hint">Tap a principle for the underlying rationale</span><span class="tech-hint" style="display:none">Tap governance foundation tiles</span></div>
+  </div>
+
+  <!-- CROSS SECTION -->
+  <div class="cross-section">
+
+    <!-- ZONE 1: SKY — Outcomes -->
+    <div class="zone-sky">
+      <div class="sky-header">
+        <div class="ztag ztag-sky">What you get · Outcomes</div>
+        <div class="sky-title-wrap">
+          <div class="sky-zone-title">
+            <span class="plain-view">What governments and citizens gain</span>
+            <span class="tech-view" style="display:none">Policy Outcomes & Service Delivery Impact</span>
+          </div>
+        </div>
+      </div>
+      <div class="outcomes-row" id="outcomesRow"></div>
+    </div>
+
+    <!-- ZONE 2: iFIX Exchange Layer -->
+    <div class="zone-ifix">
+      <div class="ifix-header">
+        <div class="ztag ztag-ifix">iFIX · Exchange Layer</div>
+        <div class="ifix-title">
+          <span class="plain-text">The missing link — one platform that speaks to all systems</span>
+          <span class="tech-text" style="display:none">iFIX — India Financial Information Exchange Platform</span>
+        </div>
+        <div class="ifix-sub plain-text">doesn't move money · moves data about money</div>
+        <div class="ifix-sub tech-text" style="display:none">data exchange layer · non-disruptive · real-time</div>
+      </div>
+
+      <!-- Hub-and-spoke diagram -->
+      <div class="ifix-hub-wrap">
+
+        <!-- Left: Source systems (plain text, not interactive) -->
+        <div>
+          <div class="hub-col-label">
+            <span class="plain-text">Systems that publish data to iFIX</span>
+            <span class="tech-text" style="display:none">Source Systems</span>
+          </div>
+          <div class="hub-systems">
+            <div class="hub-system">
+              <span class="hub-system-icon">🏛️</span>
+              <span class="plain-text">Central government</span>
+              <span class="tech-text" style="display:none">PFMS / CGA</span>
+              <div class="hub-system-arrow"></div>
+            </div>
+            <div class="hub-system">
+              <span class="hub-system-icon">🏦</span>
+              <span class="plain-text">State treasuries</span>
+              <span class="tech-text" style="display:none">State IFMIS / Treasuries</span>
+              <div class="hub-system-arrow"></div>
+            </div>
+            <div class="hub-system">
+              <span class="hub-system-icon">🏙️</span>
+              <span class="plain-text">City accounts</span>
+              <span class="tech-text" style="display:none">ULB Accounting Systems</span>
+              <div class="hub-system-arrow"></div>
+            </div>
+            <div class="hub-system">
+              <span class="hub-system-icon">📋</span>
+              <span class="plain-text">Scheme portals</span>
+              <span class="tech-text" style="display:none">Scheme MIS / DBT Systems</span>
+              <div class="hub-system-arrow"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Centre: iFIX hub badge -->
+        <div class="hub-centre">
+          <div class="hub-badge">
+            <div class="hub-name">iFIX</div>
+            <div class="hub-sub plain-text">common<br>language</div>
+            <div class="hub-sub tech-text" style="display:none">fiscal event<br>exchange</div>
+          </div>
+          <div class="hub-note">
+            <span class="plain-text">Data about money flows through here — not the money itself</span>
+            <span class="tech-text" style="display:none">Standardised fiscal events only — payment rails unchanged</span>
+          </div>
+        </div>
+
+        <!-- Right: Consumer systems (plain text, not interactive) -->
+        <div>
+          <div class="hub-col-label right">
+            <span class="plain-text">Systems that read data from iFIX</span>
+            <span class="tech-text" style="display:none">Consumer Systems</span>
+          </div>
+          <div class="hub-systems">
+            <div class="hub-system right">
+              <span class="hub-system-icon">📊</span>
+              <span class="plain-text">Finance dashboards</span>
+              <span class="tech-text" style="display:none">iFIX Fiscal Dashboards</span>
+              <div class="hub-system-arrow"></div>
+            </div>
+            <div class="hub-system right">
+              <span class="hub-system-icon">🔍</span>
+              <span class="plain-text">Audit &amp; oversight</span>
+              <span class="tech-text" style="display:none">AG / CAG Audit Systems</span>
+              <div class="hub-system-arrow"></div>
+            </div>
+            <div class="hub-system right">
+              <span class="hub-system-icon">🗳️</span>
+              <span class="plain-text">Budget planners</span>
+              <span class="tech-text" style="display:none">Budget &amp; Planning Tools</span>
+              <div class="hub-system-arrow"></div>
+            </div>
+            <div class="hub-system right">
+              <span class="hub-system-icon">👥</span>
+              <span class="plain-text">Citizens &amp; civil society</span>
+              <span class="tech-text" style="display:none">Open Data / Participatory Budgeting</span>
+              <div class="hub-system-arrow"></div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /hub-wrap -->
+
+      <!-- iFIX capability tiles — these ARE tappable -->
+      <div class="ifix-tiles-label">
+        <span class="plain-text">How iFIX works — tap each to explore</span>
+        <span class="tech-text" style="display:none">Core capabilities · tap each</span>
+      </div>
+      <div class="ifix-tiles" id="ifixTiles"></div>
+    </div>
+
+    <!-- ZONE 3: Fiscal Events (the common grammar) -->
+    <div class="zone-events">
+      <div class="ev-header">
+        <div class="ztag ztag-events">Standardised Fiscal Events</div>
+        <div class="ev-title">
+          <span class="plain-text">The common language — every money movement put into words</span>
+          <span class="tech-text" style="display:none">Standardised Fiscal Event Model · Common Grammar for all PFM Systems</span>
+        </div>
+        <div class="ev-sub plain-text">10 event types · tap each</div>
+        <div class="ev-sub tech-text" style="display:none">10 canonical event types · versioned schema</div>
+      </div>
+      <div class="events-grid" id="eventsGrid"></div>
+    </div>
+
+    <!-- ZONE 4: BEDROCK — Governance principles -->
+    <div class="zone-bedrock">
+      <div class="br-header">
+        <div class="ztag ztag-bedrock">Governance Foundations</div>
+        <div class="br-title">
+          <span class="plain-text">The principles the whole system is built on</span>
+          <span class="tech-text" style="display:none">PFM Reform Governance Principles</span>
+        </div>
+        <div class="br-sub plain-text">5 principles · tap each</div>
+        <div class="br-sub tech-text" style="display:none">5 principles · tap to explore rationale</div>
+      </div>
+      <div class="principles-grid" id="principlesGrid"></div>
+    </div>
+
+  </div><!-- /cross-section -->
+
+  <div style="max-width:720px;margin:2.5rem auto 0;padding:0 0.25rem;display:flex;align-items:center;justify-content:center;gap:0.75rem;">
+    <div style="height:1px;flex:1;background:var(--border-warm);"></div>
+    <p style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-dim);letter-spacing:0.1em;text-transform:uppercase;white-space:nowrap;">eGov Foundation · PFM Strategy Paper · egov.org.in</p>
+    <div style="height:1px;flex:1;background:var(--border-warm);"></div>
+  </div>
+
+</div><!-- /page -->
+
+<!-- DRAWER -->
+<div class="overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer" role="dialog" aria-modal="true">
+  <div class="drawer-handle-wrap"><div class="drawer-handle"></div></div>
+  <div class="dh">
+    <div class="dh-text">
+      <div class="dh-kicker" id="dKicker"></div>
+      <div class="dh-title" id="dTitle"></div>
+      <div class="dh-desc" id="dDesc"></div>
+    </div>
+    <button class="dclose" onclick="closeDrawer()" aria-label="Close">✕</button>
+  </div>
+  <div class="drawer-toggle-row" id="drawerToggleRow" style="display:none;">
+    <span class="dtoggle-label">View as</span>
+    <div class="dtoggle">
+      <button class="dtbtn on" id="dtPlain" onclick="setDrawerToggle('plain')">Plain English</button>
+      <button class="dtbtn" id="dtTech" onclick="setDrawerToggle('tech')">Technical</button>
+    </div>
+  </div>
+  <div class="db">
+    <div class="db-title" id="dBodyTitle"></div>
+    <div id="dBodyContent"></div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════
+// DATA
+// ════════════════════════════════════════
+
+let globalView = 'plain';
+let drawerIsTech = false;
+
+const outcomes = [
+  { icon:'👁️', name:'See money in real time',
+    techName:'Real-time Fund Flow Visibility',
+    plain:'Right now, no single person in government can tell you exactly where a rupee is in the system — is it still in the state treasury? Released to a district? Sitting in a scheme account? iFIX changes this.',
+    tech:'Provides real-time tracking of fund flows across all tiers of government — Union, State, ULB — through standardised fiscal event publishing, eliminating information lag and enabling live budget utilisation dashboards.',
+    example:'Imagine a state government releases funds for a road construction scheme. iFIX records the release in real time. The district collector can see it arrived. The contractor can confirm payment. An auditor can trace every step — all without calling anyone.',
+    exampleTech:'A fiscal event of type VOUCHER is published when funds are released from the State Treasury. The event is consumed by the iFIX dashboard, the scheme MIS, and the audit system simultaneously — no batch reconciliation required.' },
+
+  { icon:'💰', name:'Collect more, leak less',
+    techName:'Revenue Mobilisation & Leakage Reduction',
+    plain:'Local governments often don\'t know how much they\'re owed — property tax, water charges, licence fees. And money sanctioned for services sometimes never arrives. iFIX helps track both.',
+    tech:'iFIX integrates demand, collection, and reconciliation fiscal events, providing a unified view of own-source revenue performance and enabling identification of demand-collection gaps, facilitating targeted revenue mobilisation.',
+    example:'A municipality issues 10,000 property tax bills. iFIX tracks which ones were paid, which are overdue, and flags amounts that were collected but not banked — giving the municipal commissioner a live recovery dashboard.',
+    exampleTech:'Fiscal events of type DEMAND_NOTICE and RECEIPT are matched by iFIX, surfacing collection efficiency ratios and identifying uncollected demand by ward, scheme, or property type in real time.' },
+
+  { icon:'📋', name:'Plan budgets on real data',
+    techName:'Evidence-based Budgeting & Planning',
+    plain:'Most government budgets are planned using last year\'s numbers, not live evidence of what actually happened. iFIX gives planners access to how money was actually spent — so next year\'s budget reflects reality.',
+    tech:'iFIX creates a longitudinal fiscal event dataset that planners can query for actual expenditure patterns, enabling programme-level budget analysis, multi-year trend assessment, and outcome-linked resource allocation.',
+    example:'A State Finance Department drafting next year\'s budget pulls iFIX data on actual expenditure from the previous year. It shows which schemes have consistently low utilisation rates, and which districts are underspending — so the next allocation reflects reality rather than estimates.',
+    exampleTech:'Planners query the iFIX data warehouse for EXPENDITURE events tagged by scheme, department, and geography over a 24-month window. Utilisation rates and lapse patterns inform multi-year budget proposals.' },
+
+  { icon:'🔍', name:'Audit trails that actually work',
+    techName:'Automated Audit & Compliance',
+    plain:'Audits today mean physically collecting files from multiple departments. With iFIX, every transaction leaves a standardised digital trace — auditors can query the entire system from one place.',
+    tech:'Standardised fiscal events constitute an immutable, machine-readable audit trail. CAG and internal audit systems can subscribe to iFIX event streams, enabling continuous audit rather than periodic compliance review.',
+    example:'Imagine an auditor wants to check whether funds sanctioned under a housing scheme actually reached beneficiaries. Instead of requesting files from dozens of district offices, they query iFIX — which shows the complete chain from sanction to last-mile disbursement.',
+    exampleTech:'Audit systems subscribe to the iFIX event stream filtered by scheme code. SANCTION → ALLOTMENT → EXPENDITURE → UTILISATION_CERTIFICATE event chains are automatically validated for completeness, flagging missing events as audit risks.' },
+
+  { icon:'🗳️', name:'Give citizens a voice in budgets',
+    techName:'Participatory Governance & Inclusive Budgeting',
+    plain:'Most citizens have no idea how the government spends money in their area. iFIX creates the foundation for ward-level budget visibility — so local communities can see what\'s been promised and what\'s been delivered.',
+    tech:'iFIX\'s open data layer enables publication of anonymised fiscal event data at sub-district granularity, supporting participatory budgeting platforms, civil society monitoring, and SDG-aligned social accountability mechanisms.',
+    example:'A ward committee wants to know whether the funds sanctioned for their local drain repair were actually spent. The municipality\'s public dashboard — powered by iFIX — shows the sanction, the contractor payment, and the completion record. No RTI needed.',
+    exampleTech:'iFIX publishes a public API exposing SANCTION and EXPENDITURE events at ward/ward-equivalent granularity, with beneficiary and asset metadata, enabling third-party accountability applications.' },
+
+  { icon:'🔗', name:'Link money to actual services',
+    techName:'Service-Finance Event Integration',
+    plain:'Today, the financial system records that money was spent on, say, a hospital. The health system records that patients were treated. But nobody connects the two. iFIX links fiscal events to service delivery events.',
+    tech:'iFIX integrates with DIGIT\'s service delivery modules to correlate fiscal disbursement events with corresponding service delivery events — enabling outcome-linked budgeting and ex-post evaluation of scheme effectiveness.',
+    example:'A scheme allocates funds for water connections to hundreds of households. iFIX can now show whether the payments to the contractor coincide with the water connections being marked as complete in the civic system — revealing whether the money actually delivered the service.',
+    exampleTech:'SERVICE_DELIVERY events from DIGIT modules are mapped to upstream EXPENDITURE events in iFIX via a shared entity reference. Mismatches — expenditure without delivery or delivery without recorded expenditure — surface as programmatic risk flags.' },
+];
+
+const ifixCapabilities = [
+  { icon:'🔌', name:'Works with existing systems',
+    techName:'Non-disruptive Integration',
+    plain:'iFIX does not ask any government department to replace its existing software. It plugs in alongside — listening for financial events as they happen and translating them into a common language.',
+    tech:'iFIX operates as a middleware exchange layer using event-driven architecture. Legacy systems publish fiscal events via REST APIs or message queues; iFIX does not require schema changes to source systems.',
+    plain2:'Think of it like a universal translator. The state treasury speaks one language. The central scheme portal speaks another. iFIX understands both and creates a single shared record — without either system needing to change.' },
+
+  { icon:'🗂️', name:'One common language for money',
+    techName:'Fiscal Event Standardisation',
+    plain:'Every rupee movement — a budget sanction, a payment, a tax collection — is recorded in the same way across all systems, using a shared set of event types.',
+    tech:'iFIX defines a canonical fiscal event schema — standardised event types, mandatory and optional fields, code lists (CoA codes, scheme codes, location codes) — adopted as a common exchange standard across all participating systems.',
+    plain2:'Right now, "expenditure" means different things in different systems. Some record it when the cheque is issued. Some when it\'s cashed. iFIX sets one definition, so everyone is comparing the same thing.' },
+
+  { icon:'⚡', name:'Live, not yesterday\'s data',
+    techName:'Real-time Event Publishing',
+    plain:'Most government financial reports are weeks or months old by the time anyone reads them. iFIX captures fiscal events as they happen — so dashboards show what\'s happening now, not last quarter.',
+    tech:'iFIX supports near-real-time event streaming with sub-minute latency for critical fiscal events. Event consumers receive push notifications or can subscribe to filtered streams via the iFIX API.',
+    plain2:'A payment released by the state treasury at 2pm can appear on the district collector\'s dashboard by 2:01pm. This kind of real-time visibility is currently impossible with the batch-reconciliation approach most systems use.' },
+
+  { icon:'📐', name:'Scalable across all tiers',
+    techName:'Multi-tier Government Scalability',
+    plain:'iFIX is designed to work at every level simultaneously — from a gram panchayat to a central ministry — without requiring a central mega-system that everything passes through.',
+    tech:'iFIX\'s federated architecture allows deployment at state, district, and ULB level with event aggregation happening at each tier. This avoids single-point-of-failure risks and enables context-specific configurations while maintaining national-level interoperability.',
+    plain2:'A small rural local body and a large metropolitan corporation can both participate in iFIX — each at their own scale, with their own systems — and the data is still comparable and linkable.' },
+];
+
+const fiscalEvents = [
+  { icon:'📄', code:'BUDGET_SANCTION', name:'Sanction',
+    plain:'The government officially approves spending money for a specific purpose. Nothing moves yet — it\'s the authorisation.',
+    tech:'A BUDGET_SANCTION event records the formal authorisation of expenditure against a specific head of account, scheme code, and administrative unit. Triggers downstream ALLOTMENT events.',
+    example:'The state government approves a budget for building new classrooms across rural districts. This is the sanction — the money is earmarked but not yet released.' },
+
+  { icon:'📬', code:'ALLOTMENT', name:'Allotment',
+    plain:'The approved money is assigned to a specific department or district. It\'s still in the treasury, but now it\'s ring-fenced for a purpose.',
+    tech:'ALLOTMENT events record the distribution of sanctioned budget to a Drawing and Disbursing Officer (DDO) or sub-department. Precedes any actual expenditure or withdrawal.',
+    example:'Of the total classroom budget, a portion is allotted to a specific district. The District Education Officer can now plan procurement — but the money is still in the state treasury.' },
+
+  { icon:'💸', code:'EXPENDITURE', name:'Expenditure',
+    plain:'Money actually leaves the account and goes to a supplier, contractor, or beneficiary. This is the most important event — it\'s when government spending becomes real.',
+    tech:'EXPENDITURE events record the actual debit from a government account — including voucher number, payee details, head of account, and payment date. The primary event type for financial audit trails.',
+    example:'A contractor is paid for completing Phase 1 of the classroom construction. An expenditure event is created — with the payment date, amount, contractor details, and the scheme it was charged to.' },
+
+  { icon:'🧾', code:'RECEIPT', name:'Receipt',
+    plain:'Money comes IN to a government account — from tax collection, fees, grants, or transfers from a higher tier of government.',
+    tech:'RECEIPT events capture all government revenue inflows — own-source revenue (taxes, fees, fines), intergovernmental transfers, and grants. Mapped to revenue head of account codes.',
+    example:'A resident pays their property tax online. A receipt event is created — capturing the payer, amount, property ID, and the municipal account it landed in. This feeds the municipality\'s revenue dashboard.' },
+
+  { icon:'↩️', code:'REVERSAL', name:'Reversal',
+    plain:'A payment or receipt is cancelled or corrected. Critically, the original transaction is not deleted — a new correcting entry is created, so there\'s always a complete record.',
+    tech:'REVERSAL events are offsetting journal entries that correct or void previous fiscal events. Original events are preserved; reversal creates a linked counterpart event, maintaining full audit trail integrity.',
+    example:'An advance was paid to a contractor who turned out to be on a blacklist. A reversal event is created — linking back to the original payment, explaining the reason, and recording the recovery.' },
+
+  { icon:'🔄', code:'FUND_TRANSFER', name:'Fund Transfer',
+    plain:'Money moves from one government account to another — like from a state account to a district account, or between two schemes.',
+    tech:'FUND_TRANSFER events record intergovernmental or intra-government account-to-account movements. Distinguished from expenditure (no external payee). Critical for tracking Centre-to-State-to-ULB fund flows.',
+    example:'A Finance Commission grant is transferred from the State Consolidated Fund to all the gram panchayats in the state. One fund transfer event per gram panchayat — all linkable back to the central grant.' },
+
+  { icon:'⏳', code:'DEMAND_NOTICE', name:'Demand',
+    plain:'The government formally notifies someone that they owe money — for property tax, water charges, or other dues. This creates a recoverable record that can be matched against actual payments.',
+    tech:'DEMAND_NOTICE events establish the expected revenue liability — the receivable. Matched against corresponding RECEIPT events to calculate collection efficiency. Enables demand-collection-balance (DCB) reporting.',
+    example:'A municipality sends out property tax notices for the year. Each notice becomes a demand event. The system can now track which are paid, which are overdue, and calculate the real collection rate.' },
+
+  { icon:'🔒', code:'UTILISATION_CERT', name:'Utilisation',
+    plain:'A certificate issued by an implementing agency confirming that the money received was actually spent for the intended purpose. Required before the next tranche is released.',
+    tech:'UTILISATION_CERTIFICATE events record the submission and verification of UCs against scheme disbursements. Linked to upstream ALLOTMENT and EXPENDITURE events; triggers eligibility for subsequent fund releases.',
+    example:'An NGO implementing a nutrition programme receives a grant and must submit a utilisation certificate before getting the next instalment. The iFIX event records submission date, certifying officer, and amount certified — automatically triggering the next release when approved.' },
+
+  { icon:'📦', code:'ADVANCE', name:'Advance',
+    plain:'Money paid upfront to a contractor or officer before work is completed. Advances are tracked separately because they need to be settled against actual work.',
+    tech:'ADVANCE events record pre-payment to suppliers, contractors, or employees against expected deliverables. Linked to subsequent SETTLEMENT or REVERSAL events. Unrecovered advances surface as outstanding liabilities.',
+    example:'A contractor is given a 20% mobilisation advance to start work. An advance event is created. Until the work is done and the advance is adjusted against the final bill, it shows as an outstanding advance on the system.' },
+
+  { icon:'📊', code:'RECONCILIATION', name:'Reconciliation',
+    plain:'Checking that two systems that should show the same balance actually do. When they don\'t match, it flags a problem — a missing payment, a duplicate entry, or something worse.',
+    tech:'RECONCILIATION events record the outcome of matching fiscal records between two systems — typically bank statements against treasury ledgers, or scheme MIS against PFMS. Discrepancies generate exception events for resolution.',
+    example:'Every month, the city\'s accounting system is reconciled against its bank statements. Any mismatch — however small — creates a reconciliation exception event, which must be resolved before the accounts are certified.' },
+];
+
+const principles = [
+  { icon:'🔍', name:'Transparency by default',
+    plain:'Financial information should be public wherever it doesn\'t violate privacy. Citizens deserve to know what is being spent in their name and in their area.',
+    tech:'The PFM reform framework mandates open publication of non-sensitive fiscal events at sub-district granularity, aligned with Open Government Data policy and the National Data Governance Framework.',
+    whyMatters:'Transparency is not just good ethics — it\'s an operational tool. When citizens can see a budget line, they act as a distributed audit force. Public expenditure visibility near construction sites creates accountability that periodic audits cannot replicate.',
+    example:'Imagine ward-level expenditure data published on a municipality\'s public dashboard. Residents could flag a road marked "complete" and paid for — but visibly unfinished. Without the public data, that discrepancy might never surface.' },
+
+  { icon:'📐', name:'Interoperability over replacement',
+    plain:'Rather than asking every government department to replace their existing systems (which would take decades and enormous cost), iFIX connects what already exists using a common language.',
+    tech:'The iFIX architecture adopts an event-driven, API-first integration model. Systems retain autonomy over their internal data models; only outbound fiscal events must conform to the iFIX schema. This minimises migration risk and political resistance.',
+    whyMatters:'A big-bang replacement approach — where every legacy system must be rebuilt before the new one can work — almost always fails. iFIX\'s non-disruptive approach means a state can pilot on one department, prove value, and expand incrementally.',
+    example:'Consider a state treasury system built years ago with deeply embedded workflows. Rather than replacing it, iFIX adds an adapter that reads completed payment transactions and publishes them as fiscal events — delivering real-time visibility without touching the underlying system configuration.' },
+
+  { icon:'🏛️', name:'Subsidiarity — decisions at the lowest level',
+    plain:'Financial decisions should be made as close to the ground as possible. A ward councillor should know what their ward\'s budget is and be able to track it.',
+    tech:'The PFM framework advocates for fiscal decentralisation — ULBs should have genuine control over their budgets, supported by iFIX-enabled local financial management tools that give local officers real-time visibility over funds in their jurisdiction.',
+    whyMatters:'Centralised financial management creates bottlenecks that delay service delivery. When local government officers have real-time visibility over their own funds — not just read-only dashboards, but genuine delegated authority — procurement and payment cycles shorten significantly.',
+    example:'Imagine a gram panchayat receiving its own iFIX dashboard showing the funds in its account, pending wages, and upcoming demands. Officers can see what\'s available and act — rather than waiting weeks for confirmation from a district office.' },
+
+  { icon:'🤝', name:'Inclusive & participatory budgeting',
+    plain:'Budget decisions should not happen only behind closed doors. Women, marginalised communities, and local civil society should have a meaningful way to influence how money is spent.',
+    tech:'iFIX provides the data infrastructure for participatory budgeting platforms — enabling community-identified priorities to be formally encoded as budget demands, tracked through the system, and publicly audited for delivery.',
+    whyMatters:'When communities can see their budget allocation in plain terms, participation in budget hearings becomes meaningful rather than performative. The critical enabler is not just the hearing — it\'s the legible, auditable data that makes follow-through visible.',
+    example:'Imagine a participatory budget exercise where a women\'s self-help group identifies broken streetlights as their top priority. After the budget hearing, iFIX allows the group to track the repair work order, payment, and completion — for the first time having visibility into whether their priority actually got done.' },
+
+  { icon:'📈', name:'Accountability through evidence',
+    plain:'Government officers and programmes should be judged on whether money delivered results — not just whether it was spent. iFIX creates the data trail that makes this possible.',
+    tech:'Service-finance event integration in iFIX enables outcome-linked accountability frameworks — correlating fiscal expenditure events with corresponding service delivery metrics, enabling ex-post evaluation and results-based financing mechanisms.',
+    whyMatters:'The absence of outcome linkage is one of the deepest failures in public finance. Programmes are judged on utilisation rates (how much was spent) rather than results (what was delivered). Linking fiscal events to service delivery events in iFIX creates the empirical basis for a results-based culture.',
+    example:'Imagine using iFIX data to cross-reference contractor payments against a public asset registry. If contractors received full payment for road works but none of the roads appear as completed assets, that gap surfaces immediately — turning what would have been an invisible discrepancy into an actionable audit finding.' },
+];
+
+// ════════════════════════════════════════
+// GLOBAL VIEW TOGGLE
+// ════════════════════════════════════════
+
+function setGlobalView(mode) {
+  globalView = mode;
+  const isTech = mode === 'tech';
+
+  document.getElementById('gPlain').classList.toggle('on', !isTech);
+  document.getElementById('gTech').classList.toggle('on', isTech);
+
+  // Toggle all plain-text / tech-text spans in the main page
+  document.querySelectorAll('.plain-text').forEach(el => el.style.display = isTech ? 'none' : '');
+  document.querySelectorAll('.tech-text').forEach(el => el.style.display = isTech ? '' : 'none');
+  document.querySelectorAll('.plain-view').forEach(el => el.style.display = isTech ? 'none' : '');
+  document.querySelectorAll('.tech-view').forEach(el => el.style.display = isTech ? '' : 'none');
+  document.querySelectorAll('.plain-hint').forEach(el => el.style.display = isTech ? 'none' : '');
+  document.querySelectorAll('.tech-hint').forEach(el => el.style.display = isTech ? '' : 'none');
+  document.querySelectorAll('.intro-plain').forEach(el => el.style.display = isTech ? 'none' : '');
+  document.querySelectorAll('.intro-tech').forEach(el => el.style.display = isTech ? '' : 'none');
+
+  // Toggle outcome cards text
+  document.querySelectorAll('.oc-plain').forEach(el => el.style.display = isTech ? 'none' : '');
+  document.querySelectorAll('.oc-tech').forEach(el => el.style.display = isTech ? '' : 'none');
+
+  // Update the sky title spans
+  document.querySelectorAll('.sky-zone-title .plain-view, .sky-zone-title span.plain-view').forEach(el => el.style.display = isTech ? 'none' : '');
+  document.querySelectorAll('.sky-zone-title .tech-view, .sky-zone-title span.tech-view').forEach(el => el.style.display = isTech ? '' : 'none');
+
+  // Show tech event codes
+  document.querySelectorAll('.et-code').forEach(el => el.style.display = isTech ? '' : 'none');
+}
+
+// ════════════════════════════════════════
+// DRAWER TOGGLE
+// ════════════════════════════════════════
+
+function setDrawerToggle(mode) {
+  drawerIsTech = mode === 'tech';
+  document.getElementById('dtPlain').classList.toggle('on', !drawerIsTech);
+  document.getElementById('dtTech').classList.toggle('on', drawerIsTech);
+  document.querySelectorAll('.block-card').forEach(c => c.classList.toggle('is-tech', drawerIsTech));
+}
+
+// ════════════════════════════════════════
+// RENDER FUNCTIONS
+// ════════════════════════════════════════
+
+function renderOutcomes() {
+  const row = document.getElementById('outcomesRow');
+  outcomes.forEach((o, i) => {
+    const el = document.createElement('div');
+    el.className = 'outcome-card';
+    el.id = `oc-${i}`;
+    el.tabIndex = 0;
+    el.setAttribute('role','button');
+    el.setAttribute('aria-label', o.name);
+    el.onclick = () => openOutcomeDrawer(i);
+    el.onkeydown = e => { if(e.key==='Enter'||e.key===' ') openOutcomeDrawer(i); };
+    el.innerHTML = `
+      <span class="oc-icon">${o.icon}</span>
+      <div class="oc-name">${o.name}</div>
+      <div class="oc-plain">${o.plain.substring(0,80)}...</div>
+      <div class="oc-tech">${o.techName}</div>`;
+    row.appendChild(el);
+  });
+}
+
+function renderIfixTiles() {
+  const grid = document.getElementById('ifixTiles');
+  ifixCapabilities.forEach((c, i) => {
+    const el = document.createElement('div');
+    el.className = 'ifix-tile';
+    el.id = `it-${i}`;
+    el.tabIndex = 0;
+    el.setAttribute('role','button');
+    el.onclick = () => openIfixDrawer(i);
+    el.onkeydown = e => { if(e.key==='Enter'||e.key===' ') openIfixDrawer(i); };
+    el.innerHTML = `
+      <span class="it-icon">${c.icon}</span>
+      <div class="it-name">${globalView==='tech' ? c.techName : c.name}</div>`;
+    grid.appendChild(el);
+  });
+}
+
+function renderEvents() {
+  const grid = document.getElementById('eventsGrid');
+  fiscalEvents.forEach((ev, i) => {
+    const el = document.createElement('div');
+    el.className = 'event-tile';
+    el.id = `evt-${i}`;
+    el.tabIndex = 0;
+    el.setAttribute('role','button');
+    el.onclick = () => openEventDrawer(i);
+    el.onkeydown = e => { if(e.key==='Enter'||e.key===' ') openEventDrawer(i); };
+    el.innerHTML = `
+      <span class="et-icon">${ev.icon}</span>
+      <div class="et-name">${ev.name}</div>
+      <div class="et-code" style="display:none;">${ev.code}</div>`;
+    grid.appendChild(el);
+  });
+}
+
+function renderPrinciples() {
+  const grid = document.getElementById('principlesGrid');
+  principles.forEach((p, i) => {
+    const el = document.createElement('div');
+    el.className = 'principle-tile';
+    el.id = `pt-${i}`;
+    el.tabIndex = 0;
+    el.setAttribute('role','button');
+    el.onclick = () => openPrincipleDrawer(i);
+    el.onkeydown = e => { if(e.key==='Enter'||e.key===' ') openPrincipleDrawer(i); };
+    el.innerHTML = `<span class="pt-icon">${p.icon}</span><div class="pt-name">${p.name}</div>`;
+    grid.appendChild(el);
+  });
+}
+
+// ════════════════════════════════════════
+// DRAWER OPENERS
+// ════════════════════════════════════════
+
+function clearActive() {
+  document.querySelectorAll('.outcome-card,.ifix-tile,.event-tile,.principle-tile').forEach(el => el.classList.remove('active'));
+}
+
+function openOutcomeDrawer(i) {
+  const o = outcomes[i];
+  clearActive();
+  document.getElementById(`oc-${i}`)?.classList.add('active');
+
+  document.getElementById('dKicker').textContent = 'Outcome · What iFIX enables';
+  document.getElementById('dKicker').style.color = 'var(--teal)';
+  document.getElementById('dTitle').textContent = globalView==='tech' ? o.techName : o.name;
+  document.getElementById('dDesc').textContent = globalView==='tech' ? o.tech : o.plain;
+  document.getElementById('dBodyTitle').textContent = globalView==='tech' ? 'Technical mechanism' : 'A real example';
+
+  document.getElementById('drawerToggleRow').style.display = 'none';
+
+  document.getElementById('dBodyContent').innerHTML = `
+    <div class="example-block">
+      <div class="example-kicker">${globalView==='tech' ? 'Technical Detail' : '↳ In practice'}</div>
+      <div class="example-text">${globalView==='tech' ? o.exampleTech : o.example}</div>
+    </div>`;
+  openDrawer();
+}
+
+function openIfixDrawer(i) {
+  const c = ifixCapabilities[i];
+  clearActive();
+  document.getElementById(`it-${i}`)?.classList.add('active');
+  drawerIsTech = globalView === 'tech';
+
+  document.getElementById('drawerToggleRow').style.display = 'flex';
+  document.getElementById('dtPlain').classList.toggle('on', !drawerIsTech);
+  document.getElementById('dtTech').classList.toggle('on', drawerIsTech);
+
+  document.getElementById('dKicker').textContent = 'iFIX · Core Capability';
+  document.getElementById('dKicker').style.color = '#38bdf8';
+  document.getElementById('dTitle').textContent = drawerIsTech ? c.techName : c.name;
+  document.getElementById('dDesc').textContent = drawerIsTech ? c.tech : c.plain;
+  document.getElementById('dBodyTitle').textContent = 'More detail';
+
+  document.getElementById('dBodyContent').innerHTML = `
+    <div class="block-cards">
+      <div class="block-card" style="border-color:rgba(56,189,248,0.2);">
+        <div class="bc-plain">${c.plain2}</div>
+        <div class="bc-tech">${c.tech}</div>
+      </div>
+    </div>`;
+  openDrawer();
+}
+
+function openEventDrawer(i) {
+  const ev = fiscalEvents[i];
+  clearActive();
+  document.getElementById(`evt-${i}`)?.classList.add('active');
+  drawerIsTech = globalView === 'tech';
+
+  document.getElementById('drawerToggleRow').style.display = 'flex';
+  document.getElementById('dtPlain').classList.toggle('on', !drawerIsTech);
+  document.getElementById('dtTech').classList.toggle('on', drawerIsTech);
+
+  document.getElementById('dKicker').textContent = 'Fiscal Event Type · ' + ev.code;
+  document.getElementById('dKicker').style.color = 'var(--ev-accent)';
+  document.getElementById('dTitle').textContent = ev.name;
+  document.getElementById('dDesc').textContent = drawerIsTech ? ev.tech : ev.plain;
+  document.getElementById('dBodyTitle').textContent = drawerIsTech ? 'Technical specification' : 'Example';
+
+  document.getElementById('dBodyContent').innerHTML = `
+    <div class="block-cards">
+      <div class="block-card" style="border-color:rgba(148,163,184,0.2);">
+        <div class="bc-tag">Event code: ${ev.code}</div>
+        <div class="bc-plain">${ev.example}</div>
+        <div class="bc-tech">${ev.tech}</div>
+      </div>
+    </div>`;
+
+  // Apply current drawer tech state
+  document.querySelectorAll('.block-card').forEach(c => c.classList.toggle('is-tech', drawerIsTech));
+  openDrawer();
+}
+
+function openPrincipleDrawer(i) {
+  const p = principles[i];
+  clearActive();
+  document.getElementById(`pt-${i}`)?.classList.add('active');
+  drawerIsTech = globalView === 'tech';
+
+  document.getElementById('drawerToggleRow').style.display = 'flex';
+  document.getElementById('dtPlain').classList.toggle('on', !drawerIsTech);
+  document.getElementById('dtTech').classList.toggle('on', drawerIsTech);
+
+  document.getElementById('dKicker').textContent = 'Governance Principle';
+  document.getElementById('dKicker').style.color = '#a16207';
+  document.getElementById('dTitle').textContent = p.name;
+  document.getElementById('dDesc').textContent = drawerIsTech ? p.tech : p.plain;
+  document.getElementById('dBodyTitle').textContent = drawerIsTech ? 'Why this matters (technical rationale)' : 'Why this matters in practice';
+
+  document.getElementById('dBodyContent').innerHTML = `
+    <div class="block-cards">
+      <div class="block-card" style="border-color:rgba(255,200,100,0.2);background:#fffbeb;">
+        <div class="bc-plain">${p.whyMatters}</div>
+        <div class="bc-tech">${p.tech}</div>
+      </div>
+      <div class="block-card" style="border-color:rgba(255,200,100,0.15);">
+        <div class="bc-tag">Field example</div>
+        <div class="bc-plain">${p.example}</div>
+        <div class="bc-tech">${p.tech}</div>
+      </div>
+    </div>`;
+
+  document.querySelectorAll('.block-card').forEach(c => c.classList.toggle('is-tech', drawerIsTech));
+  openDrawer();
+}
+
+// ════════════════════════════════════════
+// DRAWER OPEN / CLOSE
+// ════════════════════════════════════════
+
+function openDrawer() {
+  document.getElementById('drawerOverlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDrawer() {
+  document.getElementById('drawerOverlay').classList.remove('open');
+  document.getElementById('drawer').classList.remove('open');
+  document.body.style.overflow = '';
+  clearActive();
+}
+
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeDrawer(); });
+
+// Sync drawer toggle with global view when reopening
+function setDrawerToggle(mode) {
+  drawerIsTech = mode === 'tech';
+  document.getElementById('dtPlain').classList.toggle('on', !drawerIsTech);
+  document.getElementById('dtTech').classList.toggle('on', drawerIsTech);
+  document.querySelectorAll('.block-card').forEach(c => c.classList.toggle('is-tech', drawerIsTech));
+  // Update dTitle and dDesc based on active drawer item
+}
+
+// ════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════
+renderOutcomes();
+renderIfixTiles();
+renderEvents();
+renderPrinciples();
+</script>
+</body>
+</html>
