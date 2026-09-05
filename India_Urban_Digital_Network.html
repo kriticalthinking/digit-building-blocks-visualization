@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>V0 India Urban Stack</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#e9edf2;font-family:"Segoe UI",Inter,Helvetica,Arial,sans-serif;overflow:auto}
+  #wrap{width:100%;display:flex;justify-content:center;padding:20px 0}
+  #scaler{transform-origin:top center}
+  .slide{width:1600px;height:900px;background:#fff;padding:30px 34px 22px;display:flex;flex-direction:column;
+         box-shadow:0 3px 24px rgba(0,0,0,.16)}
+
+  header{border-bottom:3px solid #1e3a5f;padding-bottom:11px;margin-bottom:14px;flex:0 0 auto;
+         display:flex;justify-content:space-between;align-items:flex-end}
+  h1{font-size:38px;color:#1e3a5f;font-weight:700;letter-spacing:-.02em;line-height:1.05}
+  .sub{font-size:17px;color:#5b6b7d;margin-top:5px}
+  .keyleg{display:flex;gap:14px;align-items:center;padding-bottom:3px}
+  .kl{font-size:12.5px;color:#40515f;display:flex;align-items:center;gap:5px;white-space:nowrap}
+  .sw{width:13px;height:13px;border-radius:3px;display:inline-block;border:1px solid rgba(0,0,0,.15)}
+
+  .body{flex:1 1 auto;display:flex;gap:20px;min-height:0}
+
+  /* ---------- LEFT ---------- */
+  .stack{width:1052px;display:flex;flex-direction:column;gap:8px}
+  .row{display:flex;gap:10px;background:#f5f8fa;border:1px solid #d3dce6;border-radius:6px;padding:8px 11px;align-items:center}
+  .lname{width:132px;flex:0 0 132px;font-size:14.5px;font-weight:700;color:#1e3a5f;text-transform:uppercase;letter-spacing:.02em;line-height:1.2}
+  .lname i{display:block;font-style:normal;font-size:11px;font-weight:400;color:#8b98a6;text-transform:none;letter-spacing:0;margin-top:2px}
+  .chips{flex:1 1 auto;display:flex;flex-wrap:wrap;gap:6px;align-content:center}
+  .c{font-size:13.5px;border-radius:4px;padding:5px 8px;line-height:1.15;white-space:nowrap;border:1px solid}
+  .re{background:#eef7f2;border-color:#9ec9b4;color:#1f5c45}
+  .nw{background:#fdf4e7;border-color:#e3b478;color:#8a5205}
+  .ig{background:#f3f0fa;border-color:#b3a8d6;color:#4c3f7d}
+  .c.big{font-weight:700;font-size:14px}
+  .cl{border-left:5px solid #0f7b8a}
+  .dash{border-style:dashed}
+
+  /* UPYOG band */
+  .core{display:flex;gap:9px;flex:1 1 auto;min-height:0}
+  .band{width:40px;flex:0 0 40px;background:linear-gradient(180deg,#1e3a5f,#2d5480);border-radius:6px;
+        display:flex;align-items:center;justify-content:center;color:#fff}
+  .band span{writing-mode:vertical-rl;transform:rotate(180deg);font-size:13.5px;font-weight:700;letter-spacing:.06em;text-align:center;line-height:1.35}
+  .band small{font-weight:400;opacity:.8;letter-spacing:.02em}
+  .corerows{flex:1 1 auto;display:flex;flex-direction:column;gap:8px}
+
+  .exhaust{flex:0 0 20px;display:flex;align-items:center;justify-content:center;gap:9px;
+           font-size:12px;color:#6b7a8c;font-style:italic}
+  .exhaust b{font-style:normal;color:#1e3a5f;font-weight:600}
+  .exhaust .ar{color:#4a6fa5;font-size:14px}
+
+  /* ---------- RIGHT ---------- */
+  .panel{width:466px;display:flex;flex-direction:column;gap:9px;min-height:0}
+  .ptitle{font-size:14.5px;font-weight:700;color:#1e3a5f;text-transform:uppercase;letter-spacing:.02em}
+  .ptitle i{display:block;font-style:normal;font-size:11.5px;font-weight:400;color:#8b98a6;text-transform:none;margin-top:2px}
+
+  .sig{border:1px solid #cfe0e3;border-left:5px solid #0f7b8a;border-radius:5px;background:#f2fafb;padding:8px 11px}
+  .sig div{font-size:12.5px;color:#2b4f55;line-height:1.35;margin-bottom:3px}
+  .sig div:last-child{margin-bottom:0}
+  .sig b{color:#0d5f6b}
+  .doms{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .dom{border:1px solid #cfe0e3;border-radius:5px;background:#fff;padding:6px 9px;cursor:pointer}
+  .dom b{display:block;font-size:13px;color:#1e3a5f}
+  .dom span{font-size:11px;color:#7a8899}
+  .dom.on{background:#0f7b8a;border-color:#0f7b8a}
+  .dom.on b{color:#fff}.dom.on span{color:#cfeef2}
+
+  .groups{display:flex;flex-direction:column;gap:6px}
+  .g{border:1px solid #d3dce6;border-left:5px solid #4a6fa5;border-radius:5px;padding:6px 10px;background:#fafcfd}
+  .g.para{border-left-color:#7a5ea8;background:#faf8fd}
+  .g.mkt{border-left-color:#4d8b7a;background:#f7fcfa}
+  .g.sm{padding:4px 10px;border-left-width:4px;border-left-color:#9aa7b4;background:#fbfcfd}
+  .g.sm h3{font-size:12px}
+  .g.sm p{font-size:10.5px;margin-top:1px}
+  .g h3{font-size:13.5px;color:#1e3a5f;font-weight:700;line-height:1.2}
+  .g p{font-size:11.5px;color:#6b7a8c;margin-top:2px;line-height:1.3}
+
+  .attach{display:flex;gap:6px}
+  .a{flex:1 1 0;border:1px dashed #a8b6c5;border-radius:5px;padding:5px 3px;text-align:center}
+  .a b{display:block;font-size:12.5px;color:#1e3a5f}
+  .a span{font-size:10px;color:#8b98a6;display:block;margin-top:1px}
+
+  footer{flex:0 0 auto;margin-top:11px;padding-top:9px;border-top:1px solid #d3dce6;display:flex;justify-content:space-between;gap:26px}
+  .legend{font-size:12.5px;color:#5b6b7d;line-height:1.4;width:64%}
+  .legend b{color:#0f7b8a}
+  .legend .note{font-size:11px;color:#9aa7b4;margin-top:3px}
+  .rule{font-size:13px;color:#1e3a5f;font-weight:600;text-align:right;line-height:1.35;width:33%}
+
+  [data-k]{cursor:pointer;transition:box-shadow .12s}
+  [data-k]:hover{box-shadow:0 0 0 3px rgba(30,58,95,.3)}
+
+  #ov{position:fixed;inset:0;background:rgba(16,28,42,.55);display:none;align-items:center;justify-content:center;padding:24px;z-index:99}
+  #ov.on{display:flex}
+  #card{background:#fff;max-width:680px;width:100%;max-height:88vh;overflow:auto;border-radius:10px;
+        padding:26px 30px 24px;box-shadow:0 12px 48px rgba(0,0,0,.3);position:relative}
+  #card .kick{font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:#8b98a6;font-weight:700}
+  #card h2{font-size:24px;color:#1e3a5f;margin:5px 0 9px;line-height:1.15}
+  #card .def{font-size:15.5px;color:#3d4f63;line-height:1.5;margin-bottom:12px}
+  #card ul{margin:0 0 12px 18px}
+  #card li{font-size:14.5px;color:#40515f;line-height:1.5;margin-bottom:5px}
+  #card .flagbox{font-size:13.5px;line-height:1.45;padding:10px 13px;border-radius:6px;background:#fdf6ec;border-left:5px solid #c2700a;color:#7a5a20}
+  #card .flagbox b{color:#a8620a}
+  #x{position:absolute;top:13px;right:15px;border:0;background:#eef2f6;color:#3d4f63;width:30px;height:30px;border-radius:15px;font-size:17px;cursor:pointer;line-height:1}
+
+  /* ---------- denser rows: slightly smaller chips ---------- */
+  .c{font-size:13.4px;padding:5px 8px}
+  .c.big{font-size:13.9px}
+
+
+  /* ---------- reflow: hidden blocks leave the layout ---------- */
+  .hd{display:none !important}
+  .slide{height:auto;min-height:0}
+  .body{flex:0 0 auto}
+  .stack{justify-content:flex-start;gap:12px}
+  .core{min-height:200px}
+  .stack > .row, .corerows > .row{flex:0 0 auto}
+  .core{flex:0 0 auto}
+  .attach{margin-top:auto}
+  /* ---------- staged reveal + mission lens ---------- */
+  [data-s]{transition:opacity .4s ease, filter .4s ease}
+  .gh{opacity:.10;filter:grayscale(1);pointer-events:none}
+  .ml{box-shadow:0 0 0 2.5px var(--mc), 0 0 0 4px #fff !important;position:relative;z-index:3}
+  #ctl{width:100%;max-width:1600px;margin:14px auto 0;padding:0 20px;
+       font-family:"Segoe UI",Inter,Helvetica,Arial,sans-serif}
+  #stages{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+  #stages button{font:600 13px/1 "Segoe UI",Inter,Helvetica,Arial,sans-serif;color:#40515f;
+       background:#fff;border:1px solid #c3cedb;border-radius:16px;padding:8px 14px;cursor:pointer;
+       transition:background .15s,color .15s,border-color .15s}
+  #stages button:hover{border-color:#1e3a5f}
+  #stages button.on{background:#1e3a5f;border-color:#1e3a5f;color:#fff}
+  #stages .nav{border-radius:16px;padding:8px 11px;color:#7b8b9c}
+  #cap{font-size:13px;color:#5b6b7d;margin:8px 2px 0;line-height:1.4;min-height:18px}
+  #miss{display:none;gap:6px;flex-wrap:wrap;margin-top:9px;align-items:center}
+  #miss.show{display:flex}
+  #miss .lbl{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:#8b98a6;
+       font-weight:700;margin-right:4px}
+  .mp{font:600 12.5px/1 "Segoe UI",Inter,Helvetica,Arial,sans-serif;background:#fff;cursor:pointer;
+       border:1px solid #c3cedb;border-left:5px solid var(--mc);border-radius:5px;padding:7px 11px;
+       color:#40515f;transition:background .15s,color .15s}
+  .mp:hover{border-color:var(--mc)}
+  .mp.on{background:var(--mc);border-color:var(--mc);color:#fff}
+  .mp .q{display:inline-block;margin-left:6px;opacity:.5;font-weight:400}
+  #card .grp{margin:0 0 11px}
+  #card .grp h4{font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;
+       margin-bottom:5px;color:#5b6b7d}
+  #card .grp.r h4{color:#1f5c45}#card .grp.n h4{color:#8a5205}#card .grp.i h4{color:#4c3f7d}
+  #card .grp p{font-size:14px;color:#40515f;line-height:1.45}
+  #card .grp.r p{border-left:4px solid #9ec9b4;padding-left:10px}
+  #card .grp.n p{border-left:4px solid #e3b478;padding-left:10px}
+  #card .grp.i p{border-left:4px solid #b3a8d6;padding-left:10px}
+
+  /* ---------- compact control bar ---------- */
+  #ctl{display:flex;align-items:center;justify-content:space-between;gap:16px;
+       width:100%;max-width:1600px;margin:10px auto 2px;padding:0 22px;
+       font-family:"Segoe UI",Inter,Helvetica,Arial,sans-serif}
+  #stages{display:flex;border:1px solid #ccd6e1;border-radius:5px;overflow:hidden;background:#fff}
+  #stages button{font:600 11.5px/1 "Segoe UI",Inter,Helvetica,Arial,sans-serif;letter-spacing:.04em;
+       color:#66768a;background:transparent;border:0;border-right:1px solid #e2e9f0;
+       padding:7px 13px;cursor:pointer;transition:background .15s,color .15s}
+  #stages button:last-child{border-right:0}
+  #stages button:hover{background:#f1f5f9;color:#1e3a5f}
+  #stages button.on{background:#1e3a5f;color:#fff}
+  #miss{display:none;gap:5px;align-items:center}
+  #miss.show{display:flex}
+  .mp{font:600 11px/1 "Segoe UI",Inter,Helvetica,Arial,sans-serif;letter-spacing:.03em;
+       background:#fff;cursor:pointer;color:#66768a;border:1px solid #dbe3ec;
+       border-left:3px solid var(--mc);border-radius:4px;padding:6px 8px 6px 7px;
+       transition:color .15s,border-color .15s}
+  .mp:hover{color:#1e3a5f;border-color:var(--mc)}
+  .mp.on{background:var(--mc);border-color:var(--mc);color:#fff}
+  .mp .q{margin-left:4px;opacity:.45;font-weight:400}
+  #cap{font-size:12.5px;color:#7b8b9c;margin-top:6px;line-height:1.45;max-width:60%}
+
+  .ndom .dm{border:0;padding:0;background:none;font-size:10.5px;font-style:italic;color:#0f6b63;cursor:pointer;text-decoration:underline dotted}
+  .ndom .dm:hover{color:#0a4f49}
+  /* ---------- network view ---------- */
+  #net{display:none;gap:14px;flex:1 1 auto;min-height:0}
+  .nmain{flex:1 1 auto;display:flex;flex-direction:column;gap:9px;min-width:0}
+  .nlab{display:flex;align-items:baseline;gap:12px;font-size:12.5px;font-weight:700;
+        letter-spacing:.09em;text-transform:uppercase;color:#1e3a5f}
+  .nlab i{font-weight:400;font-style:normal;letter-spacing:0;text-transform:none;
+        font-size:12.5px;color:#8b98a6}
+  .nrow{display:flex;gap:9px}
+  .nrow > *{flex:1 1 0;min-width:0}
+  .ncard{border:1px solid #d8e0e9;border-radius:5px;padding:9px 11px;background:#fff}
+  .ncard.soft{background:#f4f7fa}
+  .ncard h5{font-size:13.5px;font-weight:700;color:#1e3a5f;margin-bottom:5px;line-height:1.25}
+  .ncard p{font-size:11px;color:#5b6b7d;line-height:1.45}
+  .narr{display:flex;gap:9px;margin:-2px 0}
+  .narr > div{flex:1 1 0;text-align:center;color:#4e7ca8;font-size:17px;line-height:1.1}
+  .narr span{display:block;font-size:11px;font-style:italic;color:#4e7ca8}
+  .nspine{border:2px solid #1e3a5f;border-radius:6px;padding:12px;background:#fff}
+  .nsh{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px}
+  .nsh b{font-size:14px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#1e3a5f}
+  .nsh i{font-size:12px;color:#5b6b7d}
+  .nboxes{display:flex;gap:9px}
+  .nbox{flex:1.3 1 0;min-width:0;background:#f4f7fa;border:1px solid #d8e0e9;border-radius:5px;padding:9px 10px}
+  .nbox h5{font-size:13px;font-weight:700;color:#1e3a5f;margin-bottom:7px}
+  .nbox.hl{background:#fdf3e4;border-color:#e4c98a}
+  .nbox.hl h5{color:#9a6b18}
+  .nbox .tagline{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+        color:#9a6b18;margin:-4px 0 6px}
+  .nbox .chips{display:flex;flex-wrap:wrap;gap:5px}
+  .nbox .note{font-size:10.5px;color:#6e7e8f;line-height:1.4;margin-top:7px;font-style:italic}
+  .nrails{font-size:11.5px;color:#5b6b7d;margin-top:9px;display:flex;flex-wrap:wrap;
+        gap:5px;align-items:center}
+  .nrails b{color:#1e3a5f;font-size:11.5px}
+  .neco{border:1px solid #d8e0e9;border-radius:5px;padding:8px 11px;background:#fff}
+  .neco div{font-size:11px;color:#5b6b7d;line-height:1.6}
+  .neco b{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+        color:#1e3a5f;margin-right:8px}
+  .ncol{flex:0 0 258px;background:#f1f8f7;border:1px solid #cfe4e1;border-radius:6px;padding:11px}
+  .ncol > b{display:block;font-size:12.5px;font-weight:700;letter-spacing:.09em;
+        text-transform:uppercase;color:#0f6b63}
+  .ncol > i{display:block;font-size:11px;color:#5b6b7d;margin:3px 0 9px;line-height:1.35}
+  .ndom{background:#fff;border:1px solid #cfe4e1;border-radius:4px;padding:6px 8px;margin-bottom:5px}
+  .ndom em{display:block;font-size:12px;font-weight:700;font-style:normal;color:#1e3a5f}
+  .ndom u{display:flex;justify-content:space-between;text-decoration:none;font-size:10.5px;
+        font-style:italic;color:#0f6b63;margin-top:2px}
+  .ndom u s{text-decoration:none;color:#b5721a}
+  .ncol .foot{font-size:10.5px;color:#5b6b7d;line-height:1.45;margin-top:8px}
+  .ncol .last{font-size:10.5px;color:#0f6b63;font-weight:700;font-style:italic;
+        line-height:1.45;margin-top:8px}
+  .ndom u .c{border:0;padding:0;background:none;font-size:10.5px;font-style:italic;color:#0f6b63}
+
+  #ctl{flex-wrap:wrap;row-gap:8px}
+  #views{display:flex;border:1px solid #ccd6e1;border-radius:5px;overflow:hidden;background:#fff}
+  #views button{font:600 11.5px/1 "Segoe UI",Inter,Helvetica,Arial,sans-serif;letter-spacing:.04em;
+       color:#66768a;background:transparent;border:0;border-right:1px solid #e2e9f0;
+       padding:8px 16px;cursor:pointer}
+  #views button:last-child{border-right:0}
+  #views button:hover{background:#f1f5f9;color:#1e3a5f}
+  #views button.on{background:#1e3a5f;color:#fff}
+  #lenses{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+  .lg{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#8b98a6;
+      margin-right:2px}
+  .lg.dl{margin-left:10px;color:#5f9a93}
+  .dp{font:600 11px/1 "Segoe UI",Inter,Helvetica,Arial,sans-serif;letter-spacing:.03em;background:#fff;
+      cursor:pointer;color:#66768a;border:1px solid #dbe3ec;border-left:3px solid #0f6b63;
+      border-radius:4px;padding:6px 8px 6px 7px;transition:color .15s,border-color .15s}
+  .dp:hover{color:#1e3a5f;border-color:#0f6b63}
+  .dp.on{background:#0f6b63;border-color:#0f6b63;color:#fff}
+  .ncard.ml{box-shadow:0 0 0 2.5px var(--mc), 0 0 0 4px #fff !important}
+  .ncol{order:-1}
+  #cap{display:none}
+
+  #cap{display:block;font-size:13px;color:#5b6b7d;margin-top:7px;line-height:1.45;max-width:64%}
+  #steps{display:flex;flex-wrap:wrap;border:1px solid #ccd6e1;border-radius:5px;background:#fff}
+  #steps button{font:600 11.5px/1 "Segoe UI",Inter,Helvetica,Arial,sans-serif;letter-spacing:.03em;
+      color:#66768a;background:transparent;border:0;border-right:1px solid #e2e9f0;
+      padding:8px 13px;cursor:pointer;flex:0 0 auto;white-space:nowrap}
+  #steps button:last-child{border-right:0}
+  #steps button:hover{background:#f1f5f9;color:#1e3a5f}
+  #steps button.on{background:#1e3a5f;color:#fff}
+  .cp{font:600 11px/1 "Segoe UI",Inter,Helvetica,Arial,sans-serif;background:#fff;cursor:pointer;
+      color:#66768a;border:1px solid #dbe3ec;border-left:3px solid #0f6b63;border-radius:4px;
+      padding:6px 8px 6px 7px}
+  .cp:hover{color:#1e3a5f;border-color:#0f6b63}
+  .cp.on{background:#0f6b63;border-color:#0f6b63;color:#fff}
+  .cp .q,.dp .q{margin-left:5px;opacity:.5;font-weight:400}
+  .lg.cc{margin-left:10px;color:#5f9a93}
+
+  #nw{position:relative;width:100%;flex:0 0 auto}
+  #edges{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+  #edges path{fill:none;stroke:#c3d2e0;stroke-width:1.6;
+      transition:stroke .3s,stroke-width .3s,opacity .45s}
+  #edges path.on{stroke:#0f6b63;stroke-width:2.6}
+  #edges path.hide{opacity:0}
+  #edges text{font:italic 11px "Segoe UI",Inter,Helvetica,Arial,sans-serif;fill:#93a3b3;
+      transition:opacity .45s}
+  .nd{position:absolute;background:#fff;border:1px solid #d8e0e9;border-radius:6px;padding:8px 10px;
+      cursor:pointer;box-sizing:border-box;
+      transition:opacity .45s,box-shadow .25s,border-color .25s,top .5s}
+  .nd:hover{border-color:#1e3a5f}
+  .nd b{display:block;font-size:13px;font-weight:700;color:#1e3a5f;line-height:1.25}
+  .nd i{display:block;font-size:10.5px;font-style:normal;color:#8b98a6;margin-top:3px;line-height:1.35}
+  .nd.sat{background:#f7fafc}
+  .nd.sat b{font-size:11.5px}
+  .nd.gap{background:#f4f7fa;border-style:dashed}
+  .nd.lit{border-color:#0f6b63;box-shadow:0 0 0 2.5px #0f6b63,0 0 0 4px #fff}
+  .nd.off,.sp.off,.ra.off{opacity:0;pointer-events:none}
+  .ra{position:absolute;background:#fff;border:1px solid #b9c9d8;border-radius:6px;padding:9px 11px;
+      box-sizing:border-box;cursor:pointer;transition:opacity .45s,box-shadow .25s,border-color .25s}
+  .ra:hover{border-color:#1e3a5f}
+  .ra b{display:block;font-size:13px;font-weight:700;color:#1e3a5f}
+  .ra i{display:block;font-size:10.5px;font-style:normal;color:#8b98a6;margin:3px 0 7px;line-height:1.35}
+  .ra .chips{display:flex;flex-wrap:wrap;gap:4px}
+  .ra.lit{border-color:#0f6b63;box-shadow:0 0 0 2.5px #0f6b63,0 0 0 4px #fff}
+  .sp{position:absolute;border:2px solid #1e3a5f;border-radius:7px;background:#fff;padding:11px 13px;
+      box-sizing:border-box;transition:opacity .45s,top .5s}
+  .sph{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+  .sph b{font-size:13.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#1e3a5f}
+  .sph i{font-size:11.5px;color:#5b6b7d}
+  .spb{display:flex;gap:8px;align-items:stretch}
+  .spb > div{min-width:0;background:#f4f7fa;border:1px solid #d8e0e9;border-radius:5px;padding:7px 9px}
+  .spb > div.hl{background:#fdf3e4;border-color:#e4c98a}
+  .spb h6{font-size:11.5px;font-weight:700;color:#1e3a5f;margin-bottom:6px}
+  .spb .hl h6{color:#9a6b18}
+  .spb .chips{display:flex;flex-wrap:wrap;gap:4px}
+  .spb .note{font-size:10.5px;font-style:italic;color:#8a7440;line-height:1.45;margin-top:8px}
+  .sprail{margin-top:8px;font-size:11px;color:#5b6b7d;display:flex;gap:4px;align-items:center;
+      flex-wrap:wrap}
+  .sprail b{color:#1e3a5f;font-size:11px}
+  .dband{position:absolute;left:24px;width:1552px;border-top:2px solid #dfe7ee;padding-top:10px;
+      display:flex;gap:6px;align-items:center;flex-wrap:wrap;transition:opacity .45s}
+  .dbl{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#8b98a6;
+      margin-right:3px}
+  .dbl.cc{margin-left:14px;color:#5f9a93}
+  .dband.off{opacity:0;pointer-events:none}
+  .recs{margin-top:6px;display:flex;flex-wrap:wrap;gap:3px}
+  .rec{border:1px dashed #b9c9d8;border-radius:3px;padding:2px 5px;font-size:9.5px;
+      color:#8092a3;background:transparent;line-height:1.3;transition:border-color .25s,color .25s}
+  .rec.lit{border-color:#0f6b63;color:#0f6b63;border-style:solid}
+  #edges circle{fill:#fff;stroke:#9fb3c6;stroke-width:1.6;cursor:pointer;transition:opacity .45s,stroke .25s}
+  #edges circle:hover{stroke:#1e3a5f}
+  #edges circle.hide{opacity:0}
+  #edges circle.on{stroke:#0f6b63;stroke-width:2.4}
+  .nlabel{position:absolute;font-size:11.5px;font-weight:700;letter-spacing:.09em;
+      text-transform:uppercase;color:#a3b1bf;transition:opacity .45s}
+</style>
+</head>
+<body>
+<div id="ctl">
+  <div id="steps">
+<button data-st="1">1 &middot; The spine</button>
+<button data-st="2">2 &middot; State systems</button>
+<button data-st="3">3 &middot; MoHUA missions</button>
+<button data-st="4">4 &middot; Other departments</button>
+<button data-st="5">5 &middot; Cutting across</button>
+</div>
+</div>
+<div id="wrap"><div id="scaler">
+<div class="slide">
+
+  <header>
+    <div>
+      <h1>India Urban Digital Network</h1>
+      <div class="sub">Not a stack. A set of systems that already exist, and the minimum they need in common.</div>
+      <div id="cap"></div>
+      <div id="cap"></div>
+    </div>
+    <div class="keyleg">
+      <span class="kl"><i class="sw" style="background:#eef7f2;border-color:#9ec9b4"></i>Reuse — exists today</span><span class="kl"><i class="sw" style="background:transparent;border-style:dashed;border-color:#b9c9d8"></i>Held elsewhere — addressable, not moved</span>
+      <span class="kl"><i class="sw" style="background:#fdf4e7;border-color:#e3b478"></i>New — to be built</span>
+      <span class="kl"><i class="sw" style="background:#f3f0fa;border-color:#b3a8d6"></i>Integrate — connect to what exists</span>
+    </div>
+  </header>
+
+      <div id="nw">
+        <svg id="edges" viewBox="0 0 1600 900" preserveAspectRatio="none"></svg>
+        <div class="nlabel" id="lb1" style="left:0;top:0px">Systems running today</div>
+        <div class="nlabel" id="lb2" style="left:0;top:700px">MoHUA missions</div>
+        <div class="nlabel" id="lb3" style="left:0;top:800px">Departments, market and society</div>
+          <div class="dband off" id="dband">
+          <span class="dbl">Domains</span>
+          <button class="dp" data-di="revenue">Revenue &amp; finance<span class="q">&#9432;</span></button>
+          <button class="dp" data-di="water">Water &amp; sanitation<span class="q">&#9432;</span></button>
+          <button class="dp" data-di="waste">Solid waste<span class="q">&#9432;</span></button>
+          <button class="dp" data-di="built">Built environment<span class="q">&#9432;</span></button>
+          <button class="dp" data-di="mobility">Mobility<span class="q">&#9432;</span></button>
+          <button class="dp" data-di="livelihoods">Livelihoods<span class="q">&#9432;</span></button>
+          <button class="dp" data-di="health">Public health<span class="q">&#9432;</span></button>
+          <span class="dbl cc">Climate concerns</span>
+          <button class="cp" data-ci="aq">Air quality<span class="q">&#9432;</span></button>
+          <button class="cp" data-ci="heat">Urban heat<span class="q">&#9432;</span></button>
+          <button class="cp" data-ci="flood">Flooding<span class="q">&#9432;</span></button>
+          <button class="cp" data-ci="water">Water stress<span class="q">&#9432;</span></button>
+          </div>
+        <div class="ra" id="upyog" style="left:520px;top:36px;width:400px">
+          <b>UPYOG</b><i>reference applications, and much of the spine</i>
+          <div class="chips" data-take="ptax wns tl bpa pgr swm works fa"></div>
+        </div>
+        <div class="sp" id="spine" style="left:24px;top:330px;width:1552px">
+          <div class="sph"><b>The shared spine</b><i>the minimum that has to be common &middot; green already exists in UPYOG, amber does not exist anywhere yet</i></div>
+          <div class="spb">
+            <div style="flex:1.15"><h6>Data foundations</h6><div class="chips" data-take="individual propreg tradereg swmassets conn bound spatial linkreg sensreg hazattr"></div></div>
+            <div style="flex:1.25"><h6>Common services</h6><div class="chips" data-take="wf mdms idgen uac notif pay fs encrypt audit consent dx geo agent"></div></div>
+            <div class="hl" style="flex:0.95"><h6>Specifications &amp; conformance</h6><div class="chips" data-take="cert rulebook rules"><span class="c nw" id="codelistchip" data-k="codelists">Shared code lists &amp; schemas</span></div><div class="note">Three things, not one: what a service is and when a case closes, the code lists and schemas both sides must share, and a suite that lets a participant prove it conforms. External standards from BIS, CPHEEO and MoHUA constrain these but exchange nothing, so they sit behind this box rather than on the diagram.</div></div>
+          </div>
+          <div class="sprail"><b>Rails:</b><span class="chips" data-take="aadhaar upi dlocker bhashini"></span></div>
+        </div>
+      </div>
+      <div class="body" style="display:none">
+
+    <div class="stack">
+
+      <div class="row" >
+        <div class="lname" data-k="LI" >Intelligence &amp; decision support</div>
+        <div class="chips">
+              <span class="c nw cl" data-k="hazfc" >Hazard &amp; risk forecasting</span>
+              <span class="c nw big" data-k="actions" >Actions the officer actually owns</span>
+              <span class="c nw" data-k="horizon" >2–3 day decision horizon</span>
+              <span class="c nw" data-k="triage" >Grievance &amp; case triage</span>
+              <span class="c nw" data-k="nlvoice" >Natural language &amp; voice access</span>
+              <span class="c nw" data-k="config" >Service configurator</span>
+            </div>
+      </div>
+
+      <div class="exhaust" data-k="exhaust" >
+        <span class="ar">&#9650;</span><b>activity data</b> with provenance &mdash; actor, time, evidence, status
+        <span class="ar">&#9660;</span> actions returned to the same modules
+      </div>
+
+      <div class="core">
+        <div class="band" data-k="upyog" ><span>UPYOG / DIGIT<br><small>already built · open source · DPG</small></span></div>
+        <div class="corerows">
+
+          <div class="row" >
+            <div class="lname" data-k="LM" >Urban service modules</div>
+            <div class="chips">
+              <span class="c re" data-k="ptax" data-d="revenue" data-m="amrut ucf">Property tax</span>
+              <span class="c re" data-k="wns" data-cc="water" data-d="water" data-m="amrut">Water &amp; sewerage</span>
+              <span class="c re" data-k="tl" data-d="revenue" >Trade licence</span>
+              <span class="c re" data-k="bpa" data-cc="heat flood" data-d="built" data-m="pmay">Building plan approval</span>
+              <span class="c re" data-k="pgr" data-cc="aq flood" data-d="health livelihoods" data-m="sbm svanidhi">Grievance (PGR)</span>
+              <span class="c re" data-k="swm" data-cc="aq" data-d="waste" data-m="sbm">SWM operations</span>
+              <span class="c re" data-k="desludge" data-d="waste water" data-m="sbm">Desludging service</span>
+              <span class="c re" data-k="svmod" data-d="livelihoods" data-m="svanidhi">Street vendor management</span>
+              <span class="c re" data-k="works" data-cc="flood heat" data-d="built revenue" data-m="amrut sbm ucf">Works &amp; contracts</span>
+              <span class="c re" data-k="fa" data-d="revenue water" data-m="amrut sbm ucf">Finance &amp; accounts (NMAM)</span>
+              <span class="c nw" data-k="informal" data-d="livelihoods" data-m="svanidhi">Informal sector &amp; vendor registration</span>
+              <span class="c nw" data-k="enforce" data-d="health waste" data-m="sbm">Enforcement &amp; penalties</span>
+              <span class="c nw" data-k="incident" data-d="health waste" data-m="sbm">Event &amp; incident response</span>
+              <span class="c nw" data-k="maint" data-d="built waste" data-m="amrut sbm">Asset condition &amp; maintenance</span>
+              <span class="c ig dash" data-k="missionmis" data-d="revenue" data-m="amrut sbm pmay svanidhi ucf">Mission MIS integrations *</span>
+              <span class="c ig dash" data-k="iccc" data-d="health" data-m="sbm">ICCC *</span>
+            </div>
+          </div>
+
+          <div class="row" >
+            <div class="lname" data-k="LS" >Core service infrastructure</div>
+            <div class="chips">
+              <span class="c re" data-k="wf" >Workflow engine</span>
+              <span class="c re" data-k="mdms" >MDMS (master data service)</span>
+              <span class="c re" data-k="idgen" >IDGen</span>
+              <span class="c re" data-k="uac" >User &amp; access control</span>
+              <span class="c re" data-k="notif" >Notification</span>
+              <span class="c re" data-k="pay" data-d="revenue" data-m="svanidhi">Payments &amp; collection</span>
+              <span class="c re" data-k="fs" >File &amp; evidence store</span>
+              <span class="c re" data-k="encrypt" >Encryption</span>
+              <span class="c re" data-k="local" >Localisation</span>
+              <span class="c re" data-k="audit" >Signed audit</span>
+              <span class="c nw" data-k="rules" >Rules engine (policy as code)</span>
+              <span class="c nw" data-k="cert" data-cc="aq water" data-m="ucf">Conformance &amp; certification</span>
+              <span class="c nw" data-k="consent" >Consent (DEPA-aligned)</span>
+              <span class="c nw" data-k="dx" >Data exchange</span>
+              <span class="c nw" data-k="geo" data-m="amrut ucf">Spatial query &amp; geo services</span>
+              <span class="c nw" data-k="agent" >Agent identity &amp; permissions</span>
+            </div>
+          </div>
+
+          <div class="row" >
+            <div class="lname" data-k="LD" >Core data infrastructure</div>
+            <div class="chips">
+              <span class="c re" data-k="individual" data-d="livelihoods" data-m="pmay svanidhi">Individual registry</span>
+              <span class="c re" data-k="propreg" data-cc="heat flood" data-d="built revenue" data-m="pmay">Property registry</span>
+              <span class="c re" data-k="tradereg" data-d="livelihoods revenue" data-m="svanidhi">Trade registry</span>
+              <span class="c re" data-k="bound" data-cc="flood" data-d="built mobility" data-m="pmay">ULB boundaries</span>
+              <span class="c re" data-k="empreg" >Employee registry</span>
+              <span class="c re" data-k="swmassets" data-cc="aq" data-d="waste" data-m="amrut sbm ucf">Asset registry</span>
+              <span class="c re" data-k="conn" data-cc="water" data-d="water" data-m="amrut">Connection registry</span>
+              <span class="c nw big" data-k="linkreg" >ID link registry</span>
+              <span class="c ig" data-k="person" data-d="livelihoods" data-m="pmay">Household link &mdash; State Family ID</span>
+              <span class="c nw" data-k="spatial" data-cc="flood water heat" data-d="built mobility water" data-m="amrut pmay ucf">Spatial base: parcels, networks, land use</span>
+              <span class="c nw" data-k="fundattr" data-d="revenue" data-m="amrut sbm pmay ucf">Funding &amp; sanction attributes</span>
+              <span class="c nw" data-k="dir" data-m="svanidhi">Participant &amp; service directory</span>
+              <span class="c nw" data-k="obligd" data-d="revenue" data-m="ucf">Obligation, derived from workflow</span>
+              <span class="c ig" data-k="extreg" >Parastatal &amp; regulator registries</span>
+              <span class="c nw dash" data-k="premise" data-d="built water" >Harmonised premise ID (later)</span>
+              <span class="c nw cl" data-k="rulebook" data-cc="aq heat flood water" data-d="water" >Domain rulebooks (versioned)</span>
+              <span class="c nw cl" data-k="sensreg" data-cc="aq heat flood water" data-d="health waste water" >Monitor / sensor registry</span>
+              <span class="c nw cl" data-k="hazattr" data-cc="aq heat flood water" data-d="health" >Hazard &amp; exposure attributes</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="row" >
+        <div class="lname" data-k="LR" >DPI rails</div>
+        <div class="chips">
+              <span class="c ig" data-k="aadhaar" >Aadhaar</span>
+              <span class="c ig" data-k="upi" data-d="livelihoods" data-m="svanidhi">UPI</span>
+              <span class="c ig" data-k="dlocker" >DigiLocker</span>
+              <span class="c ig dash" data-k="beckn" >Beckn</span>
+              <span class="c ig dash" data-k="digipin" data-d="built" >DIGIPIN *</span>
+              <span class="c ig dash" data-k="vahan" data-d="mobility waste" >Vahan *</span>
+              <span class="c ig dash" data-k="ulpin" data-d="built" >ULPIN</span>
+              <span class="c ig cl dash" data-k="gati" data-d="mobility" >Gati Shakti &amp; Bhuvan</span>
+              <span class="c ig" data-k="bhashini" >Bhashini</span>
+            </div>
+      </div>
+
+    </div>
+    <div class="panel">
+
+      <div class="ptitle" data-k="climpattern" >Environment &amp; climate resilience<i>one extension pattern, many domains</i></div>
+      <div class="sig" data-k="climpattern" >
+        <div><b>Reuse</b> — the modules, registries and workflows already running</div>
+        <div><b>New</b> — a domain rulebook, a monitor registry, source attribution</div>
+        <div><b>Integrate</b> — the sectoral regulator's system and its own identifiers</div>
+      </div>
+      <div class="doms">
+        <div class="dom" data-k="dAQ" data-d="health waste" ><b>Air quality</b><span>sources &amp; compliance</span></div>
+        <div class="dom" data-k="dHeat" data-d="built health livelihoods" ><b>Urban heat</b><span>exposure &amp; response</span></div>
+        <div class="dom" data-k="dFlood" data-d="built water" ><b>Flooding &amp; drainage</b><span>asset condition</span></div>
+        <div class="dom" data-k="dWater" data-d="water" ><b>Water stress</b><span>supply &amp; reuse</span></div>
+      </div>
+
+      <div class="ptitle" style="margin-top:2px">Who plugs in</div>
+      <div class="groups">
+        <div class="g" data-k="mohua" ><h3>MoHUA &amp; missions</h3><p>Defines specifications, certifies, funds. UCF is the sharpest lever</p></div>
+        <div class="g" data-k="state"><h3>State H&amp;UD</h3><p>Owns the data. Chooses platform, partner and sequence</p></div>
+        <div class="g" data-k="ulb"><h3>ULBs</h3><p>Run the workflows that generate everything above</p></div>
+        <div class="g para" data-k="para" ><h3>Parastatals &amp; regulators</h3><p>Water boards · development authorities · transport · SPCB/CPCB · IMD</p></div>
+        <div class="g mkt" data-k="market" ><h3>Market, samaj &amp; academia</h3><p>Providers · startups · lenders · NGOs · academia · informal sector</p></div>
+        <div class="g sm" data-k="elected"><h3>Elected representatives</h3><p>Mayors · councillors · ward committees</p></div>
+        <div class="g sm" data-k="frontline"><h3>Frontline staff</h3><p>Sanitation workers · collectors · doorstep agents</p></div>
+      </div>
+
+      <div class="attach">
+        <div class="a" data-k="adopt"><b>Adopt</b><span>hosted instance</span></div>
+        <div class="a" data-k="buildon"><b>Build on</b><span>blocks and APIs</span></div>
+        <div class="a" data-k="interop"><b>Interoperate</b><span>wrap, don't replace</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="legend">
+      <b>&#9632; Teal edge</b> marks where an environmental or climate domain attaches. Climate is not a separate vertical: it is a rulebook, a monitor registry and an integration, added to modules and registries that already exist. Air quality is one concern among several.
+      <div class="note">* DIGIPIN, Vahan, mission MIS and ICCC shown as candidate integrations; API availability and licence terms for urban use unverified. UPYOG coverage and volume figures are eGov's own, to be re-verified before external circulation.</div>
+    </div>
+    <div class="rule">Draft V0 &middot; internal consultation<br>Not for external circulation</div>
+  </footer>
+
+</div>
+</div></div>
+
+<div id="ov"><div id="card">
+  <button id="x" aria-label="Close">&times;</button>
+  <div class="kick" id="k-kick"></div>
+  <h2 id="k-title"></h2>
+  <div class="def" id="k-def"></div>
+  <ul id="k-list"></ul>
+  <div id="k-grp"></div>
+  <div class="flagbox" id="k-flag" style="display:none"></div>
+</div></div>
+<script>
+var D={
+LI:["Layer","Intelligence & decision support","Decision support assembled from the exhaust of workflows the city is already running.",
+["The feedstock would be the record already created to issue a permit or pay a contractor, rather than a new data collection programme.",
+"Provenance is emitted by default: actor, timestamp, evidence and status come out of the workflow engine and signed audit service.",
+"Three capability classes with different failure modes: predictive advises, generative restates, agentic acts. Only the third needs identity and scope, which sit a row below.",
+"Provenance sits with the workflow engine and signed audit a row below.",
+"Model evaluation is treated as part of conformance and certification rather than as a separate governance box."],
+null],
+actions:["New","Actions the officer actually owns","Show a city official the decisions in their control, not the index they are measured against.",
+["A city official has limited ability to move a citywide index alone, and is rarely held responsible for one.",
+"What they can act on: inspections due today, complaints open and repeating, routes completed against planned, repeat locations ranked.",
+"Naming the action tends to be more useful than naming the outcome metric."],null],
+horizon:["New","2-3 day decision horizon","The short-horizon layer that almost no urban tooling serves.",
+["Long-term planning has modelling tools. Episodic response has escalation frameworks. Everyday execution has almost nothing.",
+"The decisions made most often often have the least support behind them.",
+"Thousands of decisions a day, in every city, is where a shared layer pays for itself."],
+"Open question for the working group: which city decisions on a two to three day horizon would actually change if the data were there?"],
+hazfc:["New · climate","Hazard & risk forecasting","Risk prediction resolving to places and assets someone is accountable for.",
+["Draws on exposure attributes in the registries and condition data on assets.",
+"Useful only when the output lands on a premise, a drain segment or a route that has an owner.",
+"Same pattern across domains: heat exposure by settlement, flood risk by drain, dust risk by construction stage."],null],
+agent:["New","Agent identity & permissions","Another principal type in the role-action model, not a separate frontier.",
+["Placed beside user and access control since that is what it would extend. An agent would need a role, a jurisdiction and a scope much like an employee.",
+"Needs an entry in the participant directory, scoped permissions, non-repudiation and a human escalation path.",
+"Without a record that an action was taken by an agent rather than a person, accountability becomes hard to trace.",
+"No Indian sectoral stack appears to have specified this yet, based on what is published."],null],
+triage:["New","Grievance & case triage","Ranking what to act on when officer time is the binding constraint.",
+["Which of today's grievances, inspections and repeat locations are worth the hours available.",
+"Repeat complaints at the same location are a cheap signal that something is not being fixed.",
+"Anomaly detection sits inside this rather than beside it."],
+"Ranking who gets attended to is a policy choice as much as a technical one. Worth deciding openly who sets the weights."],
+nlvoice:["New","Natural language & voice access","Asking questions of the record, for citizens and frontline staff.",
+["Sits on the localisation service and Bhashini, which is now wired in. An nlp-engine and chatbot services are in the repository, so this extends existing work rather than starting it.",
+"Voice tends to matter most for the users least served by portals. An agricultural advisory service reportedly moved from a few hundred to around ten thousand daily queries after shifting from an app to a feature-phone voice line.",
+"Assisted channels have carried adoption in several states, so this may extend what intermediaries already do rather than replace them."],null],
+config:["New","Service configurator","Assisted configuration of new services on the existing core, rather than commissioning software.",
+["The platform is already configuration-driven: workflows, master data, ID formats and roles are all defined as config held in a repository.",
+"That makes it plausible for a state team to describe a service and have a draft configuration generated, tested in a sandbox and reviewed before deployment.",
+"If it works, it lowers the cost of the long tail of small services that never justify a project.",
+"It would also reduce dependence on a single implementer, which is one of the governance concerns the working group has raised."],
+"Speculative. Attractive on paper and unproven here. Generated configuration would need review, testing and a rollback path before anything reaches production."],
+exhaust:["Concept","Activity data from transactions","Records created to run a service also describe the city.",
+["One building plan approval record carries plot, floor area, stage, inspection date, officer, photo and outcome.",
+"That record exists to issue a permit. It also describes construction activity by location and stage.",
+"Collection routes and tonnage, road and drain works, licensed businesses involving combustion, all fall out the same way.",
+"None of it is collected for environmental purposes. It is collected to run a service."],
+"The argument for building environmental capability on municipal rails rather than beside them."],
+
+upyog:["Platform","UPYOG / DIGIT","The band spans three layers because UPYOG already provides much of the shared layer, not just an application.",
+["Core services in the repository include the workflow engine, MDMS, IDGen, user and access control, notification, filestore, PDF, payments, persister, indexer, signed audit, localisation, HRMS and dashboard analytics.",
+"Registries include property, trade licence, water and sewerage connections, employee and ULB boundaries.",
+"Open source under MIT, certified by the Digital Public Goods Alliance, multi-tenant by design.",
+"UPYOG and DIGIT are related but not identical. DIGIT is the platform; UPYOG is the MoHUA and NIUA instance built on it, and the two have diverged in both directions. Green here indicates capability present in the DIGIT and UPYOG family, not a guarantee for any specific deployment. A component-level audit belongs in the blueprint phase.",
+"eGov's own figures: 4,425 cities in scope, 2,725 under implementation, 1,200+ live, roughly 200 million citizens, 22 billion transactions, USD 760 million mission funding, 60+ partners enabled."],
+"The claim worth making is that a large share of the shared layer already exists and is being offered up. That also sharpens the governance question of whether the specification author should remain the principal implementer."],
+
+LM:["Layer","Urban service modules","Where money moves and action happens. Every record here is also an observation about the city.",
+["Each module was built to run a service, which is why the data inside it stays current.",
+"Most environmental and climate use cases need no new module. Four gaps are real: enforcement, incident response, asset maintenance and informal sector registration. None is a climate module. All are generic municipal capabilities that other agendas happen to expose as missing.",
+"Environmental domains attach here by adding a trigger rulebook, not by adding a portal.",
+"Nothing in this layer is switched off to join the stack."],null],
+ptax:["Reuse","Property tax","The largest own-source revenue and the densest premise-level dataset a city holds.",
+["Property tax nationally raises about 0.15 per cent of GDP against 0.3 to 0.6 per cent in comparable economies.",
+"Andhra Pradesh moved property tax from a few hundred crore to over ₹1,400 crore a year on this platform, per eGov's account.",
+"The property registry underneath is the closest thing urban has to a maintained premise record."],null],
+wns:["Reuse","Water & sewerage","Connection registration, billing and grievance, joined to the property record.",
+["Only about 28 per cent of used water is treated and 8 per cent reused.",
+"Connection-level records make offtake contracts and reuse markets financeable.",
+"A property record can be created from the water connection flow, which matters for premises outside the tax net."],null],
+tl:["Reuse","Trade licence","A registry of businesses by location, category and renewal status.",
+["Directly relevant to any domain that cares about combustion, effluent, noise or waste generation at a premises.",
+"Renewal cycles give a natural compliance hook that does not require new enforcement powers."],null],
+bpa:["Reuse","Building plan approval","Geolocated buildings with owner, size and construction stage, because that was required to grant permission.",
+["The registry of what is being built already exists and is maintained as a condition of the permit.",
+"Stage-linked norms attach to it without new data collection.",
+"Construction stage is already tracked, because approval is granted against it."],null],
+pgr:["Reuse","Grievance redressal","Citizen-reported location-level signal, with an officer, a timestamp and a closure state.",
+["Roughly 3.5 million grievances handled on the platform per eGov's figures.",
+"Repeat complaints at the same location are the cheapest available detector for a persistent problem.",
+"Odisha ran over 900 Jal Sathis registering complaints at the doorstep, which is how coverage held despite low app awareness."],null],
+swm:["Reuse","SWM operations","Routes, vehicles, tonnage and processing, tracked as operations rather than reported as a city total.",
+["Collection reaches about 98 per cent of wards, yet only 12 cities achieved a seven-star garbage-free rating in 2024.",
+"Coverage was the achievement. Outcome measurement at the point of generation is the outstanding one."],null],
+works:["Reuse","Works & contracts","Project, contractor, muster roll and payment records for municipal works.",
+["Road and drain works are both an environmental activity and a resilience asset update.",
+"Contractor payment is the leverage point where a norm becomes enforceable without new statutory powers."],null],
+fa:["Reuse","Finance & accounts","NMAM-based municipal accounting, already a module on this platform.",
+["Machine-readable accounts are the precondition for a lender, a rating agency or the Urban Challenge Fund to price a city.",
+"Own-source revenue covers 30 to 40 per cent of expenditure in large cities and under 20 per cent in smaller ones.",
+"Budget lines, receipts and payments are held in the same system that runs the services they fund."],null],
+rulebook:["New · climate","Domain rulebooks","Versioned, machine-readable rules that convert a domain norm into a trigger on an existing workflow.",
+["Dust norms attaching to construction stages. Heat thresholds triggering worker-hour and shelter responses. Rainfall thresholds triggering drain inspection.",
+"Only deterministic, objectively verifiable provisions convert. Anything requiring discretion stays with a human.",
+"These are content that the rules engine executes, in the same relation as MDMS the service to MDMS the data.",
+"One rulebook format across domains is what would make this an extension pattern rather than a series of projects."],null],
+
+enforce:["New","Enforcement & penalties","Adjudication and collection of environmental compensation, polluter-pays levies and byelaw fines.",
+["Cities already levy these across waste, construction, encroachment, water and public health, mostly outside any system, so this is a general municipal gap.",
+"It appears to justify a new module because the violator is often not a licensee, so there is no existing demand-and-collection relationship to configure.",
+"It would need states that no revenue module currently has: notice, hearing, adjudication, appeal, waiver, write-off and recovery.",
+"Links to finance and accounts for realisation, and to the link registry so a violator resolves to a premise, a licence or a vehicle held elsewhere."],
+"Open question: what is legally enforceable at ULB level without new statutory backing, and are the amounts a real deterrent?"],
+incident:["New","Event & incident response","A time-bounded, multi-agency lifecycle for heat events, flood events, pollution episodes and other escalations.",
+["Nothing in the existing module set handles episodic multi-agency response. Workflows here assume a steady-state service request.",
+"It would need activation, tasking across agencies, resource dispatch, status reporting, standdown and an after-action record that survives the event.",
+"Command centres partly do this today in a way that leaves no reusable record, which is why the next event starts from nothing.",
+"It would serve disaster management, public health and civic emergencies as much as climate, and that breadth is the main argument for building it."],
+"The multi-agency part is the hard part. Tasking a water board or a pollution board through a municipal workflow needs an agreement the stack cannot supply on its own."],
+maint:["New","Asset condition & maintenance","A recurring inspect, assess, schedule and repair lifecycle for municipal assets.",
+["Works and contracts handles projects with a start and an end. There is no module for the maintenance cycle that resilience assets actually need.",
+"Drains, culverts, pumps, water bodies, tree cover, shelters, street furniture and lighting all sit in this gap.",
+"Condition history is what turns an asset register from a list into something a planner or a lender can use.",
+"Possibly the widest payoff of the four, since it serves routine municipal operations first and climate resilience as a consequence."],
+null],
+person:["Integrate","Household link","The household layer resolved through the state's existing family ID rather than a new urban one.",
+["Live examples: Haryana Parivar Pehchan Patra, Rajasthan Jan Aadhaar (which replaced Bhamashah), Uttar Pradesh Ek Parivar Ek Pehchan, Karnataka Kutumba, Madhya Pradesh Samagra, Uttarakhand Devbhoomi Parivar ID under a 2026 Act.",
+"These are state-owned and already carry household composition, income band and scheme linkage, so a separate urban person registry would likely duplicate them.",
+"What the stack could add is the link: family ID to premise, connection, licence and entitlement, which is what the ID link registry is for.",
+"Coverage is uneven and several states have none, so the design would need to degrade gracefully rather than assume one exists."],
+"Documented harm to design against: errors in Haryana's PPP led to names being dropped from BPL lists and benefits being denied. A household record used as a gate rather than a convenience risks excluding the people urban services most need to reach, with tenants, migrants and shared occupancy the likeliest failure points."],
+spatial:["New","Spatial base","Parcel geometry, road and drain networks, land use and settlement footprint, versioned and queryable.",
+["Boundaries alone fall short of a spatial base, and little of the Survey's planning agenda works without geometry underneath.",
+"Assembled from what exists rather than surveyed fresh: state GIS and property surveys, Gati Shakti layers, Bhuvan imagery, utility network records.",
+"Versioning may matter more than accuracy at first, since a boundary or land use change that overwrites history leaves downstream records hard to audit.",
+"A settlement footprint would address growth happening outside municipal limits and along transport corridors."],
+"Probably the largest single build here, and the one most likely to be underestimated."],
+geo:["New","Spatial query & geo services","The service that answers a question about a place across records held by different systems.",
+["Site suitability against utility, transit and hazard records. Station influence zones. Assets on a feeder or a drain segment. Growth against plan assumptions.",
+"Five separate recommendations in the Survey's chapter reduce to this one capability.",
+"Without it the spatial base risks remaining a map layer rather than infrastructure."],null],
+dx:["New","Data exchange","Moving records between systems, not reports to dashboards.",
+["Federated in design, with data staying with the custodian while the exchange standardises the interface and audit trail.",
+"The Survey describes dashboards receiving totals: how many is visible, which and where are not.",
+"IUDX already exists for urban data exchange and should be assessed for reuse rather than rebuilt."],null],
+dir:["New","Participant & service directory","Who is on the network, what they offer, and where their endpoint is.",
+["Without it a parastatal, vendor or service provider is hard to discover, which weakens the participation model.",
+"Carries certification status, so conformance is machine-checkable rather than asserted.",
+"The same directory pattern that registries and interaction protocols play in the India Energy Stack."],null],
+informal:["New","Informal sector & vendor registration","Simplified registration and portable recognition for street vendors, informal workers and micro-enterprises.",
+["The Survey asks for this directly, and PM SVANidhi introduced a letter of recommendation specifically to bypass repeat ULB surveys.",
+"Portability across schemes and cities is central here, since recognition that does not travel leads to the survey being repeated.",
+"Gurugram's door-to-door collection collapsed within days when its informal workforce left the city in mid-2025. That workforce is operationally load-bearing and administratively invisible.",
+"Consent-governed, since the aim is for a worker to be visible to the city without being exposed by it."],
+"A reasonable inclusion test for the whole stack. If this is the module that never gets built, the reach is limited to property owners and licensees."],
+encrypt:["Reuse","Encryption","Encryption service and client library, already part of the platform.",
+["Field-level encryption and decryption of personal data, with key management handled by the service.",
+"Available to every module through a client library rather than implemented per module."],null],
+local:["Reuse","Localisation","Localisation service for multilingual interfaces across citizen and employee applications.",
+["The municipal-side counterpart to Bhashini, which handles translation and speech at the rail layer.",
+"Matters most for frontline staff and for citizens least served by portals."],null],
+LS:["Layer","Core service infrastructure","The rails no ULB should build alone. Most of them already exist.",
+["Green items are running today across more than a thousand live cities, which changes the funding conversation considerably.",
+"The amber items are the actual ask, and it is a much smaller ask than a new platform.",
+"There is no urban regulator, so nothing here can be mandated. It has to be cheaper than building alone.",
+"Items marked as already running trace to a named service in the DIGIT core services list."],null],
+wf:["Reuse","Workflow engine","egov-workflow-v2. Configurable state machines for any application or entity.",
+["Handles human, machine and time-based transitions with role-based actions and inbox routing.",
+"Every transition is a dated, attributed record, which is where provenance comes from.",
+"New domains configure workflows rather than commissioning software.",
+"Inspection is not listed separately, since it is workflow-v2 configured for a domain and reused inside building approval, trade licence, waste operations and maintenance."],null],
+mdms:["Reuse","MDMS master data","egov-mdms-service. Configuration-driven master data, held in a versioned repository.",
+["Boundaries, departments, designations, tax heads, service definitions and ID formats all live here.",
+"Config held in git means changes are reviewable and traceable rather than done in a database.",
+"mdms-v2 is in the repository alongside the original service."],null],
+idgen:["Reuse","IDGen","egov-idgen. Configurable unique identifier generation, at state or ULB level.",
+["Formats are defined in MDMS, so identifier schemes are governed as configuration rather than hard-coded.",
+"Sequences can be scoped to a state or to an individual ULB."],null],
+uac:["Reuse","User & access control","egov-user, egov-accesscontrol, OTP and HRMS for employee identity and roles.",
+["Role-action mapping across jurisdictions, with OTP-based login for citizens and HRMS-backed identity for employees."],null],
+notif:["Reuse","Notification","SMS, email and messaging channels, plus URL shortening for low-bandwidth delivery.",
+["Multichannel delivery including WhatsApp is already in production use.",
+"Assisted channels matter more than apps: in Odisha under 15 per cent of citizens knew the platform existed, yet coverage was near-universal."],null],
+pay:["Reuse","Payments & collection","Payment gateway in core, with billing, demand and collection as business services above it.",
+["Strictly, PG-service is the core service. Demand generation and collection sit in the business layer, so this chip spans two levels of the platform.",
+"Aggregate revenue handled on the platform is around USD 2.1 billion per eGov's figures.",
+"Reconciliation into municipal accounts is the harder half and is where the finance module earns its place."],null],
+fs:["Reuse","File & evidence store","egov-filestore and pdf-service. Photographs, documents and generated outputs attached to workflow states.",
+["Files are held in S3, Azure, Minio or the filesystem, whichever the deployment configures.",
+"Evidence attached to a dated transition is what makes an inspection record usable for enforcement.",
+"Signing is not done here. That is audit-service, which signs the state change the file is attached to."],null],
+audit:["Reuse","Signed audit","audit-service. Tamper-evident audit of state changes, integrated into the persistence layer.",
+["Creation, update and deletion of an entity is captured as a digitally signed log entry, consumed through egov-persister.",
+"That makes it the basis for any credential or verifiable claim issued from municipal records."],null],
+rules:["New","Rules engine","Policy held as executable, versioned data with traceability back to the source order.",
+["MDMS handles configuration. This would be different: development control rules, fee schedules, subsidy eligibility and domain thresholds as computable objects.",
+"Comparable to the Policy Pack concept in the India Energy Stack, where systems running the same pack produce identical results.",
+"Enables rule-based approvals in place of case-by-case exemptions."],null],
+cert:["New","Conformance & certification","Automated tests verifying that a system implements the specification.",
+["Also the adoption measurement instrument. Percentage conformance is countable.",
+"Self-declaration with automated suites, escalating to independent certifiers only where systemic risk warrants it, is the model worth borrowing.",
+"Certification that travels across states is the commercial incentive for vendors."],
+"A reasonable principle: whoever writes the specification would ideally not also certify against it and be its principal implementer."],
+consent:["New","Consent","Permissioned data flows with audit trails, aligned to the DPDP Act.",
+["Reuse the DEPA and Account Aggregator pattern rather than inventing an urban consent framework.",
+"Load-bearing for informal workers, who need to be visible to the city without being exposed by it.",
+"Consent fatigue is a real adoption risk. Willingness to share cannot be assumed."],null],
+LD:["Layer","Core data infrastructure","Shared definitions, mostly maintained as a by-product of running a service.",
+["Records held inside a live workflow tend to stay current because a service depends on them, which standalone registers often lack.",
+"Green items already exist across live cities, and the amber items are largely additive rather than foundational rebuilds.",
+"A spatial base is needed for almost any planning recommendation to work, and the household layer resolves to the state family ID rather than to anything urban builds.",
+"Federation holds: states own and operate their data on a common design."],null],
+individual:["Reuse","Individual registry","core-services/individual. A registry of individuals, held separately from login accounts.",
+["Holds details of individual citizens whether or not they are system users, with accounts held in the User registry.",
+"Separating individual from account matters for tenants, workers and dependants who receive a service without ever logging in."],null],
+linkreg:["New","ID link registry","A registry mapping existing identifiers to each other, so each institution keeps its own numbering.",
+["It avoids requiring everyone to adopt a common place identifier, which would need authority urban does not currently have.",
+"Worked example: a pollution board consent-to-operate and a municipal property record for the same plot share no identifier today. A link resolves them without either side renumbering.",
+"Shared infrastructure with less political dependency, and buildable outside government.",
+"The same mechanism links a plot to a building permit, a connection, a route, a sensor and a hazard zone."],
+"Arguably the most load-bearing item in the design, and the closest thing to an answer to having no urban regulator."],
+propreg:["Reuse","Property registry","property-services. Premise-level records with owner, usage and assessment, maintained because tax depends on it.",
+["Address, usage type, built-up area, owner details and assessment history held against a property identifier.",
+"Assessment drives demand generation and collection, which is why the record stays current.",
+"The closest thing to a maintained urban premise record that exists at scale today."],null],
+tradereg:["Reuse","Trade registry","Licensed businesses by premises, category and status.",null],
+bound:["Reuse","ULB boundaries","egov-location. Hierarchical boundary and jurisdiction data, held as configuration.",
+["Ward, zone and locality hierarchies resolve which jurisdiction any record belongs to.",
+"Held as MDMS configuration, so a boundary change goes through the same review path as any other config."],null],
+empreg:["Reuse","Employee registry","HRMS. Municipal staff with department, designation, role and jurisdiction.",
+["Assignment and accountability for every workflow action resolves through this.",
+"Department, designation, role and jurisdiction come from HRMS rather than being held per module."],null],
+swmassets:["Reuse","Asset registry","An asset management module exists in UPYOG covering municipal assets generally.",
+["A separate vehicle service also exists in the repository, so fleet records may sit beside this rather than inside it.",
+"Fleet tracking obligations arriving under waste rules make this a live integration point rather than a future one."],null],
+conn:["Reuse","Connection registry","Water and sewerage connections bound to premises.",
+["Under 27 per cent of urban households have underground sewerage.",
+"Connection-level records let service gaps be seen by ward rather than asserted at city level."],null],
+sensreg:["New · climate","Monitor / sensor registry","Every measurement device with location, type, ownership, calibration state and data path.",
+["Domain-agnostic: air monitors, weather and heat sensors, water level and quality, flow meters.",
+"Ownership is mixed by nature. Regulator-owned, municipal, private and community devices all need to resolve in one registry.",
+"Carries quality and verification state as attributes: last verified, against what reference, by whom, with what uncertainty, and whether readings are currently trustworthy.",
+"Calibration itself sits awkwardly as a shared service, since the method differs across air, water level and water quality, and regulators rather than municipalities define what is acceptable. Carrying the metadata and linking to whoever certified it seems the safer position.",
+"Links to the ID link registry so a device resolves to a premise, a ward and a hazard zone."],null],
+hazattr:["New · climate","Hazard & exposure attributes","Risk attributes carried on premise and asset records rather than held in a separate study.",
+["Flood depth, heat exposure, air quality band, subsidence, coastal risk, held against the same identifiers as everything else.",
+"This is how climate enters the core. A separate hazard layer that nobody joins to service records changes no decision.",
+"Also what makes infrastructure funding conditional on credible city-climate plans auditable by a funder."],null],
+obligd:["New","Obligation, derived","Who is accountable for what, inferred from workflow assignment rather than declared in a register.",
+["A declared obligation register would be a new artefact somebody has to maintain, and those tend to go stale.",
+"Assignment, escalation and closure already record who acted, so some accountability could be derived from that.",
+"The residual gap is assets held by parastatals that no municipal workflow touches, which would need integration rather than derivation."],
+"Still a proposition rather than an agreed component. Weaker than I first argued, and better for it."],
+extreg:["Integrate","Parastatal & regulator registries","Consent-to-operate, emissions monitoring, transport permits, development authority approvals, hydrology and meteorology.",
+["These systems are not going to be replaced or migrated. They are integrated through the link registry.",
+"Each reports to a different department and none reports to MoHUA, which is why linkage beats mandate.",
+"The Economic Survey names this dispersion as the core of the fragmentation problem."],null],
+premise:["New · later","Harmonised premise ID","One identifier that resolves the same way across all urban systems.",
+["Still the theoretically clean answer, and still worth working towards.",
+"It would require political agreement across land, revenue, utility and municipal institutions, which is a decade-scale programme.",
+"The link registry delivers most of the benefit with none of the dependency, and does not foreclose this later."],null],
+
+LR:["Layer","DPI rails","Assemble, do not build. The work is agreement on interfaces, not construction.",
+["Each rail has different maturity, licence terms and API availability for urban use. Several are attractive on paper only.",
+"An audit of what genuinely can be reused belongs in the blueprint phase rather than the concept note."],null],
+aadhaar:["Integrate","Aadhaar","Identity, proven once.",["Mature and universal, and already used for authentication in the platform.","Assisted and offline routes still matter, since a single identity route excludes."],null],
+upi:["Integrate","UPI","Payments, collections, refunds and entitlement transfer.",["Already integrated in the platform's collection services."],null],
+dlocker:["Integrate","DigiLocker","Issuing and reusing verified documents.",["Municipal certificates and permissions can be issued into it, removing repeat submission."],null],
+depa:["Integrate","DEPA","Consent-based data sharing framework.",["Gives urban a consent model without inventing one.","Used by Account Aggregator and ABDM."],null],
+beckn:["Integrate","Beckn","Open network protocol for discovery, ordering and fulfilment.",
+["Fits mobility, waste aggregation, tankers, repairs and care services where a citizen can choose a provider.",
+"Also the basis of the Unified Energy Interface, so there is a sectoral precedent."],
+null],
+digipin:["Integrate","DIGIPIN","A geocoded digital addressing scheme.",
+["Addressing and property identification are related but distinct. One names a location, the other identifies a legal or fiscal object."],
+"Unverified: current adoption status, licence terms and API availability for urban use."],
+vahan:["Integrate","Vahan","The national vehicle registration database, held by MoRTH.",
+["Relevant to parking, permits, commercial vehicle enforcement and municipal fleet linkage.",
+"Waste and works fleets are already tracked municipally. Linking them to registration records is a link registry problem."],
+"Unverified: whether Vahan exposes APIs usable by ULBs, and on what terms."],
+ulpin:["Integrate","ULPIN","Unique land parcel identifier under the land records modernisation programme.",
+["Alongside NGDRS and state systems such as Bhu Bharati and Bhu Suraksha.",
+"Urban coverage is weaker than rural, which is exactly where the difficulty sits."],null],
+gati:["Integrate · climate","Gati Shakti & Bhuvan","National geospatial layers and satellite imagery.",
+["The common map beneath every plan, plus terrain and hazard layers.",
+"Carries exposure data into the registries rather than sitting as a separate map product."],null],
+bhashini:["Integrate","Bhashini","Multilingual translation and speech.",
+["Voice-first is the access unlock, particularly for frontline staff and citizens least served by portals.",
+"Evidence from agriculture: an advisory service moved from a few hundred to roughly ten thousand daily queries after switching from an app to a feature-phone voice line."],null],
+iudx:["Integrate","IUDX","India Urban Data Exchange, developed with IISc.",
+["Already scoped for urban data exchange. Assess for reuse rather than rebuild.",
+"Adoption and licence terms for this use need verification."],null],
+
+climpattern:["Cross-cutting","Environment & climate as an extension pattern","Every domain follows the same three-part signature, which is what makes this infrastructure rather than a series of projects.",
+["Giving climate its own vertical would reproduce the exact failure being diagnosed, where each concern becomes another mission with another portal."],
+"The test of the pattern is whether the second domain costs materially less than the first.",
+{"reuse":"The service modules, registries and workflows already running in live cities.",
+"new":"A domain rulebook, a monitor registry, source or cause attribution, calibration and QA.",
+"integrate":"The sectoral regulator's system, through the link registry, with neither side renumbering."}],
+
+dAQ:["Domain","Air quality","Sources, compliance and repeat offenders.",[],
+"Recent waste rule provisions, including central portal reporting, dumpsite geo-mapping deadlines and fleet tracking thresholds, need checking against the primary notification.",
+{"reuse":"Building plan approval, works, grievance, SWM operations, inspections and finance.",
+"new":"Dust and burning trigger rulebooks, a monitor registry, source attribution and a repeat-location record.",
+"integrate":"Pollution control board consent-to-operate, continuous emissions monitoring and central portal reporting."}],
+dHeat:["Domain","Urban heat","Exposure, thresholds and response.",[],null,
+{"reuse":"Works and contracts, grievance, the employee registry for outdoor staff, and the property registry for exposure.",
+"new":"A heat threshold rulebook triggering worker-hour, shelter, water point and school responses, plus a temperature monitor registry.",
+"integrate":"Meteorological forecasts, health surveillance and state disaster authority action plans."}],
+dFlood:["Domain","Flooding & drainage","The domain where asset condition matters most.",[],null,
+{"reuse":"Works and contracts for drain construction and desilting, grievance for waterlogging reports, SWM for blockage causes, and asset records.",
+"new":"A rainfall and level threshold rulebook triggering pre-monsoon inspection and clearance, a level sensor registry, and a drain segment condition record.",
+"integrate":"Hydrology and meteorology agencies, irrigation and drainage departments, and development authority stormwater plans."}],
+dWater:["Domain","Water stress","Supply, loss and reuse as a measurable state rather than a coverage claim.",[],
+"Only about 28 per cent of used water is treated and 8 per cent reused. Making reuse measurable is what makes offtake contracts financeable.",
+{"reuse":"The connection registry, billing, grievance, works, and finance and accounts.",
+"new":"Non-revenue water accounting by zone, a flow and quality monitor registry, and reuse and offtake tracking.",
+"integrate":"State water boards, the groundwater authority, and pollution control board effluent consents."}],
+
+mohua:["Participant","MoHUA & national missions","Defines specifications, certifies, funds and commits convergence.",
+["The Centre can enable, fund and incentivise, but has limited ability to mandate into a municipality, so a design that assumes compliance tends to get paper compliance.",
+"The Urban Challenge Fund is the sharpest instrument available, because it conditions money on reform and on verified progress.",
+"Institutional home unresolved: a unit inside MoHUA, an existing institution as custodian, or a dedicated sponsored entity.",
+"Would publish: specifications and versions, the certified product catalogue, convergence commitments across missions.",
+"A plausible first move: name the specification owner and publish a versioning and support policy."],null],
+state:["Participant","State H&UD departments","Owns and governs the data. Chooses platform, partner and sequence.",
+["Local government is a state subject, which is a binding constraint rather than a matter of courtesy.",
+"State-led platforms cut per-capita cost sharply: Kerala reports ₹23.95 per capita against ₹66.44 for a failed standalone city build, per eGov's account.",
+"Kerala moved from 8 ULBs in 2023 to over 1,100 local bodies in 2025, which is the strongest available evidence for state-level scale.",
+"Risk to avoid: state-led becoming digital recentralisation, with ULBs losing autonomy over their own data.",
+"Would publish: which ULBs are live on what, boundary and jurisdiction versions, state-level service definitions.",
+"A plausible first move: nominate two or three ULBs and one domain to work through end to end."],null],
+ulb:["Participant","ULBs","Run the workflows that generate everything above.",
+["Capacity ranges from corporations with full IT departments to municipalities with no IT team at all. Over 90 per cent of Punjab's 167 ULBs had none.",
+"A standard written for the top decile is unimplementable in the rest.",
+"Human intermediaries carry adoption: doorstep collection, ward secretariats and an old phone helpline still carrying most of Jalandhar's grievances.",
+"Would publish: service-level performance, asset condition, machine-readable accounts, ward-level status.",
+"A plausible first move: expose one existing registry through a documented API rather than a report."],null],
+para:["Participant","Parastatals & regulators","Water boards, development authorities, transport undertakings, pollution control boards, meteorology, disaster authorities.",
+["The Economic Survey names this dispersion as the core of the problem. Land use, policing and utilities sit above the municipal tier.",
+"They would keep their own systems and numbering, which the link registry is intended to accommodate.",
+"Every environmental domain has at least one of these as a likely integration partner.",
+"Would publish: asset ownership and condition for what they hold, consent and permit status, service coverage in their area.",
+"A plausible first move: agree an identifier link with the ULB for one shared asset class, without either side renumbering."],
+"Probably the hardest adoption problem here, since none of them reports to MoHUA."],
+market:["Participant","Market & samaj","Providers, startups, integrators, lenders, rating agencies, NGOs, community groups, informal sector aggregators.",
+["Over 60 partners already enabled on the platform, per eGov's figures. Certify once, deploy across states.",
+"Lenders and rating agencies become participants once municipal accounts are machine-readable.",
+"The link registry is buildable outside government, which may make it among the least politically dependent parts of the design.",
+"Academia and civil society could play a distinct role as independent verifiers of outcome claims, which matters once money is conditioned on verified progress. No other participant currently plays that role.",
+"Would publish: conformance status, service availability, and the provenance of any data they contribute.",
+"A plausible first move: certify one product against a draft specification and report what broke."],null],
+elected:["Participant","Elected representatives","Mayors, councillors and ward committees.",
+["Absent from most stack diagrams, which quietly concedes the point that cities are administered rather than governed.",
+"Ward-level visibility is probably what they would use most: what was promised, what was spent, what is open, what is repeating.",
+"They are also an accountability route available to a citizen when a service fails, which a dashboard does not replace.",
+"Would publish: ward priorities and commitments, so that performance can be read against something."],
+"Sized smaller here because the role is not yet worked out, rather than because it matters less."],
+frontline:["Participant","Frontline staff","Sanitation workers, bill collectors, inspectors, doorstep agents, ward secretariat staff.",
+["The largest user population of nearly everything marked as already running, and distinct from the ULB as an institution.",
+"Their experience is currently effort spent on the system rather than on the service. Over half of the root causes identified in solid waste management sit in mindset, organisational rules and facilities rather than equipment.",
+"One work list on a phone, entered once, with no month-end reconciliation across three systems, is a more useful design target than most citizen-facing features.",
+"Natural language and voice access is aimed at them as much as at citizens."],
+"Also relevant to the informal sector module, since many of the people doing this work are not municipal employees."],
+adopt:["Attach mode","Adopt","Take a hosted instance, ready to run.",
+["For ULBs and states with low IT capacity, which is the majority case.",
+"Lowest cost of entry and fastest to live."],null],
+buildon:["Attach mode","Build on","Use the blocks, guidelines and APIs. Extend without touching the core.",
+["For states that want local rules, workflows and extensions while staying upgradeable."],null],
+interop:["Attach mode","Interoperate","Protocols and specifications only. Existing systems are wrapped.",
+["For states running mature platforms and for mission systems already built.",
+"No portal switched off, no migration as a precondition. This is what makes adoption possible without a regulator."],null],
+
+desludge:["Reuse","Desludging service","Septic tank emptying requests, operator assignment and disposal, present in the UPYOG module list.",
+["Relevant because under 27 per cent of urban households have underground sewerage, so faecal sludge handling is the majority case rather than the exception.",
+"Generates an operator, a load, a premise and a treatment site per job, which is the exhaust that used water planning would otherwise commission a study to obtain."],
+null],
+
+svmod:["Reuse","Street vendor management","A street vendor module appears in the published UPYOG module list.",
+["PM SVANidhi's ULB-side process is a survey, a Certificate of Vending, and a Letter of Recommendation from the ULB or Town Vending Committee for vendors the survey missed.",
+"That is a registry, a credential and a workflow, which is what this platform already does for trade licences.",
+"Vendor records, zones and certificate status sit alongside the trade registry rather than in a separate system."],null],
+
+missionmis:["Integrate","Mission MIS integrations","Every mission already runs its own reporting system. The position here is to integrate, not rebuild.",
+["SBM-U, AMRUT, PMAY-U, PM SVANidhi and UCF each have established portals and reporting flows with their own identifiers, formats and review cycles.",
+"Replacing any of them is neither offered nor needed. The proposition is that the ULB enters a fact once, in the workflow that produces it, and the adapter serves it to whichever mission asks.",
+"Duplicate entry into mission portals is a known load on ULB staff, and it is the thing this removes.",
+"One adapter with per-mission mappings rather than five integrations, so a new mission is a configuration rather than a project."],
+"Marked with an asterisk. Whether these portals expose interfaces usable for two-way integration is not something published sources settle, and it should be checked mission by mission before this is claimed anywhere external."],
+
+iccc:["Integrate","Integrated Command & Control Centre","The operational surface cities already have for incidents, and the natural place for decision support to land.",
+["Built under the Smart Cities Mission, which has concluded, leaving the centres in place under varying municipal and parastatal ownership.",
+"Functionally this is event and incident response, which is why it sits beside that module rather than in a category of its own.",
+"Wrap rather than replace applies here as much as anywhere: the ICCC keeps its screens and gets a feed of municipal record and workflow state.",
+"Also the most plausible first home for the two to three day decision horizon, since somebody is already sitting in front of it."],
+"Operational maturity across these centres varies widely and no verified current picture is available here. This describes an integration point, not a working capability."],
+
+fundattr:["New","Funding & sanction attributes","Mission funding carried as attributes on the asset registry, in the same way hazard attributes sit on premises.",
+["Funding source, sanction reference, mission, tranche state, utilisation and geo-tagged progress, held against the asset that already exists in the registry.",
+"UCF names asset registers explicitly in its Market and Financial reform category, and releases its second and third tranches against geo-tagged physical progress with utilisation certificates.",
+"AMRUT, SBM and UCF each want a view of what they funded. Three mission asset systems is the alternative to four fields and an adapter.",
+"The same argument the climate panel makes: an agenda enters through attributes on existing registries, not through a parallel register.",
+"Also what makes an asset register usable by a lender, since provenance of funding and condition history are what due diligence asks for."],
+"The clearest single example of a block claimed by several missions at once, which is the argument for building it in the shared layer."],
+
+mAMRUT:["MoHUA mission","AMRUT",
+"Atal Mission for Rejuvenation and Urban Transformation. Launched in 2015 for water supply, sewerage and septage, drainage and green space in cities above one lakh population, and continued as AMRUT 2.0 with universal water supply coverage in statutory towns as the stated aim.",
+[],null,{
+"reuse":"Water and sewerage connection management, the connection registry, works and contracts, NMAM finance and accounts, and property tax, which carries the revenue reform side.",
+"new":"Funding and sanction attributes on the asset registry, asset condition and maintenance for the network, and the spatial base for pipe and drain geometry.",
+"integrate":"The existing AMRUT reporting system through the mission MIS adapter. Nothing about the mission's own portal changes."}],
+
+mSBM:["MoHUA mission","Swachh Bharat Mission Urban",
+"Launched in 2014 for sanitation and solid waste, continued as SBM-U 2.0 with garbage-free cities and used water management in smaller towns not covered by AMRUT as the stated focus.",
+[],null,{
+"reuse":"SWM operations, desludging, grievance redressal, the asset registry covering collection vehicles, works and contracts, and finance and accounts.",
+"new":"Enforcement and penalties, asset condition and maintenance, event and incident response, and funding attributes on the asset registry.",
+"integrate":"SBM-U reporting through the mission MIS adapter, and the ICCC where a city runs one."}],
+
+mPMAY:["MoHUA mission","PMAY-U",
+"Pradhan Mantri Awas Yojana Urban. Launched in 2015 for affordable housing, with a second phase approved in 2024.",
+[],null,{
+"reuse":"Building plan approval, the property registry, the individual registry and ULB boundaries.",
+"new":"Funding and sanction attributes for sanctioned units, and the spatial base to place them.",
+"integrate":"The PMAY-U reporting system through the mission MIS adapter, and the state family or household identifier for beneficiary resolution."}],
+
+mSVANidhi:["MoHUA mission","PM SVANidhi",
+"PM Street Vendor's AtmaNirbhar Nidhi. Launched in 2020 to give street vendors access to working capital, with SIDBI as implementation agency and lending through banks, NBFCs and microfinance institutions.",
+[],
+"The one mission where the ULB is not mainly a reporting node. The survey, the Certificate of Vending and the Letter of Recommendation are municipal acts that determine whether a vendor can borrow.",
+{
+"reuse":"The street vendor module, the trade registry, grievance redressal, payments, and the individual registry.",
+"new":"Informal sector and vendor registration as portable recognition, vending zone geometry in the spatial base, and the participant directory so lenders can find the issuing authority.",
+"integrate":"The PM SVANidhi portal through the mission MIS adapter, UPI on the repayment and incentive side, and the lender network."}],
+
+mUCF:["MoHUA mission","Urban Challenge Fund",
+"A one lakh crore rupee centrally sponsored scheme approved in February 2026. Central assistance is capped at 25 per cent of project cost and at least 50 per cent must come from market finance, with the intent of making cities creditworthy rather than grant-dependent.",
+[],
+"The sharpest lever of the five, because reform compliance is attached to money at every approval and tranche release rather than requested afterwards.",
+{
+"reuse":"Finance and accounts, property tax collection history, works and contracts, and the transaction record of every module, which is the raw material of a lender-facing track record.",
+"new":"Funding and sanction attributes with geo-tagged progress for tranche release, and a reform and maturity view derived from what modules are actually live.",
+"integrate":"The MoHUA reform portal, which the guidelines assume and which does not yet exist, plus lenders and rating agencies through the participant directory."}],
+
+nUPYOG:["Reference applications","UPYOG","A set of reference applications, and already a large part of the spine.",
+["The modules here are what a state forks and localises: property tax, water and sewerage, trade licence, building plan approval, grievance, solid waste, works and finance.",
+"Grievance sits here rather than in the spine. What has to be common is the shape of a case and when it closes, which is a specification. The application itself is free to be replaced.",
+"Separately, the core services and registries in the spine below are largely UPYOG code today, which is why so much of that box is green.",
+"Two relationships, not one. A state forks the applications, and conforms to the spine. Conflating them is how shared code gets mistaken for a shared interface."],
+"Whether a given block is present in any particular state's deployment is a different question from whether it exists in the repository."],
+
+nSUJOG:["State platform","SUJOG \u00b7 Odisha","Odisha's unified urban platform, and the clearest example of the pattern this picture rests on.",
+["SHWAS for sanitation worker welfare, SUJOG-FSSM, MUKTA for wage employment and the Jaga Mission tools were each built separately, for different needs, at different times.",
+"All were designed to plug into the common architecture and have since been aligned with SUJOG's core platform.",
+"A hub with spokes, inside one state, working. Not yet a network across states."],
+"The existence proof. A state did not need a national mandate to make its own systems interoperate."],
+
+nKSMART:["State platform","K-SMART \u00b7 Kerala","Kerala's platform, and the sharpest number in the set.",
+["From 8 ULBs in 2023 to more than 1,100 local bodies by 2025.",
+"Built for about 80 crore rupees, which works out at 23.95 rupees per capita.",
+"Video-KYC marriage registration was layered on later without breaking the services already running."],
+"Figures from the eGov policy brief on state-led urban digital transformation."],
+
+nMSEVA:["State platform","mSeva \u00b7 Punjab","Punjab's platform, running since 2018.",
+["Jalandhar's grievance helpline, in operation since 2007, was integrated rather than replaced, and still carries most of the city's complaints.",
+"Wrapping what already works is the same move this network asks of every participant."],null],
+
+nAP:["State platform","Municipal ERP \u00b7 Andhra Pradesh","110 ULBs on a single system.",
+["The state took ownership after the implementation partner's exit, and adoption held.",
+"In-house capacity after vendor exit is what separates a platform from a project."],null],
+
+nGAP:["No platform yet","ULBs with no platform","The participant this argument is for.",
+["Many ULBs still lack the technical capacity, the finance or the institutional support to run a platform of their own.",
+"Adopt exists for them: a hosted instance rather than a build.",
+"A network of four capable states is a club. The test is whether the fifth can join without a programme."],
+"Drawn dashed because it is the only node here that is not a system."],
+
+nMIS:["Integrate","MoHUA mission MIS","AMRUT, SBM-U, PMAY-U, PM SVANidhi and UCF, each with its own reporting system.",
+["Every one already works. None is being replaced.",
+"A ULB enters a fact once, in the workflow that produces it, and an adapter serves it to whichever mission asks.",
+"Duplicate entry into mission portals is a known load on municipal staff, and it is what this removes.",
+"Missions add reporting obligations to urban service delivery. They do not add new domains."],
+"Whether these portals expose interfaces usable for two-way integration is unverified and should be checked mission by mission."],
+
+nICCC:["Integrate","ICCC deployments","The operational surface cities already have.",
+["Built under the Smart Cities Mission, which has concluded, leaving the centres under varying municipal and parastatal ownership.",
+"Functionally these are event and incident response, which is why they attach to the spine rather than to a module.",
+"The most plausible place for a short decision horizon to land, because somebody is already sitting in front of the screen."],
+"Operational maturity varies widely across these centres and no verified current picture is available here."],
+
+nPCB:["Integrate","Pollution control boards","SPCB and CPCB, holding consent to operate and continuous emissions monitoring.",
+["A consent-to-operate and a municipal property record for the same physical plot share no identifier today.",
+"One link registry entry, not a data migration, and it is what makes air quality enforcement possible at plot level.",
+"The regulator keeps its system, its identifiers and its authority."],null],
+
+nWATER:["Integrate","Water and utility systems","Water boards, distribution utilities and their billing systems.",
+["Often a parastatal rather than the ULB, with its own connections, billing and network records.",
+"Non-revenue water and reuse become measurable only when the utility's records and the municipal connection registry can be read together.",
+"Under AMRUT the money and the reporting sit with one body while the customer record sits with another."],null],
+
+nLAND:["Integrate","Land, transport and planning","Land records, development authorities and transport systems.",
+["Development authorities approve and build outside ULB boundaries, which is where most urban growth actually happens.",
+"This is the only participant here that brings mobility with it. Before it joins, the mobility lens lights nothing at all.",
+"Vahan and ULPIN are the candidate rails, both unverified for urban use."],null],
+
+nMARKET:["Joins","Market, civil society and research","The people who build on it and the people who read from it.",
+["Startups, product companies, system integrators and the vendors states commission are building on it.",
+"Lenders and rating agencies pricing a city under UCF, NGOs, informal sector bodies and academia are reading from it.",
+"Neither is an exchange, which is why these edges do not carry the same label as the others."],
+"Forecasting, triage and decision-support products belong here rather than in the spine. Only agent identity and permissions has to be common."],
+
+nSHWAS:["Odisha solution","SHWAS","Sanitation worker welfare, built for a specific need and aligned to SUJOG afterwards.",[],null],
+nFSSM:["Odisha solution","SUJOG-FSSM","Faecal sludge and septage management, on the same platform.",[],null],
+nMUKTA:["Odisha solution","MUKTA","Urban wage employment, delivered through the same core.",[],null],
+nJAGA:["Odisha solution","Jaga Mission","Slum land rights and in-situ upgrading, with its own tools on the shared architecture.",[],null],
+
+nSPINE:["The proposition","The shared spine","Only what has to be common for anything to cross a boundary.",
+["Data foundations, common services, and the specifications and conformance suite that lets a system prove it can join.",
+"Much of the first two boxes is UPYOG code today, which is why they are largely green. The third box does not exist anywhere.",
+"Reuse, new and integrate describe blocks in here. They do not describe the participants around it, which is why the legend belongs to this box alone.",
+"Divergence between state platforms is correct and should continue. This is what lets it continue without losing the ability to exchange."],
+"Specifications, the exchange protocol and the conformance suite are the missing piece."],
+
+codelists:["New","Shared code lists & schemas","Two systems can conform to the same service specification and still disagree about what a ward is.",
+["Ward and zone codes, waste categories, usage types, connection classes, tenure types, closure reasons.",
+"Held as versioned reference data with a published change process, not as a table each participant copies once and lets drift.",
+"MDMS is where a state holds this today, per deployment. What is missing is the layer above it that says which values are common and which are local.",
+"Without it a link registry entry resolves to a record nobody can read consistently."],
+"The least visible item in the spine and one of the most load-bearing."],
+
+nADAPT:["The edge itself","Adapter","How a participant joins, and the reason the spine does not own it.",
+["An adapter is written per participant, deployed by that participant, and maps its own identifiers and formats to the published interface.",
+"It is deliberately not part of the spine. A spine that owned every adapter would be a central integration platform, which is the thing states are right to resist.",
+"What the spine owns is the contract that makes an adapter writable by anyone: the protocol, the code lists, and a conformance suite to test against.",
+"That is what turns integration from a recurring project into a one-time cost per participant."],
+"Today each of these is a bilateral integration, negotiated and rebuilt whenever either side changes."],
+
+dRevenue:["Domain","Revenue and finance","The most complete domain in the set, and the one the Urban Challenge Fund depends on.",[],null,
+{"runs":"Property tax, trade licence, advertisement, rents and miscellaneous collections, with NMAM finance and accounts behind them.",
+"missing":"A creditworthiness view assembled from collection history, and funding attributes on assets so a lender can see what was built with what.",
+"holders":"Registration and stamps departments hold transaction values. UCF holds sanctions, tranche state and utilisation."}],
+
+dWaterD:["Domain","Water and sanitation","Split across three owners, which is why no single system will ever hold it.",[],null,
+{"runs":"Water and sewerage connection management, the connection registry, desludging, works and billing.",
+"missing":"Non-revenue water accounting by zone, a flow and quality monitor registry, and reuse tracking.",
+"holders":"The utility or board holds connections, meters and network assets. Pollution control holds effluent consents. AMRUT holds its own sanction and progress record."}],
+
+dWaste:["Domain","Solid waste","Strong on operations, weak on condition and consequence.",[],null,
+{"runs":"SWM operations, the asset registry covering vehicles and bins, grievance, works and contracts.",
+"missing":"Enforcement and penalties, asset condition and maintenance, incident response, and a repeat-location record.",
+"holders":"Pollution control holds dumpsite and processing consents. SBM-U holds survey scores and certification status."}],
+
+dBuilt:["Domain","Built environment","The domain where the municipal record and the growth are in different places.",[],null,
+{"runs":"Building plan approval with eDCR, the property registry, ULB boundaries.",
+"missing":"A spatial base with parcels, networks and land use, and a harmonised premise identifier.",
+"holders":"Land records hold parcels and ownership. Development authorities hold approvals outside ULB limits, which is where most growth happens. PMAY-U holds beneficiaries and sanctioned units."}],
+
+dMobility:["Domain","Mobility","The emptiest lens here, and the honest answer is that this was never municipal in the first place.",[],
+"Worth saying out loud rather than leaving as a blank: the gap is institutional before it is technical.",
+{"runs":"Nothing. No UPYOG module covers mobility, and none of the state platforms shown claims it.",
+"missing":"Everything on the municipal side: street and network geometry, parking, permits, and a link to vehicle records.",
+"holders":"Transport departments hold registrations and permits. Development authorities hold road and corridor plans. Vahan is the candidate rail and its terms for urban use are unverified."}],
+
+dLive:["Domain","Livelihoods","The domain where a municipal act decides whether someone can borrow.",[],null,
+{"runs":"Street vendor management and the trade registry, with grievance and payments behind them.",
+"missing":"Vendor recognition that is portable across schemes and cities, vending zone geometry, and a household or family link.",
+"holders":"PM SVANidhi holds loan and repayment status. Lenders hold the credit record. Welfare boards hold worker registration."}],
+
+dHealth:["Domain","Public health and safety","Mostly assembled from other people's records.",[],null,
+{"runs":"Grievance, inspection through the licence and NOC flows, and incident response where a city runs an ICCC.",
+"missing":"A case definition that closes consistently, exposure attributes on premises, and a threshold rulebook.",
+"holders":"Health departments hold surveillance. Pollution control holds air and water readings. The ICCC holds the operational picture."}],
+};
+
+var ov=document.getElementById('ov');
+function openK(k){var d=D[k];if(!d)return;
+ document.getElementById('k-kick').textContent=d[0];
+ document.getElementById('k-title').textContent=d[1];
+ document.getElementById('k-def').textContent=d[2];
+ var ul=document.getElementById('k-list');ul.innerHTML='';
+ (d[3]||[]).forEach(function(t){var li=document.createElement('li');li.textContent=t;ul.appendChild(li);});
+ var g=document.getElementById('k-grp');g.innerHTML='';
+ if(d[5]){var L=d[5].runs
+   ? [['r','What already runs it','runs'],['n','What is missing','missing'],['i','Who else holds the records','holders']]
+   : [['r','Reuse — exists today','reuse'],['n','New — to be built','new'],['i','Integrate — connect to what exists','integrate']];
+  L.forEach(function(p){if(!d[5][p[2]])return;var b=document.createElement('div');b.className='grp '+p[0];
+   b.innerHTML='<h4>'+p[1]+'</h4><p></p>';b.querySelector('p').textContent=d[5][p[2]];g.appendChild(b);});}
+ var f=document.getElementById('k-flag');
+ if(d[4]){f.style.display='block';f.innerHTML='<b>&#9679;</b> '+d[4];}else{f.style.display='none';}
+ ov.classList.add('on');}
+document.querySelectorAll('[data-k]').forEach(function(el){
+ el.addEventListener('click',function(e){e.stopPropagation();openK(el.getAttribute('data-k'));});});
+document.getElementById('x').addEventListener('click',function(){ov.classList.remove('on');});
+ov.addEventListener('click',function(e){if(e.target===ov)ov.classList.remove('on');});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')ov.classList.remove('on');});
+document.querySelectorAll('.dom').forEach(function(el){el.addEventListener('click',function(){
+ document.querySelectorAll('.dom').forEach(function(o){o.classList.remove('on');});el.classList.add('on');});});
+function fit(){var s=Math.min(1,(window.innerWidth-24)/1600);
+ document.getElementById('scaler').style.transform='scale('+s+')';
+ var h=document.querySelector('.slide').offsetHeight;
+ document.getElementById('wrap').style.height=(h*s+40)+'px';}
+
+/* ---------------- incremental network ---------------- */
+var URB='revenue water waste built livelihoods';
+var CAP={
+1:"Start with the proposition. The spine is the minimum that has to be common for anything to cross a boundary. Much of it already exists in UPYOG. What is missing is the specification and conformance that lets a system prove it can join.",
+2:"The systems running today. UPYOG is a set of reference applications and much of the spine. States fork the applications, commission their own vendors and keep their own hub. Between them they cover urban service delivery, and only that.",
+3:"The missions join, each with its own MIS and its own reporting cycle. The position is to integrate rather than rebuild. Between them they add obligations to urban service delivery; they do not add new domains.",
+4:"Everything beyond urban service delivery arrives with its own department. Pollution control, utilities, land and transport bring the domains municipal systems never covered, and the market, civil society and research build on and read from what results.",
+5:"The axis appears under the spine. Domains are what the work is about, and every participant above and below sits on one or more of them. Pick one to light a path. Each climate concern also opens a card, on the info mark, setting out what is reused, what has to be built and what is integrated."};
+var N={
+ SUJOG :{x:150,y:126,w:190,h:58,t:'SUJOG',s:'Odisha',k:'nSUJOG',st:2,d:URB,c:'aq heat flood water'},
+ SHWAS :{x:24,y:26,w:146,h:44,t:'SHWAS',s:'sanitation workers',k:'nSHWAS',st:2,cls:'sat',d:'livelihoods health',c:'heat'},
+ FSSM  :{x:250,y:16,w:146,h:44,t:'SUJOG-FSSM',s:'septage',k:'nFSSM',st:2,cls:'sat',d:'water',c:'water'},
+ MUKTA :{x:14,y:226,w:146,h:44,t:'MUKTA',s:'wage employment',k:'nMUKTA',st:2,cls:'sat',d:'livelihoods',c:'heat'},
+ JAGA  :{x:258,y:232,w:146,h:44,t:'Jaga Mission',s:'land rights',k:'nJAGA',st:2,cls:'sat',d:'built livelihoods',c:''},
+ KSMART:{x:966,y:26,w:190,h:58,t:'K-SMART',s:'Kerala',k:'nKSMART',st:2,d:URB,c:'aq heat flood water'},
+ MSEVA :{x:1196,y:126,w:190,h:58,t:'mSeva',s:'Punjab',k:'nMSEVA',st:2,d:URB,c:'aq heat flood water'},
+ AP    :{x:966,y:220,w:190,h:58,t:'Municipal ERP',s:'Andhra Pradesh',k:'nAP',st:2,d:URB,c:'aq heat flood water'},
+ GAP   :{x:1400,y:26,w:186,h:58,t:'ULBs with no platform',s:'this is who Adopt is for',k:'nGAP',st:2,cls:'gap',d:'',c:''},
+ AMRUT :{x:24,ry:0,w:228,h:92,t:'AMRUT',s:'water, sewerage, drainage',k:'mAMRUT',st:3,d:'water built',c:'water flood'},
+ SBMU  :{x:334,ry:0,w:228,h:92,t:'SBM-U',s:'sanitation and solid waste',k:'mSBM',st:3,d:'waste health water',c:'aq water'},
+ PMAYU :{x:644,ry:0,w:228,h:92,t:'PMAY-U',s:'affordable housing',k:'mPMAY',st:3,d:'built livelihoods',c:'heat flood'},
+ SVAN  :{x:954,ry:0,w:228,h:92,t:'PM SVANidhi',s:'street vendor credit',k:'mSVANidhi',st:3,d:'livelihoods revenue',c:'heat'},
+ UCFN  :{x:1264,ry:0,w:228,h:92,t:'Urban Challenge Fund',s:'city projects, market finance',k:'mUCF',st:3,d:'revenue built water',c:'flood heat water'},
+ ICCC  :{x:100,ry:214,w:228,h:92,t:'ICCC deployments',s:'incident and event response',k:'nICCC',st:4,d:'waste health',c:'aq heat flood'},
+ PCB   :{x:400,ry:214,w:228,h:92,t:'Pollution control boards',s:'consent to operate \u00b7 CEMS',k:'nPCB',st:4,d:'waste health water',c:'aq water'},
+ WATER :{x:700,ry:214,w:228,h:92,t:'Water and utility systems',s:'boards \u00b7 utilities \u00b7 billing',k:'nWATER',st:4,d:'water',c:'water flood'},
+ LAND  :{x:1000,ry:214,w:228,h:92,t:'Land, transport, planning',s:'records \u00b7 authorities \u00b7 transport',k:'nLAND',st:4,d:'built mobility',c:'aq flood'},
+ MARKET:{x:1300,ry:214,w:228,h:92,t:'Market, civil society, research',s:'builds on it \u00b7 reads from it',k:'nMARKET',st:4,d:'revenue livelihoods health',c:'heat aq'}};
+var UP={x:520,y:36,w:400,st:2,d:URB,c:'aq heat flood water'};
+var SPINE={x:24,y:330,w:1552,h:300};
+var E=[
+ ['SUJOG','SHWAS',2,''],['SUJOG','FSSM',2,''],['SUJOG','MUKTA',2,''],['SUJOG','JAGA',2,''],
+ ['UP','SUJOG',2,''],['UP','KSMART',2,''],['UP','MSEVA',2,'fork and localise'],['UP','AP',2,''],
+ ['UP','SP',2,'supplies much of it'],
+ ['SUJOG','SP',2,''],['KSMART','SP',2,''],['MSEVA','SP',2,''],['AP','SP',2,'conform'],
+ ['GAP','SP',2,'adopt'],
+ ['AMRUT','SP',3,''],['SBMU','SP',3,''],['PMAYU','SP',3,''],
+ ['SVAN','SP',3,''],['UCFN','SP',3,''],
+ ['ICCC','SP',4,''],['PCB','SP',4,'interoperate'],['WATER','SP',4,''],['LAND','SP',4,''],
+ ['MARKET','SP',4,'builds on \u00b7 reads from']];
+var RECS={
+ AMRUT:'sanctions \u00b7 physical progress \u00b7 city water plans',
+ SBMU:'ODF and GFC status \u00b7 survey scores',
+ PMAYU:'beneficiaries \u00b7 sanctioned units \u00b7 geo-tags',
+ SVAN:'vendor IDs \u00b7 loan and repayment status',
+ UCFN:'sanctions \u00b7 tranche state \u00b7 utilisation',
+ ICCC:'live feeds \u00b7 incident log',
+ PCB:'consent to operate \u00b7 emissions readings \u00b7 effluent consents',
+ WATER:'connections \u00b7 meters \u00b7 billing accounts \u00b7 network assets',
+ LAND:'parcels \u00b7 land use \u00b7 approvals outside ULB limits',
+ MARKET:'credit assessments \u00b7 research datasets'};
+function adapterY(){return SPINE.y+SPINE.h+(step>=5?(dband.offsetHeight||64)+32:26);}
+var step=1, lens=null, lensType=null;
+var svg=document.getElementById('edges'), nw=document.getElementById('nw');
+var spEl=document.getElementById('spine'), upEl=document.getElementById('upyog');
+var dband=document.getElementById('dband');
+function layout(){
+  SPINE.h=spEl.offsetHeight||SPINE.h;
+  var sb=SPINE.y+SPINE.h;
+  dband.style.top=(sb+22)+'px';
+  var pad=(step>=5?(dband.offsetHeight||64)+52:52);
+  var base=sb+pad;
+  Object.keys(N).forEach(function(id){ if(N[id].ry!==undefined) N[id].y=base+N[id].ry; });
+  document.getElementById('lb2').style.top=(base-22)+'px';
+  document.getElementById('lb3').style.top=(base+192)+'px';
+  return base;
+}
+function ctr(id){
+  if(id==='SP')return {x:SPINE.x+SPINE.w/2,y:SPINE.y+SPINE.h/2,top:SPINE.y,bot:SPINE.y+SPINE.h};
+  if(id==='UP')return {x:UP.x+UP.w/2,y:UP.y+upEl.offsetHeight/2,top:UP.y,bot:UP.y+upEl.offsetHeight};
+  var n=N[id]; return {x:n.x+n.w/2,y:n.y+n.h/2,top:n.y,bot:n.y+n.h};
+}
+function edgePath(e,i){
+  var A=ctr(e[0]), B=ctr(e[1]), ay=A.y, by=B.y, bx=B.x, d;
+  if(e[1]==='SP'){
+    bx=Math.max(SPINE.x+70,Math.min(SPINE.x+SPINE.w-70,A.x));
+    if(A.y<B.y){ay=A.bot;by=B.top;} else {ay=A.top;by=B.bot;}
+    var sw=(i%2?26:-26);
+    d='M '+A.x+' '+ay+' C '+(A.x+sw)+' '+(ay+(by-ay)*0.45)+' '+(bx-sw)+' '+(ay+(by-ay)*0.62)+' '+bx+' '+by;
+  } else {
+    d='M '+A.x+' '+ay+' Q '+(A.x*0.35+bx*0.65)+' '+((ay+by)/2)+' '+bx+' '+by;
+  }
+  var dn=A.y>by;
+  return {d:d, mx:dn?A.x:(A.x+bx)/2, my:dn?ay-9:(ay+by)/2, down:dn};
+}
+function rewire(){
+  E.forEach(function(e,i){
+    var g=edgePath(e,i), p=document.getElementById('eg'+i); if(!p)return;
+    p.setAttribute('d',g.d);
+    var t=document.getElementById('et'+i);
+    if(t){t.setAttribute('x',g.mx+9);t.setAttribute('y',g.my+(g.down?0:2));}
+    var cc=document.getElementById('ad'+i);
+    if(cc){var A0=ctr(e[0]);
+      cc.setAttribute('cx',Math.max(SPINE.x+70,Math.min(SPINE.x+SPINE.w-70,A0.x)));
+      cc.setAttribute('cy',adapterY());}});
+}
+function build(){
+  layout();
+  Object.keys(N).forEach(function(id){
+    var n=N[id], el=document.createElement('div');
+    el.className='nd '+(n.cls||''); el.id='nd'+id;
+    el.style.cssText='left:'+n.x+'px;top:'+n.y+'px;width:'+n.w+'px;min-height:'+n.h+'px';
+    el.innerHTML='<b></b><i></i>';
+    el.querySelector('b').textContent=n.t; el.querySelector('i').textContent=n.s;
+    if(RECS[id]){var rw=document.createElement('div'); rw.className='recs';
+      RECS[id].split(' \u00b7 ').forEach(function(r){
+        var rs=document.createElement('span'); rs.className='rec'; rs.textContent=r; rw.appendChild(rs);});
+      el.appendChild(rw);}
+    if(n.d)el.setAttribute('data-d',n.d); if(n.c)el.setAttribute('data-cc',n.c);
+    el.addEventListener('click',function(){openK(n.k);});
+    nw.appendChild(el);});
+  upEl.setAttribute('data-d',UP.d); upEl.setAttribute('data-cc',UP.c);
+  upEl.addEventListener('click',function(e){ if(!e.target.closest('.c'))openK('nUPYOG'); });
+  spEl.addEventListener('click',function(e){ if(!e.target.closest('.c'))openK('nSPINE'); });
+  E.forEach(function(e,i){
+    var g=edgePath(e,i);
+    var p=document.createElementNS('http://www.w3.org/2000/svg','path');
+    p.setAttribute('d',g.d); p.setAttribute('id','eg'+i); svg.appendChild(p);
+    if(e[1]==='SP' && N[e[0]] && N[e[0]].st>=3){
+      var A0=ctr(e[0]);
+      var cx=Math.max(SPINE.x+70,Math.min(SPINE.x+SPINE.w-70,A0.x));
+      var cc=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      cc.setAttribute('cx',cx); cc.setAttribute('cy',adapterY()); cc.setAttribute('r',6);
+      cc.setAttribute('id','ad'+i); cc.addEventListener('click',function(){openK('nADAPT');});
+      svg.appendChild(cc);}
+    if(e[3]){var t=document.createElementNS('http://www.w3.org/2000/svg','text');
+      t.setAttribute('x',g.mx+9); t.setAttribute('y',g.my+(g.down?0:2)); t.setAttribute('id','et'+i);
+      t.textContent=e[3]; svg.appendChild(t);}});
+}
+function apply(){
+  var alone = step===1;
+  spEl.style.top = (alone?0:SPINE.y)+'px';
+  dband.classList.toggle('off', step<5);
+  layout();
+  Object.keys(N).forEach(function(id){
+    if(N[id].ry!==undefined) document.getElementById('nd'+id).style.top=N[id].y+'px';});
+  rewire();
+  upEl.classList.toggle('off', step<UP.st);
+  document.getElementById('lb1').style.opacity = alone?0:1;
+  document.getElementById('lb2').style.opacity = step<3?0:1;
+  document.getElementById('lb3').style.opacity = step<4?0:1;
+  Object.keys(N).forEach(function(id){
+    document.getElementById('nd'+id).classList.toggle('off', N[id].st>step);});
+  E.forEach(function(e,i){
+    var vis = e[2]<=step;
+    document.getElementById('eg'+i).classList.toggle('hide', !vis);
+    var cc=document.getElementById('ad'+i); if(cc)cc.classList.toggle('hide', !vis);
+    var t=document.getElementById('et'+i); if(t)t.style.opacity=vis?1:0;});
+  document.querySelectorAll('#steps button').forEach(function(b){
+    b.classList.toggle('on', parseInt(b.getAttribute('data-st'),10)===step);});
+  document.getElementById('cap').textContent=CAP[step]||'';
+  if(step<5&&lens)clearLens();
+  var low = alone ? SPINE.h : SPINE.y+SPINE.h+(step>=5?(dband.offsetHeight||64)+24:0);
+  Object.keys(N).forEach(function(id){ if(N[id].st<=step) low=Math.max(low,N[id].y+N[id].h); });
+  nw.style.height=(low+16)+'px';
+  svg.setAttribute('viewBox','0 0 1600 '+(low+16));
+  paint();
+  if(window.fit)setTimeout(fit,0);
+}
+function lit(el){
+  var v=el.getAttribute(lensType==='c'?'data-cc':'data-d');
+  return !!(lens && v && v.split(' ').indexOf(lens)>-1);
+}
+function paint(){
+  document.querySelectorAll('.nd,.ra').forEach(function(el){
+    el.classList.toggle('lit', !!lens && lit(el) && !el.classList.contains('off'));});
+  document.querySelectorAll('#spine .c,#upyog .c').forEach(function(el){
+    var on = !!lens && lit(el);
+    el.classList.toggle('ml', on);
+    if(on)el.style.setProperty('--mc','#0f6b63'); else el.style.removeProperty('--mc');});
+  document.querySelectorAll('.nd').forEach(function(el){
+    var host = lensType==='l' ? el.querySelector('.recs')!==null : el.classList.contains('lit');
+    el.querySelectorAll('.rec').forEach(function(r){r.classList.toggle('lit', !!lens && host);});});
+  if(lensType==='l'){document.querySelectorAll('.nd').forEach(function(el){
+    el.classList.toggle('lit', el.querySelector('.recs')!==null && !el.classList.contains('off'));});}
+  E.forEach(function(e,i){
+    function ok(id){
+      if(id==='SP')return true;
+      if(id==='UP')return upEl.classList.contains('lit');
+      return document.getElementById('nd'+id).classList.contains('lit');}
+    var on = !!lens && e[2]<=step && ok(e[0]) && ok(e[1]);
+    document.getElementById('eg'+i).classList.toggle('on', on);
+    var cc=document.getElementById('ad'+i); if(cc)cc.classList.toggle('on', on);});
+}
+function clearLens(){
+  lens=null;lensType=null;
+  document.querySelectorAll('.dp,.cp').forEach(function(b){b.classList.remove('on');});
+  paint();
+}
+function setLens(k,t){
+  if(lens===k&&lensType===t){clearLens();return;}
+  lens=k;lensType=t;
+  document.querySelectorAll('.dp').forEach(function(b){
+    b.classList.toggle('on', t==='d'&&b.getAttribute('data-di')===k);});
+  document.querySelectorAll('.cp').forEach(function(b){
+    b.classList.toggle('on', t==='c'&&b.getAttribute('data-ci')===k);});
+  paint();
+}
+document.querySelectorAll('#spine [data-take],#upyog [data-take]').forEach(function(box){
+  box.getAttribute('data-take').split(' ').forEach(function(k){
+    var el=document.querySelector('.body [data-k="'+k+'"].c'); if(el)box.appendChild(el);});});
+build();
+document.querySelectorAll('#steps button').forEach(function(b){
+  b.addEventListener('click',function(){step=parseInt(b.getAttribute('data-st'),10);apply();});});
+var DK={revenue:'dRevenue',water:'dWaterD',waste:'dWaste',built:'dBuilt',mobility:'dMobility',
+        livelihoods:'dLive',health:'dHealth'};
+document.querySelectorAll('.dp').forEach(function(b){
+  b.addEventListener('click',function(e){
+    var k=b.getAttribute('data-di');
+    if(e.target.classList.contains('q')){openK(DK[k]);return;}
+    setLens(k,'d');});});
+var lr=document.querySelector('#spine [data-k="linkreg"]');
+if(lr){lr.addEventListener('click',function(){setLens('link','l');});
+  lr.title='Lights every record held elsewhere';}
+var clc=document.getElementById('codelistchip');
+if(clc)clc.addEventListener('click',function(){openK('codelists');});
+var CK={aq:'dAQ',heat:'dHeat',flood:'dFlood',water:'dWater'};
+document.querySelectorAll('.cp').forEach(function(b){
+  b.addEventListener('click',function(e){
+    var k=b.getAttribute('data-ci');
+    if(e.target.classList.contains('q')){openK(CK[k]);return;}
+    setLens(k,'c');});});
+document.addEventListener('keydown',function(e){
+  if(e.key>='1'&&e.key<='5'){step=parseInt(e.key,10);apply();}
+  if(e.key==='ArrowRight'&&step<5){step++;apply();}
+  if(e.key==='ArrowLeft'&&step>1){step--;apply();}
+  if(e.key==='0'){var c=document.getElementById('ctl');
+    c.style.visibility=c.style.visibility==='hidden'?'':'hidden';}
+  if(e.key==='Escape')clearLens();});
+apply();
+
+fit();window.addEventListener('resize',fit);
+</script>
+</body>
+</html>
